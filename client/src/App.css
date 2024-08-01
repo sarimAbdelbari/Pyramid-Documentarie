@@ -36,3 +36,15 @@
   scrollbar-color: #0554a2 #f3f3f3;
   /* Thumb and track color */
 }
+
+.custom-tooltip {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  z-index: 1000;
+  white-space: nowrap;
+}

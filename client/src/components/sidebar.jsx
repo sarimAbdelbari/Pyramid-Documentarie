@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React from 'react';
 import { useStateContext } from '../contexts/ContextProvider';
 import LogoPngChiali from "../assets/images/LogoPngChiali.png";
 import { Link } from 'react-router-dom';
@@ -6,7 +6,8 @@ import { GrUpdate } from "react-icons/gr";
 import { MdOutlineLocalPolice } from "react-icons/md";
 import { FaTimes, FaHome, FaBookmark, FaUser, FaTable, FaSearch, FaUsers, FaCalendar, FaChartBar, FaCog, FaChevronDown } from "react-icons/fa";
 import { SiPowerpages } from "react-icons/si";
-
+import { ImTree } from "react-icons/im";
+import { IoIosCreate } from "react-icons/io";
 export default function SideBar() {
     const { visible, setVisible } = useStateContext();
     const { dropdowns, setDropdowns } = useStateContext();
@@ -59,6 +60,7 @@ export default function SideBar() {
                                             {dropdowns.users ? <FaTimes className="text-sm" /> : <FaChevronDown className="text-sm" />}
                                         </div>
                                         <ul className={`space-y-2 pl-4 ${dropdowns.users ? '' : 'hidden'}`}>
+                                            
                                             <li>
                                                 <Link to="/dashboard/Users" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
                                                     <FaTable className="mr-2" />
@@ -81,15 +83,21 @@ export default function SideBar() {
                                         </div>
                                         <ul className={`space-y-2 pl-4 ${dropdowns.pages ? '' : 'hidden'}`}>
                                             <li>
-                                                <Link to="/dashboard/route" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
-                                                    <FaTable className="mr-2" />
-                                                    <span>View</span>
+                                                <Link to="/dashboard/route/create" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
+                                                    <IoIosCreate  className="mr-2" />
+                                                    <span>Create</span>
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
-                                                    <FaSearch to="/dashboard/tree" className="mr-2" />
-                                                    <span>Search</span>
+                                                <Link to="/dashboard/route/table" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
+                                                    <FaTable className="mr-2" />
+                                                    <span>Table</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/dashboard/route/tree" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
+                                                    <ImTree className="mr-2" />
+                                                    <span>Tree</span>
                                                 </Link>
                                             </li>
                                         </ul>

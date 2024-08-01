@@ -13,7 +13,8 @@ import ProtectedRoute from "./components/protectedRoute";
 import Dashboard from "./pages/dashboard/dashboard";
 import Users from "./pages/dashboard/Users/users";
 import RoutePath from "./pages/dashboard/route/RoutePath";
-import TreePath from "./pages/dashboard/route/Tree";
+import TreePath from "./pages/dashboard/route/TreePath";
+import CreateRoute from "./pages/dashboard/route/CreateRoute";
 import useRouteAuth from "./hooks/useRoutesContext";
 import LoadingScreen from "./utils/loadingScreen";
 
@@ -89,7 +90,7 @@ function App() {
             }
           />
           <Route
-            path="/dashboard/route"
+            path="/dashboard/route/table"
             element={
               <ProtectedRoute>
                 <RoutePath />
@@ -97,10 +98,18 @@ function App() {
             }
           />
           <Route
-            path="/dashboard/tree"
+            path="/dashboard/route/tree"
             element={
               <ProtectedRoute>
                 <TreePath />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/route/create"
+            element={
+              <ProtectedRoute>
+                <CreateRoute />
               </ProtectedRoute>
             }
           />

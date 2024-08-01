@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../../components/navbar';
 import SideBar from '../../../components/sidebar';
-import 'react-data-grid/lib/styles.css';
 import { DataGrid } from '@mui/x-data-grid';
 import { useStateContext } from '../../../contexts/ContextProvider';
 import axios from 'axios';
