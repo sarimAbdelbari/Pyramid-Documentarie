@@ -81,14 +81,14 @@ export default function SideBar() {
                                         </div>
                                         <ul className={`space-y-2 pl-4 ${dropdowns.pages ? '' : 'hidden'}`}>
                                             <li>
-                                                <Link className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
+                                                <Link to="/dashboard/route" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
                                                     <FaTable className="mr-2" />
                                                     <span>View</span>
                                                 </Link>
                                             </li>
                                             <li>
                                                 <Link className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
-                                                    <FaSearch className="mr-2" />
+                                                    <FaSearch to="/dashboard/tree" className="mr-2" />
                                                     <span>Search</span>
                                                 </Link>
                                             </li>

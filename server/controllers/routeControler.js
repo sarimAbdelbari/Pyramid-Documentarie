@@ -4,11 +4,17 @@ const Route = require('../models/RouteModel');
 const createRoute = async (req, res) => {
   try {
     const { path, view, data } = req.body;
+
+    const existingRoute = await Route.findOne({ path });
+    if (existingRoute) {
+      return res.status(400).json({ message: 'Route with this path already exists' });
+    }
+
     const newRoute = new Route({ path, view, data });
     await newRoute.save();
     res.status(201).json(newRoute);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: `Error creating route: ${error.message}` });
   }
 };
 
@@ -18,7 +24,7 @@ const getRoutes = async (req, res) => {
     const routes = await Route.find();
     res.status(200).json(routes);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: `Error fetching routes: ${error.message}` });
   }
 };
 
@@ -32,7 +38,7 @@ const getRouteById = async (req, res) => {
     }
     res.status(200).json(route);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: `Error fetching route: ${error.message}` });
   }
 };
 
@@ -47,7 +53,7 @@ const updateRouteById = async (req, res) => {
     }
     res.status(200).json(route);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: `Error updating route: ${error.message}` });
   }
 };
 
@@ -61,7 +67,7 @@ const deleteRouteById = async (req, res) => {
     }
     res.status(200).json({ message: 'Route deleted' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: `Error deleting route: ${error.message}` });
   }
 };
 

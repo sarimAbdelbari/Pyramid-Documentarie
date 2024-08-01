@@ -105,50 +105,48 @@ const createUser = async (req, res) => {
 
 // * update A User
 
-    const updateUser = async (req, res) => {
-      const { id } = req.params;
+const updateUser = async (req, res) => {
+  const { id } = req.params;
 
-        try {
-            const user = await User.findById(id);
+  try {
+    const user = await User.findById(id);
 
-            if (user == null) {
-              return res.status(404).json({ message: 'User not found' });
-            }
-
-           
-        
-            Object.keys(req.body).forEach(async (key) => {
-              switch (key) {
-                case 'uid':
-                  user.uid = req.body.uid;
-                  break;
-                case 'userName':
-                  user.userName = req.body.userName;
-                  break;
-                case 'email':
-                  user.email = req.body.email;
-                  break;
-                case 'password':
-                  const salt = await bcrypt.genSalt(10);
-                  const hash = await bcrypt.hash(req.body.password, salt);
-                  user.password = hash;
-                  break;
-                case 'permission':
-                  user.permission = req.body.permission;
-                  break;
-                default:
-                  break;
-              }
-            });
-        
-            await user.save();
-
-            res.json(user);
-
-          } catch (error) {
-            res.status(400).json({ message: error.message });
-          }
+    if (user == null) {
+      return res.status(404).json({ message: 'User not found' });
     }
+
+    for (const key of Object.keys(req.body)) {
+      switch (key) {
+        case 'uid':
+          user.uid = req.body.uid;
+          break;
+        case 'userName':
+          user.userName = req.body.userName;
+          break;
+        case 'email':
+          user.email = req.body.email;
+          break;
+        case 'password':
+          const salt = await bcrypt.genSalt(10);
+          const hash = await bcrypt.hash(req.body.password, salt);
+          user.password = hash;
+          break;
+        case 'permission':
+          user.permission = req.body.permission;
+          break;
+        default:
+          break;
+      }
+    }
+
+    await user.save();
+
+    res.json(user);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 
 
 module.exports = {

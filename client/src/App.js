@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/protectedRoute";
 import Dashboard from "./pages/dashboard/dashboard";
 import Users from "./pages/dashboard/Users/users";
 import RoutePath from "./pages/dashboard/route/RoutePath";
+import TreePath from "./pages/dashboard/route/Tree";
 import useRouteAuth from "./hooks/useRoutesContext";
 import LoadingScreen from "./utils/loadingScreen";
 
@@ -43,10 +44,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          {/* {Object.values(routeData).map((route, index) => (
+          {Object.values(routeData).map((route, index) => (
             <Route
               key={index}
-              path={route?.path}
+              path={`/${route?.path}`}
               element={
                 <ProtectedRoute>
                   {route.view === 'View2' && <View2 data={route.data} />}
@@ -56,7 +57,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-          ))} */}
+          ))}
           <Route
             path="/"
             element={
@@ -65,14 +66,20 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/view5"
             element={
               <ProtectedRoute>
                 <View4 />
               </ProtectedRoute>
             }
-          />
+          /> */}
+            <Route
+              path="/dashboard"
+              element={
+                  <Dashboard />
+              }
+            />
           <Route
             path="/dashboard/users"
             element={
@@ -90,9 +97,11 @@ function App() {
             }
           />
           <Route
-            path="/dashboard"
+            path="/dashboard/tree"
             element={
-                <Dashboard />
+              <ProtectedRoute>
+                <TreePath />
+              </ProtectedRoute>
             }
           />
         </Routes>

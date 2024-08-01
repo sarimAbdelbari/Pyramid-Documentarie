@@ -9,9 +9,13 @@ const View2 = ({ data }) => {
     if (src.startsWith('http')) {
       return src; // External URL
     }
-    return process.env.PUBLIC_URL + src; // Local path
+    return `${process.env.PUBLIC_URL1}/assets/images/${src}`; // Local path from public/assets/images
   };
+  
 
+ 
+  console.log("data",data);
+   
   return (
     <div className='min-h-screen mx-7 px-7 bg-mainLightBg dark:bg-mainDarkBg'>
       <Navbar />
