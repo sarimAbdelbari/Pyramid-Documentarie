@@ -1,21 +1,16 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import Navbar from '../components/navbar';
 import { Link } from 'react-router-dom';
 
 const View2 = ({ data }) => {
-
-  // Function to handle local and external image URLs
   const getImageSrc = (src) => {
     if (src.startsWith('http')) {
-      return src; // External URL
+      return src;
     }
-    return `${process.env.PUBLIC_URL1}/assets/images/${src}`; // Local path from public/assets/images
+    return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
   };
-  
 
- 
-  console.log("data",data);
-   
+
   return (
     <div className='min-h-screen mx-7 px-7 bg-mainLightBg dark:bg-mainDarkBg'>
       <Navbar />
@@ -56,6 +51,10 @@ const View2 = ({ data }) => {
       </div>
     </div>
   );
+};
+
+View2.propTypes = {
+  data: PropTypes.object.isRequired,
 };
 
 export default View2;

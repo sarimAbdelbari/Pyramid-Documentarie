@@ -31,8 +31,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/users`);
-      console.log(data);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       const dataWithId = data.map((user, index) => ({ ...user, id: index + 1 }));
       setUsersData(dataWithId);
     } catch (error) {
@@ -43,7 +42,7 @@ const Users = () => {
 
   const handleCreateUser = async () => {
     try {
-      const { data } = await axios.post(`http://localhost:5000/api/users`, selectedUser);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
       sucess_toast('User created successfully');
       setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
       handleCloseDialog();
@@ -55,7 +54,7 @@ const Users = () => {
 
   const handleUpdateUser = async () => {
     try {
-      const { data } = await axios.patch(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
+      const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`, selectedUser);
       sucess_toast('User updated successfully');
       setUsersData(prevState => prevState.map(user => (user._id === data._id ? { ...data, id: user.id } : user)));
       handleCloseDialog();
@@ -67,7 +66,7 @@ const Users = () => {
 
   const handleDeleteUser = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userToDelete._id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
       sucess_toast('User deleted successfully');
       setUsersData(prevState => prevState.filter(user => user._id !== userToDelete._id));
       handleCloseConfirmDialog();

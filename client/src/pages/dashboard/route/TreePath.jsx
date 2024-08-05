@@ -1,8 +1,9 @@
-import React, { createRef, useState, useEffect } from 'react';
+import  { createRef, useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
 import Navbar from '../../../components/navbar';
 import SideBar from '../../../components/sidebar';
 import { useCenteredTree } from './helpers';
+import PropTypes from 'prop-types';
 
 const treeData = {
   name: 'main',
@@ -147,6 +148,15 @@ const CustomTooltip = ({ visible, position, text }) => (
   ) : null
 );
 
+CustomTooltip.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  position: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }).isRequired,
+  text: PropTypes.string.isRequired,
+};
+
 const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip }) => {
   let y = 37;
   let x = -10;
@@ -214,3 +224,4 @@ const TreePath = () => {
 };
 
 export default TreePath;
+

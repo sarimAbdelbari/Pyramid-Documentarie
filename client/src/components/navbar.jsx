@@ -1,5 +1,4 @@
-import React ,{ useContext } from 'react'
-import LogoPngChiali from "../assets/images/LogoPngChiali.png";
+import { useContext } from 'react'
 import { BsMoonStarsFill } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import { ThemeContext } from './themeProvider';

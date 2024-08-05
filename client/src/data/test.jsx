@@ -1,4 +1,3 @@
-import React from 'react';
 import Tree from 'react-d3-tree';
 import Navbar from '../../../components/navbar';
 import SideBar from '../../../components/sidebar';

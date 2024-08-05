@@ -1,16 +1,13 @@
-import React from 'react'
 import Navbar from '../../components/navbar';
 import SideBar from '../../components/sidebar';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Users from './Users/users';
 
 const Dashboard = () => {
 
     return (
-        <> 
+        <div className='min-h-screen bg-mainLightBg dark:bg-secDarkBg '>  
         <Navbar/>
         <SideBar/>
-        </>
+        </div>
     )
 }
 

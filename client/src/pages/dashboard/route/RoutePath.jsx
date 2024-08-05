@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../../components/navbar";
 import SideBar from "../../../components/sidebar";
 import { DataGrid } from "@mui/x-data-grid";
@@ -14,9 +14,6 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-
 import { sucess_toast, error_toast } from "../../../utils/toastNotification";
 
 const Routes = () => {
@@ -168,6 +165,19 @@ const Routes = () => {
     setOpenConfirmDialog(false);
   };
 
+  const handleDataChange = (category, field, value) => {
+    setSelectedRoute(prev => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        [category]: {
+          ...prev.data[category],
+          [field]: value
+        }
+      }
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-mainLightBg dark:bg-mainDarkBg text-textLightColor ">
       <Navbar />
@@ -236,103 +246,111 @@ const Routes = () => {
       </div>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle className="bg-secLightBg  text-textLightColor ">
-          {dialogType === "create" ? "Create Route" : "Update Route"}
+        {dialogType === "create" ? "Create Route" : "Update Route"}
         </DialogTitle>
-        <DialogContent className="bg-secLightBg  ">
+        <DialogContent className="bg-secLightBg text-textLightColor">
           <TextField
-            autoFocus
-            margin="dense"
             label="Path"
-            type="text"
             fullWidth
+            margin="normal"
             value={selectedRoute.path}
             onChange={(e) =>
               setSelectedRoute({ ...selectedRoute, path: e.target.value })
             }
-            className="bg-secLightBg "
-            InputLabelProps={{ style: { color: "inherit" } }}
-            InputProps={{ style: { color: "inherit" } }}
           />
-          <Select
-            id="View"
+          <TextField
             label="View"
-            value={selectedRoute.view || "View2"}
+            fullWidth
+            margin="normal"
+            value={selectedRoute.view}
             onChange={(e) =>
               setSelectedRoute({ ...selectedRoute, view: e.target.value })
             }
-            placeholder="view"
-            className="bg-secLightBg w-full "
-          >
-            <MenuItem value="View2">View2</MenuItem>
-            <MenuItem value="View3">View3</MenuItem>
-            <MenuItem value="View4">View4</MenuItem>
-            <MenuItem value="View5">View5</MenuItem>
-          </Select>
-          {/* <TextField
-            margin="dense"
-            label="View"
-            type="text"
-            fullWidth
-            value={selectedRoute.view}
-            onChange={(e) => setSelectedRoute({ ...selectedRoute, view: e.target.value })}
-            className='bg-secLightBg '
-            InputLabelProps={{ style: { color: 'inherit' } }}
-            InputProps={{ style: { color: 'inherit' } }}
-          /> */}
-          <TextField
-            margin="dense"
-            label="Data"
-            type="text"
-            fullWidth
-            value={JSON.stringify(selectedRoute.data, null, 2)}
-            onChange={(e) =>
-              setSelectedRoute({
-                ...selectedRoute,
-                data: JSON.parse(e.target.value),
-              })
-            }
-            className="bg-secLightBg "
-            InputLabelProps={{ style: { color: "inherit" } }}
-            InputProps={{ style: { color: "inherit" } }}
-            multiline
-            rows={6}
           />
-        </DialogContent>
-        <DialogActions className="bg-secLightBg">
+          {Object.keys(selectedRoute.data).map((category) => (
+            <div key={category} className="mb-4">
+              <h4 className="font-semibold text-textSecLightColor">{category}</h4>
+              <TextField
+                label="Image"
+                fullWidth
+                margin="normal"
+                value={selectedRoute.data[category].Image}
+                onChange={(e) =>
+                  handleDataChange(category, 'Image', e.target.value)
+                }
+              />
+              <TextField
+                label="Title"
+                fullWidth
+                margin="normal"
+                value={selectedRoute.data[category].Title}
+                onChange={(e) =>
+                  handleDataChange(category, 'Title', e.target.value)
+                }
+              />
+              <TextField
+                label="Link"
+                fullWidth
+                margin="normal"
+                value={selectedRoute.data[category].Link}
+                onChange={(e) =>
+                  handleDataChange(category, 'Link', e.target.value)
+                }
+              />
+              <TextField
+                label="Details"
+                fullWidth
+                margin="normal"
+                value={selectedRoute.data[category].Details}
+                onChange={(e) =>
+                  handleDataChange(category, 'Details', e.target.value)
+                }
+              />
+              <TextField
+                label="Permission"
+                fullWidth
+                margin="normal"
+                value={selectedRoute.data[category].Permission}
+                onChange={(e) =>
+                  handleDataChange(category, 'Permission', e.target.value)
+                }
+              />
+            </div>
+          ))}
           <Button
-            onClick={handleCloseDialog}
-            className="text-primary hover:text-darkPrimary"
+            variant="contained"
+            color="primary"
+            onClick={() => setSelectedRoute(prev => ({
+              ...prev,
+              data: { ...prev.data, [`data Name ${Object.keys(prev.data).length + 1}`]: { Image: "", Title: "", Link: "", Details: "", Permission: "" } }
+            }))}
           >
+            Add Category
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
             Cancel
           </Button>
           <Button
-            onClick={
-              dialogType === "create" ? handleCreateRoute : handleUpdateRoute
-            }
-            className="text-primary hover:text-darkPrimary"
+            onClick={dialogType === "create" ? handleCreateRoute : handleUpdateRoute}
+            color="primary"
           >
             {dialogType === "create" ? "Create" : "Update"}
           </Button>
         </DialogActions>
       </Dialog>
+
       <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
-        <DialogTitle className="bg-secLightBg text-textLightColor">
-          Confirm Delete
-        </DialogTitle>
+        <DialogTitle className="bg-secLightBg text-textLightColor">Confirm Deletion</DialogTitle>
         <DialogContent className="bg-secLightBg text-textLightColor">
           Are you sure you want to delete this route?
         </DialogContent>
-        <DialogActions className="bg-secLightBg">
-          <Button
-            onClick={handleCloseConfirmDialog}
-            className="text-primary hover:text-darkPrimary"
-          >
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleDeleteRoute}
-            className="text-primary hover:text-darkPrimary"
-          >
+          <Button onClick={handleDeleteRoute} color="secondary">
             Delete
           </Button>
         </DialogActions>
@@ -342,3 +360,4 @@ const Routes = () => {
 };
 
 export default Routes;
+

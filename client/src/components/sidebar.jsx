@@ -1,6 +1,5 @@
-import React from 'react';
 import { useStateContext } from '../contexts/ContextProvider';
-import LogoPngChiali from "../assets/images/LogoPngChiali.png";
+import LogoPngChiali from "../../public/assets/images/LogoPngChiali.png";
 import { Link } from 'react-router-dom';
 import { GrUpdate } from "react-icons/gr";
 import { MdOutlineLocalPolice } from "react-icons/md";

@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "../components/navbar";
 
 // Sample data, you can also import it from a JSON file

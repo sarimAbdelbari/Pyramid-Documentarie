@@ -1,6 +1,7 @@
 const Route = require('../models/RouteModel');
 
 // Create a new route
+
 const createRoute = async (req, res) => {
   try {
     const { path, view, data } = req.body;
@@ -19,6 +20,7 @@ const createRoute = async (req, res) => {
 };
 
 // Get all routes
+
 const getRoutes = async (req, res) => {
   try {
     const routes = await Route.find();

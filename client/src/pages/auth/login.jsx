@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
-import LogoPngChiali from "../../assets/images/LogoPngChiali.png";
-import signUpImg from '../../assets/images/signUpImg.jpg';
+import { useState } from 'react'
+import LogoPngChiali from "../../../public/assets/images/LogoPngChiali.png";
+import signUpImg from '../../../public/assets/images/signUpImg.jpg';
 import axios from 'axios';
 import {useStateContext} from '../../contexts/ContextProvider';
 import LoadingScreen from "../../utils/loadingScreen"
-import {sucess_toast, error_toast, warn_toast, info_toast} from "../../utils/toastNotification"
+import {sucess_toast, warn_toast} from "../../utils/toastNotification"
 // import { useAuthContext } from '../../hooks/useAuthContext';
 const Login = () => {
 
   const {isLoading, setIsLoading} = useStateContext();
-  const [error, setError] = useState(null);
 
   // const { dispatch } = useAuthContext();
 
@@ -22,17 +21,10 @@ const Login = () => {
     event.preventDefault();
     try {
       setIsLoading(true);
-      // const result = await axios.post("http://localhost:5000/api/auth/login", values);
+
       const result = await axios.post('http://localhost:5000/api/auth/login', values, {
         withCredentials: true // Important: Include credentials in request
       });
-      //  this is the old way where i didnt intigrate cookie Parser gpt here show me 
-
-    //  const token = result.data.token;
-
-    //  const json = await result.json()
-
-    //  localStorage.setItem('user', JSON.stringify(json))
 
 
      sucess_toast("Login successful");
@@ -54,7 +46,6 @@ const Login = () => {
     
   }
 
-  
   return (
     <>
      {isLoading && <LoadingScreen />}

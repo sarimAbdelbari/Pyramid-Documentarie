@@ -1,16 +1,8 @@
-import React from 'react';
 import Navbar from '../components/navbar';
-import { mainPageImages, View4Data } from '../data/mainImages';
+import {View4Data } from '../data/mainImages';
 import { Link } from 'react-router-dom';
 
-import SME from "../assets/images/SME.png";
-import SMQ from "../assets/images/SMQ.png";
-import SMSST from "../assets/images/SMSST.png";
-import Certification from "../assets/images/Certification.png";
-import imageHolder from "../assets/images/imageHolder.jpg";
-import Dispostions from "../assets/images/Dispostions.png";
-import Formations from "../assets/images/Formations.png";
-import NormsISo from "../assets/images/normsISo.png";
+
 
 const View4 = () => {
   return (

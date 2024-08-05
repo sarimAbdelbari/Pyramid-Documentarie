@@ -6,7 +6,7 @@ import View4 from "./views/view4";
 import View2 from "./views/view2";
 import View3 from "./views/view3";
 import View5 from "./views/view5";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/protectedRoute";
@@ -18,7 +18,7 @@ import CreateRoute from "./pages/dashboard/route/CreateRoute";
 import useRouteAuth from "./hooks/useRoutesContext";
 import LoadingScreen from "./utils/loadingScreen";
 
-function App() {
+const App = () => {
   const routeData = useRouteAuth();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function App() {
   const Theme = localStorage.getItem('theme');
 
   return (
-    <div className="bg-mainLightBg dark:bg-secDarkBg min-h-screen">
+    <div className="bg-mainLightBg dark:bg-secDarkBg">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -42,7 +42,6 @@ function App() {
         theme={Theme}
       />
 
-      <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           {Object.values(routeData).map((route, index) => (
@@ -59,7 +58,7 @@ function App() {
               }
             />
           ))}
-          <Route
+           <Route
             path="/"
             element={
               <ProtectedRoute>
@@ -67,14 +66,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/view5"
-            element={
-              <ProtectedRoute>
-                <View4 />
-              </ProtectedRoute>
-            }
-          /> */}
             <Route
               path="/dashboard"
               element={
@@ -89,7 +80,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+         <Route
             path="/dashboard/route/table"
             element={
               <ProtectedRoute>
@@ -114,9 +105,8 @@ function App() {
             }
           />
         </Routes>
-      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;
