@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-  Image: { type: String, required: true },
+  Image: { type: String },
   Title: { type: String, required: true },
-  Link: { type: String, required: true },
-  Details: { type: String, required: true },
+  name: { type: String, required: true },
+  Link: { type: String, required: true , unique: true  },
+  Details: { type: String },
   Permission: { type: String, enum: ['show', 'no-show', 'read', 'download'], required: true }
 });
 

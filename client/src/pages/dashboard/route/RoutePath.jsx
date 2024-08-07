@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Navbar from "../../../components/navbar";
-import SideBar from "../../../components/sidebar";
+import Navbar from "@/components/navbar";
+import SideBar from "@/components/sidebar";
 import { DataGrid } from "@mui/x-data-grid";
-import { useStateContext } from "../../../contexts/ContextProvider";
+import { useStateContext } from "@/contexts/ContextProvider";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -14,7 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { sucess_toast, error_toast } from "../../../utils/toastNotification";
+import { sucess_toast, error_toast } from "@/utils/toastNotification";
 
 const Routes = () => {
   const { isLoading } = useStateContext();
@@ -35,7 +35,7 @@ const Routes = () => {
 
   const fetchRoutes = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/route");
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
       const dataWithId = data.map((route, index) => ({
         ...route,
         id: index + 1,
@@ -54,7 +54,7 @@ const Routes = () => {
   const handleCreateRoute = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/route",
+        `${import.meta.env.VITE_API_URL}/route`,
         selectedRoute
       );
       sucess_toast("Route created successfully");
@@ -76,7 +76,7 @@ const Routes = () => {
   const handleUpdateRoute = async () => {
     try {
       const { data } = await axios.patch(
-        `http://localhost:5000/api/route/${selectedRoute._id}`,
+        `${import.meta.env.VITE_API_URL}/route/${selectedRoute._id}`,
         selectedRoute
       );
       sucess_toast("Route updated successfully");
@@ -99,7 +99,7 @@ const Routes = () => {
   const handleDeleteRoute = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/route/${routeToDelete._id}`
+        `${import.meta.env.VITE_API_URL}/route/${routeToDelete._id}`
       );
       sucess_toast("Route deleted successfully");
       setRoutesData((prevState) =>
@@ -119,6 +119,7 @@ const Routes = () => {
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
     { field: "path", headerName: "Path", flex: 2 },
+    { field: "data.Link", headerName: "Sub Path", flex: 2 },
     { field: "view", headerName: "View", flex: 2 },
     { field: "createdAt", headerName: "Created At", flex: 1 },
     { field: "updatedAt", headerName: "Updated At", flex: 1 },
@@ -253,7 +254,8 @@ const Routes = () => {
             label="Path"
             fullWidth
             margin="normal"
-            value={selectedRoute.path}
+            value={selectedRoute.path || "/"}
+            placeholder="/"
             onChange={(e) =>
               setSelectedRoute({ ...selectedRoute, path: e.target.value })
             }
@@ -292,7 +294,8 @@ const Routes = () => {
                 label="Link"
                 fullWidth
                 margin="normal"
-                value={selectedRoute.data[category].Link}
+                value={selectedRoute.data[category].Link || "/"}
+                placeholder="/"
                 onChange={(e) =>
                   handleDataChange(category, 'Link', e.target.value)
                 }

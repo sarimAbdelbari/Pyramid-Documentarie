@@ -7,9 +7,9 @@ const View2 = ({ data }) => {
     if (src.startsWith('http')) {
       return src;
     }
+    
     return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
   };
-
 
   return (
     <div className='min-h-screen mx-7 px-7 bg-mainLightBg dark:bg-mainDarkBg'>

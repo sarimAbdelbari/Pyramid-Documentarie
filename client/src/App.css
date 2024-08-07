@@ -40,12 +40,40 @@
 
 .custom-tooltip {
   position: absolute;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 5px;
+  padding: 8px;
+  background-color: #f2f2f2;
+  color: black;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
   pointer-events: none;
-  z-index: 1000;
-  white-space: nowrap;
+  transform: translate(-50%, -100%);
+}
+
+.tree-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Node styles */
+.node circle {
+  stroke: #333;
+  stroke-width: 2px;
+  cursor: pointer;
+}
+
+.node text {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.react-flow__renderer {
+  overflow: visible;
 }
