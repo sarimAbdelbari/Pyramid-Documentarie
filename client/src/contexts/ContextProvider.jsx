@@ -6,11 +6,15 @@ const StateContext = createContext();
 const initialState = {
   visible: false,
   isLoading: false,
+  showNew: false,
+  reloadfetch: false,
 };
 
 export const ContextProvider = ({ children }) => {
   const [visible, setVisible] = useState(initialState.visible);
   const [isLoading, setIsLoading] = useState(initialState.isLoading);
+  const [showNew, setShowNew] = useState(initialState.showNew);
+  const [reloadfetch, setReloadfetch] = useState(initialState.reloadfetch);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [routeData, setRouteData] = useState({});
   const [dropdowns, setDropdowns] = useState({
@@ -24,6 +28,10 @@ export const ContextProvider = ({ children }) => {
   return (
     <StateContext.Provider
       value={{
+        reloadfetch,
+        setReloadfetch,
+        showNew,
+        setShowNew,
         dropdowns,
         setDropdowns,
         routeData,

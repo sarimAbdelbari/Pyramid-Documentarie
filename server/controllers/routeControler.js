@@ -73,10 +73,48 @@ const deleteRouteById = async (req, res) => {
   }
 };
 
+
+// Delete a specific item from the data field by item _id
+const deleteItemById = async (req, res) => {
+  try {
+    const { routeId, itemId } = req.params;
+
+    // Find the route by its ID
+    const route = await Route.findById(routeId);
+    if (!route) {
+      return res.status(404).json({ message: 'Route not found' });
+    }
+
+    // Find the item in the data map and delete it
+    const data = route.data;
+    let itemFound = false;
+
+    data.forEach((value, key) => {
+      if (value._id.toString() === itemId) {
+        data.delete(key);
+        itemFound = true;
+      }
+    });
+
+    if (!itemFound) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    // Save the updated route
+    await route.save();
+    res.status(200).json({ message: 'Item deleted', data: route.data });
+  } catch (error) {
+    res.status(500).json({ message: `Error deleting item: ${error.message}` });
+  }
+};
+
 module.exports = {
   createRoute,
   getRoutes,
   getRouteById,
   updateRouteById,
-  deleteRouteById
+  deleteRouteById,
+  deleteItemById 
 };
+
+
