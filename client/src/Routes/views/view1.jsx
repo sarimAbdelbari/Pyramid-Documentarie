@@ -1,7 +1,7 @@
-import Navbar from '../components/navbar';
+import Navbar from '../../components/navbar';
 import { Link } from 'react-router-dom';
 
-const Main = ({data}) => {
+const Main = ({route}) => {
 
   const getImageSrc = (src) => {
     if (src.startsWith('http')) {
@@ -16,7 +16,7 @@ const Main = ({data}) => {
       <Navbar />
       <div className='pt-28'>
         <div className='grid grid-flow-row grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-12 place-content-center'>
-          {Object.values(data).map((data, index) => (
+          {Object.values(route.data).map((data, index) => (
             <div key={index} className='flex justify-center items-center flex-col m-4'>
               <Link
                 to={data.Link}

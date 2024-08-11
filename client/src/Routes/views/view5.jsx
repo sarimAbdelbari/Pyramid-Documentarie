@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar";
+import Navbar from "../../components/navbar";
 
 // Sample data, you can also import it from a JSON file
 const data = [
@@ -93,6 +93,26 @@ const data = [
     date: "2024-07-05"
   },
   {
+    link: "https://www.iso.org/standard/44556.html",
+    author: "ISO Working Group 2",
+    date: "2024-07-05"
+  },
+  {
+    link: "https://www.iso.org/standard/44556.html",
+    author: "ISO Working Group 2",
+    date: "2024-07-05"
+  },
+  {
+    link: "https://www.iso.org/standard/44556.html",
+    author: "ISO Working Group 2",
+    date: "2024-07-05"
+  },
+  {
+    link: "https://www.iso.org/standard/44556.html",
+    author: "ISO Working Group 2",
+    date: "2024-07-05"
+  },
+  {
     link: "https://www.iso.org/standard/78901.html",
     author: "ISO Secretariat",
     date: "2024-03-30"
@@ -103,8 +123,8 @@ const View5 = () => {
   return (
     <div className="min-h-screen mx-7 bg-mainLightBg dark:bg-mainDarkBg">
       <Navbar />
-      <div className="pt-28">
-        <div className="text-center my-11 flex justify-center flex-col gap-7 items-center">
+      <div className="py-28 h-full">
+        <div className="text-center my-11 flex justify-center flex-col gap-14 items-center">
           <h1 className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             ISO Surface-Mount Technology <br /> (SMT) Standards
           </h1>
@@ -115,14 +135,14 @@ const View5 = () => {
             meeting international quality benchmarks.
           </p>
         </div>
-        <div className="flex justify-center items-center flex-col gap-7 w-full ">
+        <div className="mt-24 flex justify-center items-center flex-col gap-7 w-full ">
           <div className="w-full  lg:w-3/4 bg-white dark:bg-secDarkBg rounded-xl shadow-lg dark:shadow-md p-4">
             <div className="grid grid-cols-3 gap-4 text-textLightColor dark:text-textDarkColor">
-              <div className="font-semibold text-start p-2">Link</div>
-              <div className="font-semibold text-center p-2">Author</div>
-              <div className="font-semibold text-end p-2">Date</div>
+              <div className="font-semibold text-xl text-start py-4 px-4">Link</div>
+              <div className="font-semibold text-xl text-center py-4 px-4">Author</div>
+              <div className="font-semibold text-xl text-end py-4 px-4">Date</div>
             </div>
-            <div  className="h-96 overflow-y-scroll">
+            <div  className="h-96 overflow-y-scroll" >
 
             {data.map((item, index) => (
               <div

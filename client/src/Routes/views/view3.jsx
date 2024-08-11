@@ -1,6 +1,8 @@
-import Navbar from "../components/navbar";
+import Navbar from "../../components/navbar";
 
 const View3 = () => {
+
+  
   return (
     <div className="min-h-screen mx-7 bg-mainLightBg dark:bg-mainDarkBg">
       <Navbar />
@@ -16,9 +18,9 @@ const View3 = () => {
             meeting international quality benchmarks.
           </p>
         </div>
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {Array(4).fill(0).map((_, index) => (
+        <div className="mt-11 flex justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
+            {Array(8).fill(0).map((_, index) => (
               <div
                 key={index}
                 className="border dark:shadow-md dark:shadow-white text-textLightColor dark:text-textDarkColor p-4 rounded-xl shadow-xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg duration-300 ease-in-out"

@@ -1,11 +1,11 @@
 import "./App.css";
 import { useEffect } from "react";
 import Login from "./pages/auth/login";
-import View1 from "./views/view1";
-import View4 from "./views/view4";
-import View2 from "./views/view2";
-import View3 from "./views/view3";
-import View5 from "./views/view5";
+import View1 from "./Routes/views/view1";
+import View4 from "./Routes/views/view4";
+import View2 from "./Routes/views/view2";
+import View3 from "./Routes/views/view3";
+import View5 from "./Routes/views/view5";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,12 +17,15 @@ import TreePath from "./pages/dashboard/route/TreePath";
 import CreateRoute from "./pages/dashboard/route/CreateRoute";
 import useRouteAuth from "./hooks/useRoutesContext";
 import LoadingScreen from "./utils/loadingScreen";
-import PdfReader from "./views/pdfReader";
-import TableView from "./views/tableView";
+import PdfReader from "./Routes/readers/pdfReader";
+import TableView from "./Routes/readers/tableView";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const App = () => {
   const routeData = useRouteAuth();
 
+  console.log(routeData);
   useEffect(() => {
      <LoadingScreen />;
   }, [routeData]);
@@ -46,24 +49,27 @@ const App = () => {
         pauseOnHover
         theme={Theme}
       />
-
+      {routeData && 
+      <>
         <Routes>
           <Route path="/login" element={<Login />} />
           {Object.values(routeData).map((route, index) => (
-            <Route
-              key={index}
-              path={`/${route?.path}`}
-              element={
-                <ProtectedRoute>
-                  {route.view === 'View1' && <View1 data={route.data} />}
-                  {route.view === 'View2' && <View2 data={route.data} />}
-                  {route.view === 'View3' && <View3 data={route.data} />}
-                  {route.view === 'View4' && <View4 data={route.data} />}
-                  {route.view === 'View5' && <View5 data={route.data} />}
-                </ProtectedRoute>
-              }
-            />
-          ))}
+           <Route
+               key={index}
+               path={`${route?.path}`}
+               element={
+                 <ProtectedRoute>
+                   {route.view === 'View1' && <View1 route={{route}} />}
+                   {route.view === 'View2' && <View2 route={{route}} />}
+                   {route.view === 'View3' && <View3 route={{route}} />}
+                   {route.view === 'View4' && <View4 route={{route}} />}
+                   {route.view === 'View5' && <View5 route={{route}} />}
+                 </ProtectedRoute>
+               }
+             />
+           ))}
+            {/* <Route path="/View5" element={<View5 />} /> */}
+
            <Route
             path="/pdf"
             element={
@@ -121,6 +127,7 @@ const App = () => {
             }
           />
         </Routes>
+      </>}
     </div>
   );
 };

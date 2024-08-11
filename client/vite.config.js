@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: ['swiper'],
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

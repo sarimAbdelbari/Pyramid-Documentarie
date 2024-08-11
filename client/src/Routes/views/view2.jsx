@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import Navbar from '../components/navbar';
+import Navbar from '../../components/navbar';
 import { Link } from 'react-router-dom';
 
-const View2 = ({ data }) => {
+const View2 = ({ route }) => {
   const getImageSrc = (src) => {
     if (src.startsWith('http')) {
       return src;
@@ -16,7 +16,7 @@ const View2 = ({ data }) => {
       <Navbar />
       <div className='pt-28'>
         <div className='flex justify-center items-start flex-col'>
-          {Object.values(data).map((item, index) => (
+          {Object.values(route.data).map((item, index) => (
             <div
               key={index}
               className='w-full px-5 lg:w-7/12 dark:shadow-md dark:shadow-white flex justify-center items-center flex-col my-4 shadow-2xl py-12 rounded-3xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'

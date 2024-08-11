@@ -5,8 +5,7 @@ const {
   getRoutes,
   getRouteById,
   updateRouteById,
-  deleteRouteById,
-  deleteItemById
+  deleteRouteById
 } = require('../controllers/routeControler');
 
 // Route CRUD endpoints
@@ -15,6 +14,5 @@ router.get('/', getRoutes);
 router.get('/:id', getRouteById);
 router.patch('/:id', updateRouteById);
 router.delete('/:id', deleteRouteById);
-router.delete('/:routeId/data/:itemId', deleteItemById);
 
 module.exports = router;
