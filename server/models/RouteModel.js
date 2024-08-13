@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const routeSchema = new mongoose.Schema({
-  parrentPath: {type: String, required: true, unique: true },
+  parrentPath: { type: String, required: true },
   title: { type: String, required: true },
-  path: { type: String, required: true, unique: true },
+  path: { type: String, required: true, unique: true }, // Only `path` is unique
   view: { type: String, required: true },
   image: { type: String, required: true },
   details: { type: String, required: true },

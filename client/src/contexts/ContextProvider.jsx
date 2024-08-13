@@ -16,6 +16,7 @@ export const ContextProvider = ({ children }) => {
   const [showNew, setShowNew] = useState(initialState.showNew);
   const [reloadfetch, setReloadfetch] = useState(initialState.reloadfetch);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [selectedRoute, setSelectedRoute] = useState({});
   const [routeData, setRouteData] = useState({});
   const [dropdowns, setDropdowns] = useState({
     favorites: false,
@@ -42,6 +43,8 @@ export const ContextProvider = ({ children }) => {
         setIsLoading, 
         visible,
         setVisible,
+        selectedRoute,
+        setSelectedRoute
       }}
     >
       {children}

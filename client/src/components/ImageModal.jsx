@@ -4,6 +4,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 const ImageModal = ({ open, onClose, imgSrc }) => {
+ 
+  console.log("hello",imgSrc)
   return (
     <Dialog open={open} onClose={onClose} fullScreen >
       <DialogContent className="bg-[#0000003f] flex justify-center items-center">

@@ -1,7 +1,9 @@
 
 const PdfReader = () => {
   return (
-    <div>PdfReader</div>
+    <div className="py-28">
+      PdfReader
+    </div>
   )
 }
 

@@ -1,5 +1,10 @@
-import * as React from 'react';
+import {useState} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+
+
+const TableView = ()=> {
+
+const [isLoading , setIsLoading] = useState(false)
 
 // Sample data
 const rows = [
@@ -15,35 +20,46 @@ const rows = [
 // Define columns
 const columns = [
 
-  { field: 'id', headerName: 'ID',flex:1 },
-  { field: 'Domaine', headerName: 'Domaine',flex:1 },
-  { field: 'NatureDuTexte', headerName: 'NatureDuTexte',flex:1 },
-  { field: 'Numéro', headerName: 'Numéro',flex:1 },
-  { field: 'Date', headerName: 'Date',flex:1 },
+  { field: 'id', headerName: 'ID',width:50 },
+  { field: 'Domaine', headerName: 'Domaine',flex:3 },
+  { field: 'NatureDuTexte', headerName: 'NatureDuTexte',flex:2 },
+  { field: 'Numéro', headerName: 'Numéro',flex:2 },
+  { field: 'Date', headerName: 'Date',flex:2 },
   { field: 'Contenu', headerName: 'Contenu', flex:3 , minWidth: 300 },
 ];
 
-export default function TableView() {
-  // Group rows by 'col1' and keep unique rows
-  const groupedRows = React.useMemo(() => {
-    const groups = rows.reduce((acc, row) => {
-      if (!acc[row.col1]) {
-        acc[row.col1] = [];
-      }
-      acc[row.col1].push({ ...row, id: `${row.col1}-${row.id}` }); // Modify ID to keep unique
-      return acc;
-    }, {});
-
-    // Flatten the grouped rows
-    return Object.values(groups).flat();              
-  }, [rows]);
 
   return (
-    <div style={{ height: 800, width: '100%' }}>
+  <>
+      <div className="py-28">
+       <div className="text-center my-11 flex justify-center flex-col gap-7 items-center">
+          <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
+            {/* {route.route.title} */}
+            Title
+          </h1>
+          <p className="text-md lg:text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
+          {/* {route.route.details} */}
+          Details on what you have to say
+          </p>
+        </div>
+    </div>
+    <div className='w-full flex justify-center items-center'>
+
+    <div className='mt-11' style={{ height: 800, width: '80%' }}>
       <DataGrid
-        rows={groupedRows}
+        rows={rows}
         columns={columns}
+        autoHeight
+        
+        loading={isLoading}
+        disableSelectionOnClick
+        disableColumnMenu
       />
     </div>
+    </div>
+  </>
   );
-}
+} 
+
+ 
+export default TableView;

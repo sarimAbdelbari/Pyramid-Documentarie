@@ -1,134 +1,40 @@
 import Navbar from "../../components/navbar";
+import { Link } from 'react-router-dom';
+import {useState , useEffect} from 'react';
+import axios from 'axios';
 
-// Sample data, you can also import it from a JSON file
-const data = [
-  {
-    link: "https://www.iso.org/standard/12345.html",
-    author: "ISO/IEC JTC 1",
-    date: "2024-05-15"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/67890.html",
-    author: "ISO Technical Committee 1",
-    date: "2023-11-22"
-  },
-  {
-    link: "https://www.iso.org/standard/11223.html",
-    author: "ISO Standards Board",
-    date: "2024-01-10"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/44556.html",
-    author: "ISO Working Group 2",
-    date: "2024-07-05"
-  },
-  {
-    link: "https://www.iso.org/standard/78901.html",
-    author: "ISO Secretariat",
-    date: "2024-03-30"
-  }
-];
+const View5 = (route) => {
 
-const View5 = () => {
+  const [data, setData] = useState([]);
+  console.log("route id",route.route._id);
+  
+  useEffect(() => {
+    const getViewData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`);
+
+        console.log("response.data",response.data);
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getViewData();
+  },[route])
+
+
+
   return (
-    <div className="min-h-screen mx-7 bg-mainLightBg dark:bg-mainDarkBg">
-      <Navbar />
+<>
       <div className="py-28 h-full">
         <div className="text-center my-11 flex justify-center flex-col gap-14 items-center">
           <h1 className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             ISO Surface-Mount Technology <br /> (SMT) Standards
+             {route.route.title}
           </h1>
           <p className="text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
+             {route.route.details}
             ISO standards for SMT ensure quality and consistency in electronics
             manufacturing, covering design, assembly, and testing. They help
             reduce defects and enhance product performance, essential for
@@ -149,18 +55,24 @@ const View5 = () => {
                 key={index}
                 className={`grid grid-cols-3 gap-4 p-3 rounded-md ${index % 2 === 0 ? 'bg-mainLightBg dark:bg-mainDarkBg' : 'bg-secLightBg dark:bg-secDarkBg'} transition duration-300 ease-in-out`}
               >
-                <a href={item.link} className="text-blue-500 dark:text-blue-400 hover:underline">
-                  {item.link}
-                </a>
-                <p className="text-center text-textLightColor dark:text-textDarkColor ">{item.author}</p>
-                <p className="text-end text-textLightColor dark:text-textDarkColor ">{item.date}</p>
+                <Link to={item.path} className="text-blue-500 dark:text-blue-400 hover:underline">
+                  {item.path}
+                </Link>
+                {/* <Link to={item.path} className="text-blue-500 dark:text-blue-400 hover:underline">
+                // ? File Name
+                {item.path}
+                </Link> */}
+                <p className="text-center text-textLightColor dark:text-textDarkColor ">{item.title}</p>
+                <p className="text-end text-textLightColor dark:text-textDarkColor ">{item.path}</p>
+                {/* <p className="text-center text-textLightColor dark:text-textDarkColor ">{item.author}</p>
+                <p className="text-end text-textLightColor dark:text-textDarkColor ">{item.date}</p> */}
               </div>
             ))}
           </div>
             </div>
         </div>
       </div>
-    </div>
+  </>
   );
 };
 

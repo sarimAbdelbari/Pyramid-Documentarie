@@ -1,8 +1,28 @@
-import PropTypes from 'prop-types';
-import Navbar from '../../components/navbar';
 import { Link } from 'react-router-dom';
+import {useState , useEffect} from 'react';
+import axios from 'axios';
+const View2 = ( route ) => {
 
-const View2 = ({ route }) => {
+
+  const [data, setData] = useState([]);
+  console.log("route id",route.route._id);
+  
+  useEffect(() => {
+    const getViewData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`);
+
+        console.log("response.data",response.data);
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getViewData();
+  },[route])
+
+
   const getImageSrc = (src) => {
     if (src.startsWith('http')) {
       return src;
@@ -12,35 +32,34 @@ const View2 = ({ route }) => {
   };
 
   return (
-    <div className='min-h-screen mx-7 px-7 bg-mainLightBg dark:bg-mainDarkBg'>
-      <Navbar />
-      <div className='pt-28'>
+    <>
+      <div className='py-28'>
         <div className='flex justify-center items-start flex-col'>
-          {Object.values(route.data).map((item, index) => (
+          {Object.values(data).map((item, index) => (
             <div
               key={index}
               className='w-full px-5 lg:w-7/12 dark:shadow-md dark:shadow-white flex justify-center items-center flex-col my-4 shadow-2xl py-12 rounded-3xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
             >
               <Link
-                to={item.Link}
+                to={item.path}
                 className='flex gap-7 flex-row-reverse justify-around items-center w-full'
               >
                 <div className='mx-9'>
-                  {item.Title && (
+                  {item.title && (
                     <p className='my-2 text-center text-2xl text-textLightColor dark:text-textDarkColor font-semibold'>
-                      {item.Title}
+                      {item.title}
                     </p>
                   )}
-                  {item.Details && (
+                  {item.details && (
                     <p className='text-center text-lg text-textLightColor dark:text-textDarkColor font-medium'>
-                      {item.Details}
+                      {item.details}
                     </p>
                   )}
                 </div>
-                {item.Image && (
+                {item.image && (
                   <img
-                    src={getImageSrc(item.Image)}
-                    alt={item.Title}
+                    src={getImageSrc(item.image)}
+                    alt={item.title}
                     className='object-contain h-32 md:h-48 pointer-events-none rounded-xl'
                   />
                 )}
@@ -49,12 +68,9 @@ const View2 = ({ route }) => {
           ))}
         </div>
       </div>
-    </div>
+  </>
   );
 };
 
-View2.propTypes = {
-  data: PropTypes.object.isRequired,
-};
 
 export default View2;

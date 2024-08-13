@@ -15,6 +15,7 @@ import { sucess_toast, error_toast } from "@/utils/toastNotification";
 
 const Routes = () => {
   const { isLoading } = useStateContext();
+  // const { isLoading ,setSelectedRoute , selectedRoute } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState("");
@@ -63,12 +64,16 @@ const Routes = () => {
         `${import.meta.env.VITE_API_URL}/route`,
         dataRoute
       );
+
       sucess_toast("Route created successfully");
+
       setRoutesData((prevState) => [
         ...prevState,
         { ...data, id: prevState.length + 1 },
       ]);
+
       handleCloseDialog();
+      
     } catch (error) {
       error_toast(
         `Failed to create route: ${
@@ -81,16 +86,20 @@ const Routes = () => {
 
   const handleUpdateRoute = async () => {
     try {
+
       const { data } = await axios.patch(
         `${import.meta.env.VITE_API_URL}/route/${selectedRoute._id}`,
         selectedRoute
       );
+
       sucess_toast("Route updated successfully");
+
       setRoutesData((prevState) =>
         prevState.map((route) =>
           route._id === data._id ? { ...data, id: route.id } : route
         )
       );
+
       handleCloseDialog();
     } catch (error) {
       error_toast(

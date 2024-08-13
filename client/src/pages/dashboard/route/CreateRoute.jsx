@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import Slider from "react-slick";
 import { error_toast } from "@/utils/toastNotification";
-import ImageModal from "@/components/ImageModal"; // Import the ImageModal component
+import ImageModal from "@/components/ImageModal"; 
 
 const CreateRoute = ({
   open,
@@ -23,8 +23,12 @@ const CreateRoute = ({
   const [routes, setRoutes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  const [imagePreview, setImagePreview] = useState(null); // State to hold the image preview
-
+  const [dataFields, setDataFields] = useState(
+    selectedRoute.data 
+      ? Object.entries(selectedRoute.data).map(([key, value]) => ({ key, value })) 
+      : [{ key: "", value: "" }]
+  );
+  
   useEffect(() => {
     fetchRoutes();
   }, []);
@@ -56,21 +60,74 @@ const CreateRoute = ({
   };
 
   const handleImageClick = (imgSrc) => {
-    setSelectedImage(imgSrc); // Set selected image source
+    setSelectedImage(imgSrc);
     setModalOpen(true);
   };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileName = file.name; // Get the file name with extension
+      const fileName = file.name;
       setSelectedRoute({ ...selectedRoute, image: fileName });
-
-      // Create a preview URL for the selected image
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
     }
   };
+
+  const getImageSrc = (src) => {
+    if (src.startsWith('http')) {
+      return src;
+    }
+    return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+  };
+
+  const handleFieldChange = (index, event) => {
+    const { name, value } = event.target;
+    setDataFields((prevFields) => {
+      const updatedFields = [...prevFields];
+      updatedFields[index][name] = value;
+  
+      const dataObject = updatedFields.reduce((obj, item) => {
+        if (item.key && item.value) {
+          obj[item.key] = item.value;
+        }
+        return obj;
+      }, {});
+  
+      setSelectedRoute(prev => ({ ...prev, data: dataObject }));
+      return updatedFields;
+    });
+  };
+  
+  const handleAddField = () => {
+    setDataFields([...dataFields, { key: "", value: "" }]);
+  };
+
+  const handleRemoveField = (index) => {
+    setDataFields((prevFields) => {
+      const updatedFields = prevFields.filter((_, i) => i !== index);
+      
+      const dataObject = updatedFields.reduce((obj, item) => {
+        if (item.key && item.value) {
+          obj[item.key] = item.value;
+        }
+        return obj;
+      }, {});
+  
+      setSelectedRoute(prev => ({ ...prev, data: dataObject }));
+      return updatedFields;
+    });
+  };
+
+
+  const onCreateOrUpdate = async () => {
+    try {
+
+      await handleCreateOrUpdate(selectedRoute);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
   const settings = {
     dots: true,
@@ -86,40 +143,34 @@ const CreateRoute = ({
         open={open}
         onClose={handleClose}
         maxWidth="md"
-        sx={{ "& .MuiDialog-paper": { width: "80%", overflowX: "hidden" } }} // Custom width
+        sx={{ "& .MuiDialog-paper": { width: "80%", overflowX: "hidden" } }}
       >
-        <DialogTitle className="bg-secLightBg text-textLightColor ">
+        <DialogTitle className="bg-secLightBg text-textLightColor">
           {dialogType === "create" ? "Create Route" : "Update Route"}
         </DialogTitle>
-        <DialogContent 
-          className="bg-secLightBg"
-          sx={{ overflow: 'hidden' }} // Remove the scrollbar
-        >
+        <DialogContent className="bg-secLightBg" sx={{ overflowY: "scroll" }}>
           <Select
-  id="route-select"
-  label="Parent Path"
-  value={selectedRoute.parrentPath || "/" }
-  onChange={(e) =>
-    setSelectedRoute({
-      ...selectedRoute,
-      parrentPath: e.target.value,
-    })
-  }
-  placeholder="Parent Path"
-  fullWidth
-  className="bg-secLightBg w-full"
-  InputLabelProps={{ style: { color: "inherit" } }}
-  InputProps={{ style: { color: "inherit" } }}
->
-  {routes.map((route) => (
-    <MenuItem
-      key={route._id}
-      value={route._id}
-    >
-      {route.path}
-    </MenuItem>
-  ))}
-</Select>
+            id="route-select"
+            label="Parent Path"
+            value={selectedRoute?.parrentPath}
+            onChange={(e) =>
+              setSelectedRoute({
+                ...selectedRoute,
+                parrentPath: e.target.value,
+              })
+            }
+            placeholder="Parent Path"
+            fullWidth
+            className="bg-secLightBg w-full"
+            inputlabelprops={{ style: { color: "inherit" } }}
+            inputprops={{ style: { color: "inherit" } }}
+          >
+            {routes.map((route) => (
+              <MenuItem key={route._id} value={route._id}>
+                {route.path}
+              </MenuItem>
+            ))}
+          </Select>
 
           <TextField
             autoFocus
@@ -132,8 +183,8 @@ const CreateRoute = ({
               setSelectedRoute({ ...selectedRoute, title: e.target.value })
             }
             className="bg-secLightBg"
-            InputLabelProps={{ style: { color: "inherit" } }}
-            InputProps={{ style: { color: "inherit" } }}
+            inputlabelprops={{ style: { color: "inherit" } }}
+            inputprops={{ style: { color: "inherit" } }}
           />
           <TextField
             margin="dense"
@@ -145,8 +196,8 @@ const CreateRoute = ({
               setSelectedRoute({ ...selectedRoute, path: e.target.value })
             }
             className="bg-secLightBg"
-            InputLabelProps={{ style: { color: "inherit" } }}
-            InputProps={{ style: { color: "inherit" } }}
+            inputlabelprops={{ style: { color: "inherit" } }}
+            inputprops={{ style: { color: "inherit" } }}
           />
           <div className="m-4">
             <Slider {...settings}>
@@ -154,7 +205,7 @@ const CreateRoute = ({
                 <div
                   key={option.name}
                   onClick={() =>
-                    handleViewSelection(option.name, option.imgSrc)
+                    handleViewSelection(option.name)
                   }
                   className={`cursor-pointer p-2 rounded-lg border-2 ${
                     selectedRoute.view === option.name
@@ -182,11 +233,11 @@ const CreateRoute = ({
             className="mb-4 bg-secLightBg text-textLightColor"
           />
           {/* Display the image preview */}
-          {imagePreview && (
+          {selectedRoute.image && (
             <div className="mb-4">
               <p className="text-textLightColor">Selected Image Preview:</p>
               <img
-                src={imagePreview}
+                src={getImageSrc(selectedRoute.image)}
                 alt="Image Preview"
                 className="h-32 object-cover rounded-lg mt-2"
               />
@@ -202,30 +253,67 @@ const CreateRoute = ({
               setSelectedRoute({ ...selectedRoute, details: e.target.value })
             }
             className="bg-secLightBg"
-            InputLabelProps={{ style: { color: "inherit" } }}
-            InputProps={{ style: { color: "inherit" } }}
+            inputlabelprops={{ style: { color: "inherit" } }}
+            inputprops={{ style: { color: "inherit" } }}
           />
+
+          {/* data fields */}
+
+          <div className="my-4">
+            <h4 className="text-textLightColor mb-2">Data Fields</h4>
+            {dataFields.map((field, index) => (
+              <div key={index} className="flex items-center gap-2 mb-2">
+                <TextField
+                  label="Field Name"
+                  name="key"
+                  value={field.key}
+                  onChange={(e) => handleFieldChange(index, e)}
+                  className="bg-secLightBg"
+                  InputLabelProps={{ style: { color: "inherit" } }}
+                  InputProps={{ style: { color: "inherit" } }}
+                  fullWidth
+                />
+                <TextField
+                  label="Field Value"
+                  name="value"
+                  value={field.value}
+                  onChange={(e) => handleFieldChange(index, e)}
+                  className="bg-secLightBg"
+                  InputLabelProps={{ style: { color: "inherit" } }}
+                  InputProps={{ style: { color: "inherit" } }}
+                  fullWidth
+                />
+                <Button
+                  onClick={() => handleRemoveField(index)}
+                  className="text-primary hover:text-darkPrimary"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button onClick={handleAddField} className="text-primary hover:text-darkPrimary">
+              Add Field
+            </Button>
+          </div>
         </DialogContent>
         <DialogActions className="bg-secLightBg">
-          <Button
-            onClick={handleClose}
-            className="text-primary hover:text-darkPrimary"
-          >
+          <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleCreateOrUpdate}
-            className="text-primary hover:text-darkPrimary"
-          >
+          <Button onClick={onCreateOrUpdate} color="primary">
             {dialogType === "create" ? "Create" : "Update"}
           </Button>
         </DialogActions>
       </Dialog>
-      <ImageModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        imgSrc={selectedImage}
-      />
+
+      {/* Image Modal */}
+      {modalOpen && (
+        <ImageModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          imgSrc={selectedImage}
+        />
+      )}
     </>
   );
 };

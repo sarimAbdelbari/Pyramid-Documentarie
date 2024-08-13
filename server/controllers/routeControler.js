@@ -44,6 +44,32 @@ const getRouteById = async (req, res) => {
   }
 };
 
+const getRouteByParrentId = async (req, res) => {
+  try {
+    const { parrentPath } = req.params;
+
+    // Validate if parrentPath is provided
+    if (!parrentPath) {
+      return res.status(400).json({ message: 'parrentPath parameter is required' });
+    }
+
+    // Find all routes with the specified parrentPath
+    const routes = await Route.find({ parrentPath });
+
+    // Check if any routes are found
+    if (routes.length === 0) {
+      return res.status(204).json({ message: 'No routes found with the provided parrentPath' });
+    }
+
+    // Return the found routes
+    res.status(200).json(routes);
+  } catch (error) {
+    res.status(500).json({ message: `Error fetching routes: ${error.message}` });
+  }
+};
+
+
+
 // Update a route by ID
 const updateRouteById = async (req, res) => {
   try {
@@ -80,6 +106,7 @@ module.exports = {
   createRoute,
   getRoutes,
   getRouteById,
+  getRouteByParrentId,
   updateRouteById,
   deleteRouteById
 };

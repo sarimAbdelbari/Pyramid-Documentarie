@@ -18,7 +18,7 @@ export default function SideBar() {
     };
 
     return (
-        <div className={`fixed inset-0 z-50 shadow-2xl dark:shadow-lg dark:shadow-white transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'}`}>
+        <div className={`fixed inset-0 z-40 shadow-2xl dark:shadow-lg dark:shadow-white transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'}`}>
         <div className="flex relative flex-row-reverse ">
         <div className={`w-full bg-[#0e0e0e4d] transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'} `} onClick={() => setVisible(false)}></div>
         <div className="w-3/5 lg:w-1/3  flex flex-col text-textlightColor dark:text-textDarkColor bg-mainLightBg  dark:bg-mainDarkBg h-screen   shadow-2xl dark:shadow-lg dark:shadow-white"> {/* Change min-h-screen to h-full and add overflow-y-auto */}

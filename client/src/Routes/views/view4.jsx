@@ -1,33 +1,19 @@
-import Navbar from '@/components/navbar';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import axios from 'axios';
-import { useEffect} from 'react';
+import { useEffect ,useState} from 'react';
 import LoadingScreen from '@/utils/loadingScreen';
 
-const View4 = ({ route }) => {
+const View4 = ( route ) => {
 
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   
   
-
-  console.log("Enter the View 4 Here is the route",route); 
-
-  const getImageSrc = (src) => {
-    if (src.startsWith('http')) {
-      return src;
-    }
-    console.log(`${import.meta.env.VITE_PUBLIC_URL1}/${src}`);
-    return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
-  };
- 
   useEffect(() => {
     const getViewData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route`, {
-          params: { parrentPathId: route._id }
-        });
-        console.log(response.data);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`);
+
+        setData(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -35,17 +21,23 @@ const View4 = ({ route }) => {
 
     getViewData();
   },[route])
+  
+  const getImageSrc = (src) => {
+    if (src.startsWith('http')) {
+      return src;
+    }
+    return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+  };
 
   // ? this  : public/assets/images/Finance.png
   // ? other : public/assets/images/Finance.png
 
   return (
-    <div className='min-h-screen px-7 bg-mainLightBg dark:bg-mainDarkBg'>
-      <Navbar />
-      {route ? (
-        <div className='pt-28'>
+<>
+      {data ? (
+        <div className='py-28'>
         <div className="grid grid-flow-row grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-12 place-content-center">
-          {Object.values(route).map((data, index) => (
+          {Object.values(data).map((data, index) => (
           {/* ? Here You Put Data Instad {Object.values(data).map((data, index) => ( */},
             <div
               key={index}
@@ -81,11 +73,9 @@ const View4 = ({ route }) => {
       </div>
       ) : <LoadingScreen/>}
       
-    </div>
+      </>
   );
 };
 
-View4.propTypes = {
-  data: PropTypes.object.isRequired,
-};
+
 export default View4;

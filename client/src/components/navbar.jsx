@@ -16,7 +16,7 @@ const Navbar = () => {
   const { setVisible } = useStateContext()
  
   return (
-    <div className='fixed top-0 left-0 z-40 w-full  shadow-xl dark:shadow-md dark:shadow-white py-2 dark:bg-mainDarkBg bg-mainLightBg' >
+    <div className='fixed top-0 left-0 z-30 w-full  shadow-xl dark:shadow-md dark:shadow-white py-2 dark:bg-mainDarkBg bg-mainLightBg' >
       <div className='p-3 mx-7 flex justify-between items-center gap-7'>
         <img src={LogoPngChiali} className='w-14' alt='LogoPngChiali' onClick={() => setVisible(true)}/>
           {/* <RiMenuFold2Fill  className='text-4xl hover:text-white font-bold text-textlightColor dark:text-textDarkColor  cursor-pointer' onClick={() => setVisible(true)}/> */}

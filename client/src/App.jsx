@@ -21,22 +21,22 @@ import PdfReader from "./Routes/readers/pdfReader";
 import TableView from "./Routes/readers/tableView";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Navbar from '@/components/navbar';
 
 const App = () => {
+
   const routeData = useRouteAuth();
 
-  console.log(routeData);
+
   useEffect(() => {
      <LoadingScreen />;
   }, [routeData]);
 
   const Theme = localStorage.getItem('theme');
 
-  // const pdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-  // const title = 'Title of PDF';
 
   return (
-    <div className="bg-mainLightBg dark:bg-secDarkBg">
+    <div className="min-h-screen px-4 bg-mainLightBg dark:bg-secDarkBg">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -49,25 +49,28 @@ const App = () => {
         pauseOnHover
         theme={Theme}
       />
+
+      <Navbar />
+
       {routeData && 
       <>
         <Routes>
           <Route path="/login" element={<Login />} />
           {Object.values(routeData).map((route, index) => (
-           <Route
+<>
+            <Route
                key={index}
                path={`${route?.path}`}
                element={
                  <ProtectedRoute>
-                   {route.view === 'View1' && <View1 route={{route}} />}
-                   {route.view === 'View2' && <View2 route={{route}} />}
-                   {route.view === 'View3' && <View3 route={{route}} />}
-                   {route.view === 'View4' && <View4 route={{route}} />}
-                   {route.view === 'View5' && <View5 route={{route}} />}
+                   {route.view === 'View1' && <View1 route={route} />}
+                   {route.view === 'View2' && <View2 route={route} />}
+                   {route.view === 'View3' && <View3 route={route} />}
+                   {route.view === 'View4' && <View4 route={route} />}
+                   {route.view === 'View5' && <View5 route={route} />}
                  </ProtectedRoute>
                }
              />
-           ))}
             {/* <Route path="/View5" element={<View5 />} /> */}
 
            <Route
@@ -88,6 +91,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          
             <Route
               path="/dashboard"
               element={
@@ -117,7 +121,7 @@ const App = () => {
                 <TreePath />
               </ProtectedRoute>
             }
-          />
+            />
           <Route
             path="/dashboard/route/create"
             element={
@@ -126,8 +130,12 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+                   
+</>
+          ))}
         </Routes>
       </>}
+
     </div>
   );
 };
