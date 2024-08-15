@@ -5,7 +5,6 @@ const View2 = ( route ) => {
 
 
   const [data, setData] = useState([]);
-  console.log("route id",route.route._id);
   
   useEffect(() => {
     const getViewData = async () => {

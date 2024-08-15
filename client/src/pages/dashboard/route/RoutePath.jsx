@@ -9,31 +9,20 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import CreateRoute from "./CreateRoute"; // Import the new component
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
+import CreateRoute from "./CreateRoute";
 
 const Routes = () => {
-  const { isLoading } = useStateContext();
-  // const { isLoading ,setSelectedRoute , selectedRoute } = useStateContext();
+  const { isLoading , showNew , setShowNew ,reloadfetch } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState("");
-  const [selectedRoute, setSelectedRoute] = useState({
-    parrentPath:"",
-    title:"",
-    path: "",
-    view: "",
-    image: "",
-    details: "",
-    data : {},
-  });
+  const [selectedRoute, setSelectedRoute] = useState("");
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [routeToDelete, setRouteToDelete] = useState(null);
 
   useEffect(() => {
     fetchRoutes();
-  }, []);
+  }, [reloadfetch]);
 
   const fetchRoutes = async () => {
     try {
@@ -53,63 +42,7 @@ const Routes = () => {
     }
   };
 
-  const handleCreateRoute = async () => {
-    try {
-       
-      const  dataParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${selectedRoute.parrentPath}`);
-      
-      const dataRoute = {...selectedRoute , path: `${dataParrent.data.path}${selectedRoute.path}`}
-
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/route`,
-        dataRoute
-      );
-
-      sucess_toast("Route created successfully");
-
-      setRoutesData((prevState) => [
-        ...prevState,
-        { ...data, id: prevState.length + 1 },
-      ]);
-
-      handleCloseDialog();
-      
-    } catch (error) {
-      error_toast(
-        `Failed to create route: ${
-          error.response ? error.response.data.message : error.message
-        }`
-      );
-      console.error(error);
-    }
-  };
-
-  const handleUpdateRoute = async () => {
-    try {
-
-      const { data } = await axios.patch(
-        `${import.meta.env.VITE_API_URL}/route/${selectedRoute._id}`,
-        selectedRoute
-      );
-
-      sucess_toast("Route updated successfully");
-
-      setRoutesData((prevState) =>
-        prevState.map((route) =>
-          route._id === data._id ? { ...data, id: route.id } : route
-        )
-      );
-
-      handleCloseDialog();
-    } catch (error) {
-      error_toast(
-        `Failed to create route: ${
-          error.response ? error.response.data.message : error.message
-        }`
-      );
-      console.error(error);
-    }
-  };
+  
 
   const handleDeleteRoute = async () => {
     try {
@@ -140,6 +73,7 @@ const Routes = () => {
     setOpenConfirmDialog(false);
     setRouteToDelete(null);
   };
+
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
     { field: "path", headerName: "Path", flex: 2 },
@@ -155,7 +89,7 @@ const Routes = () => {
       renderCell: (params) => (
         <>
           <IconButton
-            onClick={() => handleOpenDialog("update", params.row)}
+            onClick={() => handleOpenDialog(params.row._id)}
             className="text-primary hover:text-darkPrimary transition-colors duration-300"
           >
             <EditIcon />
@@ -172,26 +106,14 @@ const Routes = () => {
     },
   ];
 
-  const handleOpenDialog = (type, route = null) => {
-    setDialogType(type);
-    setSelectedRoute(
-      route || {
-        parrentPath:"",
-        title:"",
-        path: "",
-        view: "",
-        image: "",
-        details: "",
-        data:{},
-      }
-    );
-    setOpenDialog(true);
+  const handleOpenDialog = (id) => {
+    setSelectedRoute(id);
+    setShowNew(true);
   };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedRoute({});
-  };
+  const OpenDialog = () =>{
+    setSelectedRoute("");
+    setShowNew(true);
+  }
 
   return (
     <div className="flex flex-col flex-grow h-screen">
@@ -206,7 +128,7 @@ const Routes = () => {
             <Button
               variant="contained"
               startIcon={<AddIcon />}
-              onClick={() => handleOpenDialog("create")}
+              onClick={() =>  OpenDialog()}
               className="bg-primary hover:bg-darkPrimary transition-colors duration-300"
             >
               Add Route
@@ -220,21 +142,15 @@ const Routes = () => {
               autoHeight
               loading={isLoading}
               disableSelectionOnClick
-              disableColumnMenu
             />
           </div>
-          {openDialog && 
-          <CreateRoute
-            open={openDialog}
-            handleClose={handleCloseDialog}
-            dialogType={dialogType}
-            selectedRoute={selectedRoute}
-            setSelectedRoute={setSelectedRoute}
-            handleCreateOrUpdate={
-              dialogType === "create" ? handleCreateRoute : handleUpdateRoute
-            }
-          />
-          }
+
+          {/* Create Route Dialog */}
+           {showNew && 
+            <CreateRoute
+              routeId={selectedRoute}
+            />
+          } 
         </div>
       </div>
       

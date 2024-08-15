@@ -22,11 +22,14 @@ import TableView from "./Routes/readers/tableView";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Navbar from '@/components/navbar';
-
+import useAuth from "./hooks/useAuthContext";
 const App = () => {
 
+  
   const routeData = useRouteAuth();
 
+
+  const isAuthenticated  = useAuth();
 
   useEffect(() => {
      <LoadingScreen />;
@@ -36,7 +39,7 @@ const App = () => {
 
 
   return (
-    <div className="min-h-screen px-4 bg-mainLightBg dark:bg-secDarkBg">
+    <div className="min-h-screen  bg-mainLightBg dark:bg-secDarkBg">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -50,14 +53,12 @@ const App = () => {
         theme={Theme}
       />
 
+     {isAuthenticated ? (<>
       <Navbar />
-
-      {routeData && 
-      <>
+      {routeData.length ? (
         <Routes>
-          <Route path="/login" element={<Login />} />
           {Object.values(routeData).map((route, index) => (
-<>
+            
             <Route
                key={index}
                path={`${route?.path}`}
@@ -68,10 +69,12 @@ const App = () => {
                    {route.view === 'View3' && <View3 route={route} />}
                    {route.view === 'View4' && <View4 route={route} />}
                    {route.view === 'View5' && <View5 route={route} />}
+                   {route.view === 'TableView' && <TableView route={route} />}
                  </ProtectedRoute>
                }
              />
-            {/* <Route path="/View5" element={<View5 />} /> */}
+
+          ))}
 
            <Route
             path="/pdf"
@@ -81,17 +84,7 @@ const App = () => {
                  {/* <PdfReader pdfUrl={pdfUrl} title={title} /> */}
               </ProtectedRoute>
             }
-          />
-           <Route
-            path="/TableView"
-            element={
-              <ProtectedRoute>
-                 <TableView />
-                 {/* <PdfReader pdfUrl={pdfUrl} title={title} /> */}
-              </ProtectedRoute>
-            }
-          />
-          
+          />       
             <Route
               path="/dashboard"
               element={
@@ -129,12 +122,16 @@ const App = () => {
                 <CreateRoute />
               </ProtectedRoute>
             }
-          />
-                   
-</>
-          ))}
-        </Routes>
-      </>}
+          />       
+        </Routes>) : (
+          <LoadingScreen/>
+        )}
+     </>) : (<>
+     <Routes>
+      <Route path="/" element={<Login />} />
+      </Routes></>)}
+
+      
 
     </div>
   );

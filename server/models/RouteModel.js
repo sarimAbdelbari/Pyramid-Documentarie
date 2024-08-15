@@ -7,6 +7,7 @@ const routeSchema = new mongoose.Schema({
   view: { type: String, required: true },
   image: { type: String, required: true },
   details: { type: String, required: true },
+  file: { type: String },
   data: { type: Object },
 }, { timestamps: true });
 

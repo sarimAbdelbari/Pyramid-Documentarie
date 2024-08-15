@@ -1,12 +1,10 @@
-import Navbar from "../../components/navbar";
 import { Link } from 'react-router-dom';
 import {useState , useEffect} from 'react';
 import axios from 'axios';
 
-const View5 = (route) => {
+const View5 = ({route}) => {
 
   const [data, setData] = useState([]);
-  console.log("route id",route.route._id);
   
   useEffect(() => {
     const getViewData = async () => {
@@ -31,10 +29,10 @@ const View5 = (route) => {
         <div className="text-center my-11 flex justify-center flex-col gap-14 items-center">
           <h1 className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             ISO Surface-Mount Technology <br /> (SMT) Standards
-             {route.route.title}
+             {route.title}
           </h1>
           <p className="text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
-             {route.route.details}
+             {route.details}
             ISO standards for SMT ensure quality and consistency in electronics
             manufacturing, covering design, assembly, and testing. They help
             reduce defects and enhance product performance, essential for

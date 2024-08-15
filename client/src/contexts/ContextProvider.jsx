@@ -8,6 +8,7 @@ const initialState = {
   isLoading: false,
   showNew: false,
   reloadfetch: false,
+  authenticated: false,
 };
 
 export const ContextProvider = ({ children }) => {
@@ -15,7 +16,7 @@ export const ContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(initialState.isLoading);
   const [showNew, setShowNew] = useState(initialState.showNew);
   const [reloadfetch, setReloadfetch] = useState(initialState.reloadfetch);
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(initialState.authenticated);
   const [selectedRoute, setSelectedRoute] = useState({});
   const [routeData, setRouteData] = useState({});
   const [dropdowns, setDropdowns] = useState({
