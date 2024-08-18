@@ -14,7 +14,7 @@ import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CreateRoute from "./CreateRoute";
 
 const Routes = () => {
-  const { isLoading , showNew , setShowNew ,reloadfetch } = useStateContext();
+  const { isLoading , showNew , setShowNew ,reloadfetch ,setReloadfetch } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState("");
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -22,7 +22,8 @@ const Routes = () => {
 
   useEffect(() => {
     fetchRoutes();
-  }, [reloadfetch]);
+    setReloadfetch(false);
+  }, [reloadfetch ,setReloadfetch]);
 
   const fetchRoutes = async () => {
     try {
@@ -80,12 +81,12 @@ const Routes = () => {
     { field: "view", headerName: "View", flex: 2 },
     { field: "image", headerName: "Image", flex: 2 },
     { field: "details", headerName: "Details", flex: 2 },
-    { field: "createdAt", headerName: "Created At", flex: 1 },
-    { field: "updatedAt", headerName: "Updated At", flex: 1 },
+    { field: "createdAt", headerName: "Created At", flex: 2 },
+    { field: "updatedAt", headerName: "Updated At", flex: 2 },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 2,
       renderCell: (params) => (
         <>
           <IconButton
@@ -122,9 +123,9 @@ const Routes = () => {
         <SideBar />
         <div className="flex-grow p-6 overflow-auto pt-28">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold text-primary">
+            <h3 className="text-3xl font-semibold text-primary">
               Routes Management
-            </h1>
+            </h3>
             <Button
               variant="contained"
               startIcon={<AddIcon />}

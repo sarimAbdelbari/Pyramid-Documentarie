@@ -9,10 +9,11 @@ const TableView = ({ route }) => {
   const fetchData = async () => {
     try{
       setIsLoading(true);
-      const col = Object.keys(route.data).map((key) => {
-        return { field: key, headerName: key, minWidth: 150, flex: 1 };
+
+      const col = Object.keys(route.data.tableCol).map((value) => {
+        return { field: value, headerName: value, minWidth: 150, flex: 1 };
       });
-  
+     
       setColumnsUi(col);
 
     } catch (error) {
@@ -30,13 +31,13 @@ const TableView = ({ route }) => {
 
   // Sample data
   const rows = [
-    { id: 1, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
-    { id: 2, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
-    { id: 3, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
-    { id: 4, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
-    { id: 5, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
-    { id: 6, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
-    { id: 7, Domaine: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 1, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 2, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 3, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 4, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 5, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 6, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
+    { id: 7, Domain: 'Protection des données à caractère personnel', NatureDuTexte: 'Loi', Numéro: 'N° 18-07', Date: '10/06/2018', Contenu: 'Relative à la protection des personnes physiques dans le traitement des données à caractère personnel.' },
   ];
 
   return (

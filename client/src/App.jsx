@@ -128,6 +128,7 @@ const App = () => {
         )}
      </>) : (<>
      <Routes>
+      {/* <Route path="/*"  element={<LoadingScreen />} /> */}
       <Route path="/" element={<Login />} />
       </Routes></>)}
 
