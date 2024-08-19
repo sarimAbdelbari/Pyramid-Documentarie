@@ -23,17 +23,21 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Navbar from '@/components/navbar';
 import useAuth from "./hooks/useAuthContext";
-const App = () => {
+const App =  () => {
 
   
-  const routeData = useRouteAuth();
+  const routeData =  useRouteAuth();
 
 
-  const isAuthenticated  = useAuth();
+  const isAuthenticated  =  useAuth();
 
   useEffect(() => {
      <LoadingScreen />;
   }, [routeData]);
+
+  useEffect(() => {
+     <LoadingScreen />;
+  }, [isAuthenticated]);
 
   const Theme = localStorage.getItem('theme');
 
@@ -128,8 +132,8 @@ const App = () => {
         )}
      </>) : (<>
      <Routes>
-      {/* <Route path="/*"  element={<LoadingScreen />} /> */}
-      <Route path="/" element={<Login />} />
+      <Route path="/*"  element={<Login />} />
+      {/* <Route path="/" element={<Login />} /> */}
       </Routes></>)}
 
       

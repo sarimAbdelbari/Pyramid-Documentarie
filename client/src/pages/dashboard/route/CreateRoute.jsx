@@ -66,10 +66,13 @@ const CreateRoute = ({ routeId }) => {
   };
 
   const getImageSrc = (src) => {
+
     if (src.startsWith('http')) {
       return src;
     }
+
     return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+    
   };
 
   const fetchRoutes = async () => {
@@ -86,7 +89,7 @@ const CreateRoute = ({ routeId }) => {
           value: dataWithParrent?.data?._id,
           label: dataWithParrent?.data?.path,
         });
-        setParrentData(dataWithParrent.data)
+      
 
         const dataFields = Object.entries(dataWithId?.data?.data.tableCol || {}).map(([tableCol, value]) => ({ tableCol, value }));
         setDataFields(dataFields);
@@ -243,11 +246,17 @@ const CreateRoute = ({ routeId }) => {
     }),
   };
 
-  const onChangeParrentPath = (selectedOption) => {
+  const parrentSData = async (id) =>{
+    const dataWithId = await axios.get(`${import.meta.env.VITE_API_URL}/route/${id}`);
+    setParrentData(dataWithId.data)
+  }
+
+  const onChangeParrentPath = async (selectedOption) => {
     setSelectedRoute({
       ...selectedRoute,
       parrentPath: selectedOption.value,
     });
+    await parrentSData(selectedOption.value);
     setSelectedParrent({
       value: selectedOption.value,
       label: selectedOption.label,
@@ -391,8 +400,31 @@ const CreateRoute = ({ routeId }) => {
               inputprops={{ style: { color: "inherit" } }}
             />
           </div>
+
+          {parrentData.view == "TableView" && 
+          <div className="my-4">
+              <h3 className="text-textLightColor">Table Rows</h3>
+            {parrentData.data.tableCol && Object.keys(parrentData.data.tableCol).map((key) => (
+              <>
+              <TextField
+                margin="dense"
+                label={`${key}`}
+                type="text"
+                fullWidth
+                // value={field.tableCol}
+                // onChange={(event) => handleFieldChange(index, event, "tableCol")}
+                className="bg-secLightBg"
+                InputLabelProps={{ style: { color: "inherit" } }}
+                InputProps={{ style: { color: "inherit" } }}
+              />                 
+              </>
+            ))}
+            </div>
+          }
+
           {selectedRoute.view == "TableView" && 
   <div className="my-4">
+    <h3 className="text-textLightColor"> Table Colums</h3>
     {dataFields.map((field, index) => (
       <div key={index} className="flex items-center space-x-4">
         <TextField
