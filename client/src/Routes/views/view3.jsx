@@ -38,12 +38,12 @@ const View3 = (route) => {
           <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             {route.route.title}
           </h1>
-          <p className="text-md lg:text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
+          <p className="text-sm lg:text-xl text-textLightColor dark:text-textDarkColor font-normal w-3/5 leading-relaxed">
           {route.route.details}
           </p>
         </div>
-        <div className="mt-11 flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
+        <div className="mt-11 mx-10 flex justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-7 place-content-center ">
             {/* ********************* */}
             {Object.values(data).map((item, index) => (
                <Link

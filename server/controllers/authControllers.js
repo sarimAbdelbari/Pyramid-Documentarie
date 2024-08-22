@@ -6,32 +6,51 @@ const createToken = (_id) => {
 };
 
 const loginUser = async (req, res) => {
-    const {email, password} = req.body
-  
+    const { email, password } = req.body;
+
     try {
-      const user = await User.login(email, password)
-  
-      // create a token
-      const token = createToken(user._id)
-  
-       // Set the token in a cookie
-       res.cookie('token', token, { 
-        httpOnly: true, 
-        maxAge: 24 * 60 * 60 * 1000 ,
-        secure: true,
-      });
+        const user = await User.login(email, password);
 
-
-      res.status(200).json({email, token})
+        // create a token
+        const token = createToken(user._id);
+// 
+        // Set the token in a cookie
+        res.cookie('token', token, { 
+            httpOnly: true, 
+            maxAge: 24 * 60 * 60 * 1000,
+            secure: true, 
+            sameSite: 'None' // Adjust based on your deployment
+        });
+        
+        res.status(200).json({ email, token , user});
     } catch (error) {
-      res.status(400).json({error: error.message})
+        res.status(400).json({ error: error.message });
     }
-  }
-  
-  module.exports = { loginUser }
-  // ? Haker so3odi 
-  // eyJhbGciOiJlUzl1NllslnR5cCl6lkpXVCJ9.eyJpZCl6ljElLCJpYXQlOjE3MjE4MDg4NzEslmV4cCl6MTcyMjY5NTl3MX0.j9v9pqe1pJVCfpzw8YB2qquKySOg6cdjQYCycyPd12Q
+}
 
+const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None' // Adjust based on your deployment
+        })
+
+
+        // console.log(res.getHeaders())
+
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to log out' });
+    }
+}
+
+module.exports = { loginUser, logoutUser };
+
+
+
+  
 // * signup user 
 
 // const signupUser = async (req, res) => {

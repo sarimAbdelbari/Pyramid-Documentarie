@@ -4,14 +4,14 @@ const Route = require('../models/RouteModel');
 
 const createRoute = async (req, res) => {
   try {
-    const {parrentPath ,title, path, view, image ,details ,data } = req.body;
+    const {parrentPath ,title, path, view, image ,file, expiredate ,details ,data } = req.body;
 
     const existingRoute = await Route.findOne({ path });
     if (existingRoute) {
       return res.status(400).json({ message: 'Route with this path already exists' });
     }
 
-    const newRoute = new Route({parrentPath, title, path, view, image , details ,data});
+    const newRoute = new Route({parrentPath, title, path, view, image ,file, expiredate , details ,data});
     await newRoute.save();
     res.status(201).json(newRoute);
   } catch (error) {
@@ -74,8 +74,8 @@ const getRouteByParrentId = async (req, res) => {
 const updateRouteById = async (req, res) => {
   try {
     const { id } = req.params;
-    const {parrentPath,title, path, view,  image , details ,data} = req.body;
-    const route = await Route.findByIdAndUpdate(id, {parrentPath , title, path, view,  image , details ,data }, { new: true });
+    const {parrentPath , title , path , view ,  image ,file, expiredate, details ,data} = req.body;
+    const route = await Route.findByIdAndUpdate(id, {parrentPath , title, path, view,  image ,file , expiredate, details ,data }, { new: true });
     if (!route) {
       return res.status(404).json({ message: 'Route not found' });
     }

@@ -12,6 +12,10 @@ import ImageModal from "@/components/ImageModal";
 import { useStateContext } from "@/contexts/ContextProvider";
 import LoadingScreen from "@/utils/loadingScreen";
 import Select from "react-select";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const CreateRoute = ({ routeId }) => {
   const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch } = useStateContext();
@@ -19,14 +23,17 @@ const CreateRoute = ({ routeId }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [dataFields, setDataFields] = useState([{ tableCol: "", value: "" }]);
+  const [dataRowFields, setDataRowFields] = useState([{}]);
   const [selectedRoute, setSelectedRoute] = useState({
     parrentPath: "",
     title: "",
     path: "",
     view: "",
     image: "",
+    file: "",
+    expiredate: new Date(),
     details: "",
-    data: { tableCol: {} },
+    data: { tableCol: {} , tableRow: {}},
   });
   const [selectedParrent, setSelectedParrent] = useState();
 
@@ -37,15 +44,16 @@ const CreateRoute = ({ routeId }) => {
     label: route.path,
   }));
 
+  
 
     const viewOptions = [
-    { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` },
-    { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` },
-    { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` },
-    { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` },
-    { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` },
-    { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` },
-    { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png` },
+    { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir1" },
+    { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` , titre:"Voir2"}, 
+    { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` , titre:"Voir3"}, 
+    { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir4" },
+    { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir5" },
+    { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
+    { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png` ,titre:"Lecteur PDF"},
   ];
 
   const handleViewSelection = (viewName) => {
@@ -59,11 +67,23 @@ const CreateRoute = ({ routeId }) => {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       const fileName = file.name;
       setSelectedRoute({ ...selectedRoute, image: fileName });
     }
   };
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+
+
+    if (file) {
+      const fileName = file.name;
+      setSelectedRoute({ ...selectedRoute, file: fileName });
+    }
+
+  }
+  console.log("selectedRoute",selectedRoute)
 
   const getImageSrc = (src) => {
 
@@ -82,7 +102,10 @@ const CreateRoute = ({ routeId }) => {
 
       if (routeId) {
         const dataWithId = await axios.get(`${import.meta.env.VITE_API_URL}/route/${routeId}`);
+
+
         setSelectedRoute(dataWithId?.data);
+ 
 
         const dataWithParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${dataWithId.data.parrentPath}`);
         setSelectedParrent({
@@ -90,13 +113,20 @@ const CreateRoute = ({ routeId }) => {
           label: dataWithParrent?.data?.path,
         });
       
+        setParrentData(dataWithParrent.data)
 
         const dataFields = Object.entries(dataWithId?.data?.data.tableCol || {}).map(([tableCol, value]) => ({ tableCol, value }));
         setDataFields(dataFields);
+
+        // const dataFieldsRow = Object.entries(dataWithId?.data?.data.tableCol || {}).map(([tableCol, value]) => ({ tableCol, value }));
+        // setDataFields(dataFields);
+
+        setDataRowFields(dataWithId?.data?.data.tableRow || []);
       }
 
+
     } catch (error) {
-      console.error(`Failed to fetch routes: ${error.response ? error.response.data.message : error.message}`);
+      console.error(`Impossible de récupérer les routes: ${error.response ? error.response.data.message : error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -108,23 +138,53 @@ const CreateRoute = ({ routeId }) => {
   
 
 
-  const handleFieldChange = (index, event, field) => {
+  const handleFieldTableChange = (index, event, field) => {
     const { value } = event.target;
     setDataFields((prevFields) => {
-      const updatedFields = [...prevFields];
-      updatedFields[index] = { ...updatedFields[index], [field]: value };
-  
-      const dataObject = updatedFields.reduce((obj, item) => {
-        if (item.tableCol) {
-          obj[item.tableCol] = item.value; // Column name as key, value as the content
-        }
-        return obj;
-      }, {});
-  
-      setSelectedRoute((prev) => ({ ...prev, data: { tableCol: dataObject } }));
-      return updatedFields;
+        const updatedFields = [...prevFields];
+        updatedFields[index] = { ...updatedFields[index], [field]: value };
+
+        const dataObject = updatedFields.reduce((obj, item) => {
+            if (item.tableCol) {
+                obj[item.tableCol] = item.value; // Column name as key, value as the content
+            }
+            return obj;
+        }, {});
+
+        setSelectedRoute((prev) => ({
+            ...prev,
+            data: { ...prev.data, tableCol: dataObject },
+        }));
+        return updatedFields;
     });
-  };
+};
+
+
+const handleFieldRowChange = (index, event, key) => {
+    const { value } = event.target;
+
+    setDataRowFields((prevFields) => {
+        const updatedFields = [...prevFields];
+        updatedFields[index] = { ...updatedFields[index], [key]: value };
+
+        // ! Rebuild data object from updated fields
+        // const dataObject = updatedFields.reduce((obj, item) => {
+        //     if (item.tableRow) {
+        //         obj[item.tableRow] = item.value; // Row name as key, value as the content
+        //     }
+        //     return obj;
+        // }, {});
+
+        setSelectedRoute((prev) => ({
+            ...prev,
+            data: { ...prev.data, tableRow: updatedFields },
+        }));
+
+
+        return updatedFields;
+    });
+};
+
   
 
   const handleRemoveField = (index) => {
@@ -157,15 +217,16 @@ const CreateRoute = ({ routeId }) => {
     try {
       const dataParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${selectedRoute.parrentPath}`);
       const dataRoute = { ...selectedRoute, path: `${dataParrent.data.path}${selectedRoute.path}` };
+
       await axios.post(`${import.meta.env.VITE_API_URL}/route`, dataRoute);
 
-      sucess_toast("Route created successfully");
-
+      sucess_toast("Route créé avec succès");
+      
       setSelectedRoute({});
       setShowNew(false);
       setReloadfetch(true);
     } catch (error) {
-      error_toast(`Failed to create route: ${error.response ? error.response.data.message : error.message}`);
+      error_toast(`Échec de la création de route: ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
     }
   };
@@ -173,13 +234,13 @@ const CreateRoute = ({ routeId }) => {
   const handleUpdateRoute = async () => {
     try {
       await axios.patch(`${import.meta.env.VITE_API_URL}/route/${selectedRoute._id}`, selectedRoute);
-      sucess_toast("Route updated successfully");
+      sucess_toast("Route mis à jour avec succès");
 
       setSelectedRoute({});
       setShowNew(false);
       setReloadfetch(true);
     } catch (error) {
-      error_toast(`Failed to update route: ${error.response ? error.response.data.message : error.message}`);
+      error_toast(`Échec de la mise à jour de route: ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
     }
   };
@@ -263,21 +324,31 @@ const CreateRoute = ({ routeId }) => {
     });
   };
 
+
+  const handleDateChange = (date) => {
+    setSelectedRoute({ ...selectedRoute, expiredate : date });
+
+  console.log("date", date)
+
+  };
+  
+
+
   return (
     <>
       {isLoading && <LoadingScreen />}
       <Dialog
         open={showNew}
         onClose={closeDialog}
-        maxWidth="md"
-        sx={{ "& .MuiDialog-paper": { width: "80%", overflowX: "hidden" } }}
+        maxWidth="lg"
+        sx={{ "& .MuiDialog-paper": { height: "100%", overflowX: "hidden" } }}
       >
         <DialogTitle className="bg-secLightBg text-textLightColor">
-          {routeId ? "Update Route" : "Create Route"}
+          {routeId ? "Mettre à jour Route" : "Créer un Route"}
         </DialogTitle>
         <DialogContent className="bg-secLightBg" sx={{ overflowY: "scroll" }}>
           <div className="my-4">
-            <p className="mb-2">Parrent Route</p>
+            <p className="mb-2">Parent Route</p>
             <Select
               value={selectedParrent}
               onChange={onChangeParrentPath}
@@ -292,7 +363,7 @@ const CreateRoute = ({ routeId }) => {
           <div className="my-4">
             <TextField
               margin="dense"
-              label="Path"
+              label="Chemin"
               type="text"
               fullWidth
               value={selectedRoute.path || "/"}
@@ -321,10 +392,10 @@ const CreateRoute = ({ routeId }) => {
                   <img
                     src={option.imgSrc}
                     alt={option.name}
-                    className="w-full h-32 object-cover rounded-lg"
+                    className="w-full h-32 object-contain rounded-lg"
                     onClick={() => handleImageClick(option.imgSrc)}
                   />
-                  <p className="text-center mt-2">{option.name}</p>
+                  <p className="text-center mt-2">{option.titre}</p>
                 </div>
               ))}
             </Slider>
@@ -343,7 +414,7 @@ const CreateRoute = ({ routeId }) => {
           <div className="my-4">
             <TextField
               margin="dense"
-              label="Title"
+              label="Titre"
               type="text"
               fullWidth
               value={selectedRoute.title || ""}
@@ -358,7 +429,8 @@ const CreateRoute = ({ routeId }) => {
 
           <div className="my-4">
               <Button variant="contained" component="label" color="primary" className=" bg-secLightBg text-textLightColor w-1/4  " >
-                Upload Image
+
+                 Image
 
                 <input accept="image/*"
                   id="contained-button-file"
@@ -370,12 +442,30 @@ const CreateRoute = ({ routeId }) => {
               </Button>
 
             </div>
+          
+          {selectedRoute.view == "PdfReader" &&
+            
+          <div className="my-4">
+              <Button variant="contained" component="label" color="primary" className=" bg-secLightBg text-textLightColor w-1/4  " >
+                Télécharger le fichier
+
+                <input accept="file/*"
+                  id="contained-button-file"
+                  type="file"
+                  onChange={handleFileUpload}
+                  className="my-4 bg-secLightBg text-textLightColor" hidden
+                  />
+
+              </Button>
+
+            </div>
+                }
             <div className="my-4">
 
               {/* Display the image preview */}
               {selectedRoute.image && (
                 <div className="mb-4">
-                  <p className="text-textLightColor">Selected Image Preview:</p>
+                  <p className="text-textLightColor">Aperçu de L&apos;image sélectionnée:</p>
                   <img
                     src={getImageSrc(selectedRoute.image)}
                     alt="Image Preview"
@@ -388,7 +478,7 @@ const CreateRoute = ({ routeId }) => {
           <div className="my-4">
             <TextField
               margin="dense"
-              label="Details"
+              label="Détails"
               type="text"
               fullWidth
               value={selectedRoute.details || ""}
@@ -400,28 +490,37 @@ const CreateRoute = ({ routeId }) => {
               inputprops={{ style: { color: "inherit" } }}
             />
           </div>
-
-          {parrentData.view == "TableView" && 
           <div className="my-4">
-              <h3 className="text-textLightColor">Table Rows</h3>
-            {parrentData.data.tableCol && Object.keys(parrentData.data.tableCol).map((key) => (
+          <DatePicker
+      selected={selectedRoute?.expiredate || ""}
+      onChange={handleDateChange}
+      dateFormat="yyyy/MM/dd"
+      placeholderText="Select a date"
+      className="p-2  border border-primary rounded-lg"
+    />
+         </div>
+          <div className="my-4">
+            {parrentData.data && 
+            <h3 className="text-textLightColor">Table Rows</h3>
+            }
+            {parrentData.data && Object.keys(parrentData.data.tableCol).map((key, index) => (
               <>
               <TextField
                 margin="dense"
                 label={`${key}`}
                 type="text"
                 fullWidth
-                // value={field.tableCol}
-                // onChange={(event) => handleFieldChange(index, event, "tableCol")}
+                value={selectedRoute?.data?.tableRow[index]?.[key] || ""}
+                onChange={(event) => handleFieldRowChange(index, event, key)}
                 className="bg-secLightBg"
-                InputLabelProps={{ style: { color: "inherit" } }}
-                InputProps={{ style: { color: "inherit" } }}
-              />                 
+                inputlabelprops={{ style: { color: "inherit" } }}
+                inputprops={{ style: { color: "inherit" } }}
+              />          
               </>
             ))}
             </div>
-          }
-
+          
+      
           {selectedRoute.view == "TableView" && 
   <div className="my-4">
     <h3 className="text-textLightColor"> Table Colums</h3>
@@ -429,11 +528,11 @@ const CreateRoute = ({ routeId }) => {
       <div key={index} className="flex items-center space-x-4">
         <TextField
           margin="dense"
-          label={`Column ${index + 1}`}
+          label={`Colonne ${index + 1}`}
           type="text"
           fullWidth
           value={field.tableCol}
-          onChange={(event) => handleFieldChange(index, event, "tableCol")}
+          onChange={(event) => handleFieldTableChange(index, event, "tableCol")}
           className="bg-secLightBg"
           InputLabelProps={{ style: { color: "inherit" } }}
           InputProps={{ style: { color: "inherit" } }}
@@ -443,7 +542,7 @@ const CreateRoute = ({ routeId }) => {
           color="secondary"
           className="bg-[#0056b3] hover:bg-[#004494] text-white rounded"
         >
-          Remove
+          Retirer
         </Button>
       </div>
     ))}
@@ -451,7 +550,7 @@ const CreateRoute = ({ routeId }) => {
       onClick={handleAddField}
       className="mt-4 bg-primary hover:bg-darkPrimary text-white rounded"
     >
-      Add Field
+      Ajouter un champ
     </Button>
   </div>
 }
@@ -463,13 +562,13 @@ const CreateRoute = ({ routeId }) => {
             onClick={closeDialog}
             className="bg-[#ff5c5c] hover:bg-[#e0471b] text-white rounded"
           >
-            Cancel
+            Annuler
           </Button>
           <Button
             onClick={routeId ? handleUpdateRoute : handleCreateRoute}
             className="bg-primary hover:bg-darkPrimary text-white rounded"
           >
-            {routeId ? "Update" : "Create"}
+            {routeId ? "Mise à jour" : "Créer"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -590,7 +689,6 @@ export default CreateRoute;
 
    
 // //      if(selectedRoute.view === "TableView"){
-// //        console.log("table view")
 // //      }
 // //      // setDataFields([{ key: "", value: "" }])
     
@@ -598,7 +696,6 @@ export default CreateRoute;
     
 // //     if(selectedRoute.view === "PdfReader"){
       
-// //       console.log("PdfReader view")
 // //     }
 
 
@@ -798,7 +895,6 @@ export default CreateRoute;
 //    };
 
 //    const onChangeParrentPath = (selectedOption) => {
-//      console.log("Selected option:", selectedOption);
 //      setSelectedRoute({
 //        ...selectedRoute,
 //        parrentPath: selectedOption.value,

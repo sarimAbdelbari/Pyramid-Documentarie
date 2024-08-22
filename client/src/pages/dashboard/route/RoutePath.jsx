@@ -19,11 +19,18 @@ const Routes = () => {
   const [selectedRoute, setSelectedRoute] = useState("");
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [routeToDelete, setRouteToDelete] = useState(null);
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
 
   useEffect(() => {
     fetchRoutes();
     setReloadfetch(false);
-  }, [reloadfetch ,setReloadfetch]);
+
+    const savedVisibilityModel = localStorage.getItem('columnVisibilityModelRoute');
+
+    if (savedVisibilityModel) {
+      setColumnVisibilityModel(JSON.parse(savedVisibilityModel));
+    }
+    }, [reloadfetch ,setReloadfetch]);
 
   const fetchRoutes = async () => {
     try {
@@ -35,7 +42,7 @@ const Routes = () => {
       setRoutesData(dataWithId);
     } catch (error) {
       error_toast(
-        `Failed to create route: ${
+        `Échec de la création de route: ${
           error.response ? error.response.data.message : error.message
         }`
       );
@@ -50,7 +57,7 @@ const Routes = () => {
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/route/${routeToDelete}`
       );      
-      sucess_toast("Route deleted successfully");
+      sucess_toast("Route a supprimé avec succès");
       setRoutesData((prevState) =>
         prevState.filter((route) => route._id !== routeToDelete)
       );
@@ -58,7 +65,7 @@ const Routes = () => {
       fetchRoutes();
     } catch (error) {
       error_toast(
-        `Failed to create route: ${
+        `Échec de la création de route: ${
           error.response ? error.response.data.message : error.message
         }`
       );
@@ -77,12 +84,13 @@ const Routes = () => {
 
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
-    { field: "path", headerName: "Path", flex: 2 },
+    { field: "path", headerName: "Chemin", flex: 2 },
     { field: "view", headerName: "View", flex: 2 },
+    { field: "title", headerName: "Titre", flex: 2 },
     { field: "image", headerName: "Image", flex: 2 },
-    { field: "details", headerName: "Details", flex: 2 },
-    { field: "createdAt", headerName: "Created At", flex: 2 },
-    { field: "updatedAt", headerName: "Updated At", flex: 2 },
+    { field: "details", headerName: "Détails", flex: 2 },
+    { field: "createdAt", headerName: "Créé à", flex: 2 },
+    { field: "updatedAt", headerName: "Mis à jour à", flex: 2 },
     {
       field: "actions",
       headerName: "Actions",
@@ -115,16 +123,20 @@ const Routes = () => {
     setSelectedRoute("");
     setShowNew(true);
   }
+  const handleColumnVisibilityChange = (newModel) => {
+    setColumnVisibilityModel(newModel);
+    localStorage.setItem('columnVisibilityModelRoute', JSON.stringify(newModel));
+  };
 
   return (
     <div className="flex flex-col flex-grow h-screen">
       <Navbar />
       <div className="flex flex-grow overflow-hidden">
         <SideBar />
-        <div className="flex-grow p-6 overflow-auto pt-28">
+        <div className="flex-grow p-6 overflow-auto  pt-36 mx-0 lg:mx-16">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-3xl font-semibold text-primary">
-              Routes Management
+              Gestion des Routes
             </h3>
             <Button
               variant="contained"
@@ -132,10 +144,10 @@ const Routes = () => {
               onClick={() =>  OpenDialog()}
               className="bg-primary hover:bg-darkPrimary transition-colors duration-300"
             >
-              Add Route
+              Ajouter Route
             </Button>
           </div>
-          <div className=" flex justify-center items-center">
+          <div className=" flex justify-center items-center ">
             <DataGrid
               rows={routesData}
               columns={columns}
@@ -143,6 +155,8 @@ const Routes = () => {
               autoHeight
               loading={isLoading}
               disableSelectionOnClick
+              columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={handleColumnVisibilityChange}
             />
           </div>
 
@@ -160,8 +174,8 @@ const Routes = () => {
         open={openConfirmDialog}
         handleClose={handleCloseConfirmDialog}
         handleConfirm={handleDeleteRoute}
-        title="Confirm Deletion"
-        message="Are you sure you want to delete this route? This action cannot be undone."
+        title="Confirmer la suppression"
+        message="Etes-vous sûr de vouloir supprimer cet route ? Cette action ne peut pas être annulée."
       />
     </div>
   );

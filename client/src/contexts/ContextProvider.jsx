@@ -26,6 +26,9 @@ export const ContextProvider = ({ children }) => {
     permissions: false,
     application: false,
   });
+  
+  
+  
 
   return (
     <StateContext.Provider

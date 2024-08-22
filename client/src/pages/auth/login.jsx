@@ -2,13 +2,13 @@ import { useState } from 'react'
 import LogoPngChiali from "../../../public/assets/images/LogoPngChiali.png";
 import signUpImg from '../../../public/assets/images/signUpImg.jpg';
 import axios from 'axios';
-import {useStateContext} from '../../contexts/ContextProvider';
-import LoadingScreen from "../../utils/loadingScreen"
-import {sucess_toast, warn_toast} from "../../utils/toastNotification"
+import {useStateContext} from '@/contexts/ContextProvider';
+import LoadingScreen from "@/utils/loadingScreen"
+import {sucess_toast, warn_toast} from "@/utils/toastNotification"
 // import { useAuthContext } from '../../hooks/useAuthContext';
 const Login = () => {
 
-  const {isLoading, setIsLoading} = useStateContext();
+  const {isLoading, setIsLoading } = useStateContext();
 
   // const { dispatch } = useAuthContext();
 
@@ -22,14 +22,15 @@ const Login = () => {
     try {
       setIsLoading(true);
 
-      const result = await axios.post('http://localhost:5000/api/auth/login', values, {
-        withCredentials: true // Important: Include credentials in request
-      });
+    const result = await axios.post('http://localhost:5000/api/auth/login', values, {
+      withCredentials: true // Important: Include credentials in request
+    });
+
+  
+    sucess_toast("Connexion réussie");
 
 
-     sucess_toast("Login successful");
-
-     console.log(result);
+    localStorage.setItem('userInfo', JSON.stringify(result.data.user));
 
     setTimeout(() => {
       window.location.href = "/";
@@ -38,7 +39,7 @@ const Login = () => {
    } catch (err) {
      setIsLoading(false);
      // TODO: handle the error to show an error message
-     console.log("Login error", err.response?.data?.error || "message Error" ,  err.message)
+     console.log("Erreur de connexion", err.response?.data?.error || "Message d'erreur" ,  err.message)
      warn_toast( err.response?.data?.error ||  err.message);
     } finally {
       setIsLoading(false);
@@ -66,7 +67,7 @@ const Login = () => {
             <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                  Email address
+                  Adresse e-mail
                 </label>
                 <div className="mt-2">
                   <input
@@ -84,7 +85,7 @@ const Login = () => {
               <div>
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                    Password
+                  Mot de passe
                   </label>
                   
                 </div>
@@ -113,7 +114,7 @@ const Login = () => {
             </form>
   
             <p className="mt-10 text-center text-sm text-gray-800">
-              Terms And Conditions {'Link To It'}
+              Conditions générales {'Link To It'}
             </p>
           </div>
         </div>

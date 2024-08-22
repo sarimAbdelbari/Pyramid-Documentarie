@@ -9,7 +9,7 @@ const View5 = ({route}) => {
   useEffect(() => {
     const getViewData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`);
 
         console.log("response.data",response.data);
         setData(response.data);
@@ -54,16 +54,14 @@ const View5 = ({route}) => {
                 className={`grid grid-cols-3 gap-4 p-3 rounded-md ${index % 2 === 0 ? 'bg-mainLightBg dark:bg-mainDarkBg' : 'bg-secLightBg dark:bg-secDarkBg'} transition duration-300 ease-in-out`}
               >
                 <Link to={item.path} className="text-blue-500 dark:text-blue-400 hover:underline">
-                  {item.path}
+                  {item.title}
                 </Link>
                 {/* <Link to={item.path} className="text-blue-500 dark:text-blue-400 hover:underline">
                 // ? File Name
                 {item.path}
                 </Link> */}
                 <p className="text-center text-textLightColor dark:text-textDarkColor ">{item.title}</p>
-                <p className="text-end text-textLightColor dark:text-textDarkColor ">{item.path}</p>
-                {/* <p className="text-center text-textLightColor dark:text-textDarkColor ">{item.author}</p>
-                <p className="text-end text-textLightColor dark:text-textDarkColor ">{item.date}</p> */}
+                <p className="text-end text-textLightColor dark:text-textDarkColor ">{new Date(item.createdAt).toLocaleDateString()}</p>
               </div>
             ))}
           </div>

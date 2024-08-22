@@ -32,10 +32,10 @@ const Main = (route) => {
       <div className='py-28'>
         <div className='grid grid-flow-row grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-12 place-content-center'>
           {Object.values(data).map((data, index) => (
-            <div key={index} className='flex justify-center items-center flex-col m-4'>
+            <div key={index} className='flex justify-center items-center flex-col m-4 '>
               <Link
                 to={data.path}
-                className='w-72 h-72 gap-2 flex flex-col justify-center items-center rounded-full shadow-2xl dark:shadow-sm dark:shadow-white p-7 bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
+                className='w-96 h-96 gap-2 flex flex-col justify-center items-center rounded-full shadow-2xl dark:shadow-sm dark:shadow-white p-7 bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
               >
                 {data.image && (
                   <img

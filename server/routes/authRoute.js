@@ -1,16 +1,17 @@
-const express = require('express')
+// authRoutes.js
+const express = require('express');
+const router = express.Router();
+const { loginUser ,logoutUser} = require('../controllers/authControllers');
 const { verifyToken } = require('../middleware/authMiddleware');
 
-
-// controller functions
-const { loginUser} = require('../controllers/authControllers')
-const router = express.Router()
-
 // login route
-router.post('/login',loginUser)
+router.post('/login', loginUser);
+
+// logout route
+router.post('/logout', logoutUser);
 
 // signup route
-// router.post('/signup', signupUser)
+// router.post('/signup', signupUser);
 
 router.get('/check-auth', verifyToken, (req, res) => {
     res.status(200).send({ authenticated: true });

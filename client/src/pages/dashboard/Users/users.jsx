@@ -24,19 +24,23 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState({ userName: '', email: '', password: '', groop: '' });
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
 
   useEffect(() => {
     fetchUsers();
+    const savedVisibilityModel = localStorage.getItem('columnVisibilityModelUsers');
+    if (savedVisibilityModel) {
+      setColumnVisibilityModel(JSON.parse(savedVisibilityModel));
+    }
   }, []);
 
   const fetchUsers = async () => {
     try {
       const { data } = await axios.get(`http://localhost:5000/api/users`);
-      console.log(data);
       const dataWithId = data.map((user, index) => ({ ...user, id: index + 1 }));
       setUsersData(dataWithId);
     } catch (error) {
-      error_toast('Failed to fetch users');
+      error_toast('Impossible de récupérer les utilisateurs');
       console.error(error);
     }
   };
@@ -44,11 +48,11 @@ const Users = () => {
   const handleCreateUser = async () => {
     try {
       const { data } = await axios.post(`http://localhost:5000/api/users`, selectedUser);
-      sucess_toast('User created successfully');
+      sucess_toast('Utilisateur créé avec succès');
       setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
       handleCloseDialog();
     } catch (error) {
-      error_toast('Failed to create user');
+      error_toast("Échec de la création de l'utilisateur");
       console.error(error);
     }
   };
@@ -56,11 +60,11 @@ const Users = () => {
   const handleUpdateUser = async () => {
     try {
       const { data } = await axios.patch(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
-      sucess_toast('User updated successfully');
+      sucess_toast("Mise à jour de l'utilisateur réussie");
       setUsersData(prevState => prevState.map(user => (user._id === data._id ? { ...data, id: user.id } : user)));
       handleCloseDialog();
     } catch (error) {
-      error_toast('Failed to update user');
+      error_toast("Échec de la mise à jour de l'utilisateur");
       console.error(error);
     }
   };
@@ -68,22 +72,22 @@ const Users = () => {
   const handleDeleteUser = async () => {
     try {
       await axios.delete(`http://localhost:5000/api/users/${userToDelete._id}`);
-      sucess_toast('User deleted successfully');
+      sucess_toast("L'utilisateur a été supprimé avec succès");
       setUsersData(prevState => prevState.filter(user => user._id !== userToDelete._id));
       handleCloseConfirmDialog();
     } catch (error) {
-      error_toast('Failed to delete user');
+      error_toast("Impossible de supprimer l'utilisateur");
       console.error(error);
     }
   };
 
   const columns = [
     { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'userName', headerName: 'User Name', flex: 2 },
+    { field: 'userName', headerName: "Nom d'utilisateur", flex: 2 },
     { field: 'email', headerName: 'Email', flex: 2 },
-    { field: 'groop', headerName: 'Groop', flex: 2 },
-    { field: 'createdAt', headerName: 'Created At', flex: 1 },
-    { field: 'updatedAt', headerName: 'Updated At', flex: 1 },
+    { field: 'groop', headerName: 'Group', flex: 2 },
+    { field: 'createdAt', headerName: 'Créé à', flex: 1 },
+    { field: 'updatedAt', headerName: 'Mis à jour à', flex: 1 },
     {
       field: 'actions', headerName: 'Actions', flex: 1, renderCell: (params) => (
         <>
@@ -124,19 +128,24 @@ const Users = () => {
     setOpenConfirmDialog(false);
   };
 
+  const handleColumnVisibilityChange = (newModel) => {
+    setColumnVisibilityModel(newModel);
+    localStorage.setItem('columnVisibilityModelUsers', JSON.stringify(newModel));
+  };
+
   return  (
     <div className='min-h-screen bg-mainLightBg dark:bg-mainDarkBg text-textLightColor '>
       <Navbar />
       <SideBar />
-      <div className='pt-28 flex flex-col items-center gap-7'>
-        <h3 className='text-3xl font-semibold text-textLightColor  dark:text-textDarkColor leading-relaxed'>Users</h3>
+      <div className='pt-32 flex flex-col items-center gap-7'>
+        <h3 className='text-3xl font-semibold text-textLightColor  dark:text-textDarkColor leading-relaxed'>Utilisateurs</h3>
         <Button 
           variant="contained" 
           className='bg-primary hover:bg-darkPrimary text-white shadow-lg rounded-xl'
           startIcon={<AddIcon />} 
           onClick={() => handleOpenDialog('create')}
         >
-          Create User
+          Créer un utilisateur
         </Button>
         <div className='w-full max-w-7xl  shadow-2xl rounded-lg' style={{ height: '600px' }}>
           <DataGrid
@@ -147,6 +156,8 @@ const Users = () => {
             disableSelectionOnClick
             checkboxSelection={false}
             loading={isLoading} 
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={handleColumnVisibilityChange}
             className='m-4  border-none bg-[#f9fafb] text-textLightColor '
             sx={{
               // Row background color
@@ -172,10 +183,10 @@ const Users = () => {
         </div>
       </div>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>{dialogType === 'create' ? 'Create User' : 'Update User'}</DialogTitle>
+        <DialogTitle>{dialogType === 'create' ? 'Créer un utilisateur' : "Mettre à jour l'utilisateur" }</DialogTitle>
         <DialogContent>
           <TextField
-            label="User Name"
+            label="Nom d'utilisateur"
             value={selectedUser.userName}
             onChange={(e) => setSelectedUser({ ...selectedUser, userName: e.target.value })}
             fullWidth
@@ -190,7 +201,7 @@ const Users = () => {
             margin="normal"
           />
           <TextField
-            label="Password"
+            label="mot de passe"
             type="password"
             value={selectedUser.password}
             onChange={(e) => setSelectedUser({ ...selectedUser, password: e.target.value })}
@@ -198,7 +209,7 @@ const Users = () => {
             margin="normal"
           />
           <TextField
-            label="Groop"
+            label="group"
             value={selectedUser.groop}
             onChange={(e) => setSelectedUser({ ...selectedUser, groop: e.target.value })}
             fullWidth
@@ -207,27 +218,27 @@ const Users = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
-            Cancel
+          Annuler
           </Button>
           <Button 
             onClick={dialogType === 'create' ? handleCreateUser : handleUpdateUser} 
             color="primary"
           >
-            {dialogType === 'create' ? 'Create' : 'Update'}
+            {dialogType === 'create' ? 'Créer' : 'Mise à jour'}
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle>Confirmer la suppression</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete {userToDelete?.userName}?
+        Etes-vous sûr de vouloir supprimer {userToDelete?.userName}?
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmDialog} color="primary">
-            Cancel
+          Annuler
           </Button>
           <Button onClick={handleDeleteUser} color="secondary">
-            Delete
+          Supprimer
           </Button>
         </DialogActions>
       </Dialog>

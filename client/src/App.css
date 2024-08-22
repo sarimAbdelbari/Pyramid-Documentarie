@@ -77,3 +77,10 @@
 .react-flow__renderer {
   overflow: visible;
 }
+
+
+/* In your CSS file */
+.custom-pdf-viewer .rpv-core__viewer {
+  background-color: #1e293b; /* Tailwind color gray-800 */
+  padding: 20px;
+}

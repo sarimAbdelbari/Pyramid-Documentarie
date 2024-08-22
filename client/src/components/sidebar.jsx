@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useStateContext } from '../contexts/ContextProvider';
 import LogoPngChiali from "../../public/assets/images/LogoPngChiali.png";
 import { Link } from 'react-router-dom';
@@ -9,14 +10,36 @@ import { ImTree } from "react-icons/im";
 import { IoIosCreate } from "react-icons/io";
 export default function SideBar() {
     const { visible, setVisible } = useStateContext();
-    const { dropdowns, setDropdowns } = useStateContext();
-    
-   
+    const [ dropdowns, setDropdowns ] = useState({
+        favorites: false,
+        users: false,
+        pages: false,
+        permissions: false,
+        application: false,
+      });
+
+    // Load dropdowns from local storage on component mount
+    useEffect(() => {
+        const storedDropdowns = JSON.parse(localStorage.getItem('dropdowns'));
+        if (storedDropdowns) {
+            setDropdowns(storedDropdowns);
+        }
+    }, [setDropdowns]);
+
+    // Save dropdowns to local storage whenever they change
+    // useEffect(() => {
+
+    //     localStorage.setItem('dropdowns', JSON.stringify(dropdowns));
+
+    // }, [dropdowns]);
 
     const toggleDropdown = (key) => {
-        setDropdowns(prevState => ({ ...prevState, [key]: !prevState[key] }));
+        setDropdowns(prevState => {
+            const newDropdowns = { ...prevState, [key]: !prevState[key] };
+            localStorage.setItem('dropdowns', JSON.stringify(newDropdowns));
+            return newDropdowns;
+        });
     };
-
     return (
         <div className={`fixed inset-0 z-40 shadow-2xl dark:shadow-lg dark:shadow-white transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'}`}>
         <div className="flex relative flex-row-reverse ">
