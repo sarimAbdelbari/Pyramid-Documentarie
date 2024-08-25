@@ -46,7 +46,23 @@ const logoutUser = async (req, res) => {
     }
 }
 
-module.exports = { loginUser, logoutUser };
+const checkAuth = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId); // Retrieve the user using the userId set in the middleware
+
+        if (!user) {
+            return res.status(404).json({ authenticated: false, message: 'User not found' });
+        }
+
+        res.status(200).json({ authenticated: true, user }); // Send back the user data and authentication status
+    } catch (error) {
+        res.status(500).json({ authenticated: false, message: 'Server error' });
+    }
+};
+
+
+
+module.exports = { loginUser, logoutUser , checkAuth};
 
 
 

@@ -10,7 +10,7 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/protectedRoute";
-import Dashboard from "./pages/dashboard/dashboard";
+// import Dashboard from "./pages/dashboard/dashboard";
 import Users from "./pages/dashboard/Users/users";
 import RoutePath from "./pages/dashboard/route/RoutePath";
 import TreePath from "./pages/dashboard/route/TreePath";
@@ -22,28 +22,28 @@ import TableView from "./Routes/readers/tableView";
 import Navbar from '@/components/navbar';
 import useAuth from "./hooks/useAuthContext";
 import DepthBar from "./components/DepthBar";
+import { useStateContext } from "./contexts/ContextProvider";
+import SideBar from "./components/sidebar";
+
 const App =  () => {
 
-  
-  const routeData =  useRouteAuth();
-
-
   const isAuthenticated  =  useAuth();
+  const { userInfo } = useStateContext();
+  const routeData = useRouteAuth();
+
+  useEffect(() => {
+    
+    <LoadingScreen />;
+  }, [isAuthenticated]);
+
 
   useEffect(() => {
      <LoadingScreen />;
   }, [routeData]);
 
-  useEffect(() => {
-     <LoadingScreen />;
-  }, [isAuthenticated]);
-
   const Theme = localStorage.getItem('theme');
 
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-
-  console.log("user groop ",userInfo);
+  console.log(isAuthenticated ? "Authenticated" : "Not Authenticated");
 
   return (
     <div className="min-h-screen  bg-mainLightBg dark:bg-secDarkBg">
@@ -66,6 +66,12 @@ const App =  () => {
         
         <DepthBar/>
       )}
+      {
+        userInfo && userInfo.groop == "Administrator" && (
+          <SideBar/>
+        )
+      }
+
       {routeData.length ? (
         <Routes>
 
@@ -100,6 +106,7 @@ const App =  () => {
                <Dashboard />
               }
               /> */}
+
           <Route
             path="/"
             element={
@@ -108,6 +115,15 @@ const App =  () => {
               </ProtectedRoute>
             }
             />
+          <Route
+            path="/dashboard/Users"
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            }
+            />
+
          <Route
             path="/dashboard/route/table"
             element={
@@ -116,6 +132,7 @@ const App =  () => {
               </ProtectedRoute>
             }
             />
+
           <Route
           path="/dashboard/route/tree"
           element={
@@ -124,6 +141,7 @@ const App =  () => {
               </ProtectedRoute>
             }
             />
+
           <Route
           path="/dashboard/route/create"
           element={
@@ -138,10 +156,15 @@ const App =  () => {
           <LoadingScreen/>
         )}
      </>) : (<>
-     <Routes>
-      <Route path="/*"  element={<Login />} />
-      {/* <Route path="/" element={<Login />} /> */}
-      </Routes></>)}
+
+      <Routes>
+
+         <Route path="/"  element={<Login />} />       
+         <Route path="/login"  element={<Login />} />       
+
+      </Routes>
+      
+      </>)}
 
       
 

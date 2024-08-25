@@ -26,7 +26,7 @@ export const ContextProvider = ({ children }) => {
     permissions: false,
     application: false,
   });
-  
+  const [userInfo , setUserInfo] = useState({});
   
   
 
@@ -48,7 +48,9 @@ export const ContextProvider = ({ children }) => {
         visible,
         setVisible,
         selectedRoute,
-        setSelectedRoute
+        setSelectedRoute,
+        userInfo,
+        setUserInfo
       }}
     >
       {children}

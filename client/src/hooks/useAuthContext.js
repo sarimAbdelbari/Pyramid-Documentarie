@@ -3,14 +3,17 @@ import axios from 'axios';
 import { useStateContext } from '../contexts/ContextProvider';
 
 const useAuth = () => {
-  // const [isAuthenticated, setIsAuthenticated] = useState(null); // Use null as the initial state to differentiate between loading and loaded states
-  const {isAuthenticated ,setIsAuthenticated } = useStateContext();
+
+  
+  const { isAuthenticated ,setIsAuthenticated ,setUserInfo } = useStateContext();
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get('http://localhost:5000/api/auth/check-auth', {
+       const result = await axios.get('http://localhost:5000/api/auth/check-auth', {
           withCredentials: true,
         });
+         setUserInfo(result.data.user);
 
         setIsAuthenticated(true);
       } catch (error) {
@@ -19,7 +22,7 @@ const useAuth = () => {
     };
     checkAuth();
   }, []);
-  // Return null while checking authentication
+  
   return isAuthenticated;
 };
 

@@ -6,8 +6,8 @@ import {  MdOutlineLightMode } from "react-icons/md";
 import { useStateContext } from '@/contexts/ContextProvider';
 import LogoPngChiali from '../../public/assets/images/LogoPngChiali.png';
 import axios from 'axios';
-
-
+import { Link } from 'react-router-dom';
+import { IoMdMore } from "react-icons/io";
 
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -16,8 +16,9 @@ const Navbar = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  const { setVisible } = useStateContext()
+  const { setVisible , userInfo } = useStateContext()
  
+
   const Logout = async () => {
     try {
         await axios.post('http://localhost:5000/api/auth/logout',{},{
@@ -36,16 +37,25 @@ const Navbar = () => {
   return (
     <div className='fixed top-0 left-0 z-30 w-full  shadow-xl dark:shadow-md dark:shadow-white py-2 dark:bg-mainDarkBg bg-mainLightBg' >
       <div className='p-3 mx-7 flex justify-between items-center gap-7'>
-        <img src={LogoPngChiali} className='w-14' alt='LogoPngChiali' onClick={() => setVisible(true)}/>
-          {/* <RiMenuFold2Fill  className='text-4xl hover:text-white font-bold text-textlightColor dark:text-textDarkColor  cursor-pointer' onClick={() => setVisible(true)}/> */}
+        {userInfo && userInfo.groop !== "Administrator" && (
+          
+          <Link  to="/">
+          <img src={LogoPngChiali} className='w-14' alt='LogoPngChiali' onClick={() => setVisible(true)}/>
+          </Link>
+        )}
+        {userInfo && userInfo.groop == "Administrator" && (
+          <IoMdMore  className='text-4xl font-extrabold hover:text-primary hover:dark:text-primary duration-400 ease-in-out  text-textlightColor dark:text-textDarkColor  cursor-pointer' onClick={() => setVisible(true)} />
+        )}
+
+          {/* <RiMenuFold2Fill  /> */}
         <div className='flex items-center gap-11'> 
           <button onClick={toggleTheme}>
-            {theme === 'light' ? <BsMoonStarsFill className='text-3xl text-textlightColor hover:dark:text-primary dark:text-textDarkColor hover:text-primary duration-300 ease-in-out   '/> 
-            :  <MdOutlineLightMode className='text-4xl font-bold text-textlightColor hover:dark:text-primary dark:text-textDarkColor hover:text-primary duration-300 ease-in-out' />}
+            {theme === 'light' ? <BsMoonStarsFill className='text-3xl text-textlightColor hover:dark:text-primary dark:text-textDarkColor hover:text-primary duration-400 ease-in-out   '/> 
+            :  <MdOutlineLightMode className='text-4xl font-bold text-textlightColor hover:dark:text-primary dark:text-textDarkColor hover:text-primary duration-400 ease-in-out' />}
           </button>
           <div onClick={Logout}>
 
-          <FaRegUserCircle className='text-4xl hover:text-primary hover:dark:text-primary duration-300 ease-in-out font-bold text-textlightColor dark:text-textDarkColor  cursor-pointer' />
+          <FaRegUserCircle className='text-4xl hover:text-primary hover:dark:text-primary duration-400 ease-in-out font-bold text-textlightColor dark:text-textDarkColor  cursor-pointer' />
           </div>
          
 
