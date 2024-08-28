@@ -24,9 +24,11 @@ import useAuth from "./hooks/useAuthContext";
 import DepthBar from "./components/DepthBar";
 import { useStateContext } from "./contexts/ContextProvider";
 import SideBar from "./components/sidebar";
+import { useContext } from 'react'
+import { ThemeContext } from '@/components/themeProvider';
 
 const App =  () => {
-
+  const { theme } = useContext(ThemeContext);
   const isAuthenticated  =  useAuth();
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
@@ -41,9 +43,8 @@ const App =  () => {
      <LoadingScreen />;
   }, [routeData]);
 
-  const Theme = localStorage.getItem('theme');
+  // const Theme = localStorage.getItem('theme');
 
-  console.log(isAuthenticated ? "Authenticated" : "Not Authenticated");
 
   return (
     <div className="min-h-screen  bg-mainLightBg dark:bg-secDarkBg">
@@ -57,7 +58,7 @@ const App =  () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={Theme}
+        theme={theme}
       />
 
      {isAuthenticated ? (<>

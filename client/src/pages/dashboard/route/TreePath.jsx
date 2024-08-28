@@ -1,159 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect , useContext} from 'react';
 import axios from 'axios';
 import Tree from 'react-d3-tree';
-import Navbar from '@/components/navbar';
-import SideBar from '@/components/sidebar';
+import { error_toast, sucess_toast } from '@/utils/toastNotification';
 import LoadingScreen from '@/utils/loadingScreen';
 import { useCenteredTree } from './helpers';
 import Button from '@/components/button';
 import CreateRoute from './CreateRoute';
 import { useStateContext } from '@/contexts/ContextProvider';
-
-const CustomTooltip = ({ visible, position, data }) => (
-  visible ? (
-    <>
-    {data.Title && 
-      <div className="custom-tooltip flex gap-6 flex-col shadow-2xl" style={{ top: position.y, left: position.x }}>
-        {data.Image && <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${data.Image}`} alt={data.Title} style={{ width: '100px', height: 'auto' }} />}
-        <h4>{data.Title}</h4>
-        <p>{data.Details}</p>
-      </div>
-   }
-    </>
-  ) : null
-);
-
-const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip, showContextMenu }) => {
-  const y = -35;
-  const x =  -18;
-
-  const tooltipData = nodeDatum.attributes || {};
-
-  return (
-    <g
-      ref={wrapper}
-      onMouseEnter={(e) => setTooltip({
-        visible: true,
-        position: { x: e.pageX, y: e.pageY },
-        data: tooltipData,
-      })}
-      onMouseLeave={() => setTooltip({
-        visible: false,
-        position: { x: 0, y: 0 },
-        data: {},
-      })}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        showContextMenu(nodeDatum, e.pageX, e.pageY);
-      }}
-    >
-      <circle
-        r="20"
-        fill={nodeDatum.children ? "#0056b3" : "#ff5c5c"}
-        onClick={toggleNode}
-      />
-      <text fill="black" strokeWidth="1" x={x} y={y}>
-        {nodeDatum?.attributes?.Link || nodeDatum.name}
-      </text>
-    </g>
-  );
-};
-
-const transformData = (routeData) => {
-  console.log("routeData", routeData);
-
-  const tree = {
-    name: 'Root',
-    children: [],
-    tooltip: 'Root Node',
-  };
-
-  const addNode = (pathParts, data, currentNode, routeId) => {
-    pathParts.forEach((part, index) => {
-      let childNode = currentNode.children.find(child => child.name === part);
-
-      if (!childNode) {
-        childNode = {
-          name: part,
-          attributes: {},
-          children: [],
-          tooltip: `Node: ${part}`,
-        };
-        currentNode.children.push(childNode);
-      }
-
-      if (index === pathParts.length - 1) {
-        Object.keys(data).forEach(key => {
-          const dataItem = data[key];
-          const dataTitle = dataItem.Title;
-          if (!childNode.children.find(child => child.name === dataTitle)) {
-            const child = {
-              name: dataTitle,
-              attributes: { ...dataItem, routeId, itemId: dataItem._id },  // Include routeId and itemId
-              children: [],
-              tooltip: `Title: ${dataTitle}`,
-            };
-            childNode.children.push(child);
-          }
-        });
-      }
-
-      currentNode = childNode;
-    });
-  };
-
-  routeData.forEach(route => {
-    const { path, data, _id: routeId } = route;  // Get the routeId
-
-    if (path === '/') {
-      Object.keys(data).forEach(key => {
-        const dataItem = data[key];
-        const dataTitle = dataItem.Title;
-        if (!tree.children.find(child => child.name === dataTitle)) {
-          const child = {
-            name: dataTitle,
-            attributes: { ...dataItem, routeId, itemId: dataItem._id },  // Include routeId and itemId
-            children: [],
-            tooltip: `Title: ${dataTitle}`,
-          };
-          tree.children.push(child);
-        }
-      });
-    } else {
-      const pathParts = path.split('/').filter(part => part);
-      addNode(pathParts, data, tree, routeId);  // Pass routeId to addNode
-    }
-  });
-
-  return tree;
-};
+import { RxUpdate } from "react-icons/rx";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { ThemeContext } from '@/components/themeProvider';
 
 
-const ContextMenu = ({ position, onDelete }) => (
-  <div className="context-menu fixed bg-white shadow-lg rounded" style={{ top: position.y, left: position.x }}>
-    <ul>
-      <li onClick={onDelete}>Delete</li>
-    </ul>
-  </div>
-);
-
-const ConfirmModal = ({ isOpen, onClose, onConfirm }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-md shadow-md">
-        <h2 className="mb-4 text-xl">Are you sure?</h2>
-        <div className="flex justify-end">
-          <button onClick={onConfirm} className="bg-red-500 text-white py-1 px-4 rounded mr-2">Yes</button>
-          <button onClick={onClose} className="bg-gray-500 text-white py-1 px-4 rounded">No</button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default function TreePath() {
+
+  const { theme } = useContext(ThemeContext);
   const [data, setData] = useState(null);
   const { setShowNew, showNew, reloadfetch } = useStateContext();
   const [tooltip, setTooltip] = useState({
@@ -172,13 +35,111 @@ export default function TreePath() {
     visible: false,
     nodeData: null
   });
+  const [selectedNode, setSelectedNode] = useState(null);
+
+  // Tooltip component
+  const CustomTooltip = ({ visible, position, data }) => (
+    visible ? 
+      data && (<>
+        <div  className="custom-tooltip flex gap-6 flex-col shadow-2xl" style={{ top: position.y, left: position.x }}>
+        {/* {data.image && <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${data.image}`} alt={data.title} style={{ width: '100px', height: 'auto' }} />}
+        <h4>{data.title}</h4>
+        <p>{data.view}</p> */}
+        {viewOptions.map((view) => {
+          if (view.name === data.view) {
+            return (
+              <>
+                <h4 className='text-center text-xl my-3 font-medium' >{view.titre}</h4>
+                <img src={view.imgSrc} alt={data.title} style={{ width: '550px', height: 'auto' }} />
+              </>
+            );
+          }
+          return null; // Ensure to return null when condition is not met
+        })}
+        </div>
+        </>) 
+    : null
+  );
+  
+const viewOptions = [
+  { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
+  { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` , titre:"Voir 2"}, 
+  { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` , titre:"Voir 3"}, 
+  { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir 4" },
+  { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
+  { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
+  { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png` ,titre:"Lecteur PDF"},
+];
+
+
+const getNodeColor = (viewType) => {
+  switch (viewType) {
+    // case "View1":
+    //   return "#FFD700"; // Gold for view type 1
+    // case "View2":
+    //   return "#FF8C00"; // Dark Orange for view type 2
+    // case "View3":
+    //   return "#FF4500"; // Orange Red for view type 3
+    // case "View4":
+    //   return "#32CD32"; // Lime Green for view type 4
+    // case "View5":
+    //   return "#1E90FF"; // Dodger Blue for view type 5
+    case 'TableView':
+      return "#0056B3"; // Slate Blue for TableView
+    case 'PdfReader':
+      return "#C70100"; // Blue Violet for PDF Reader
+      default:
+        return "#0400B3"; // Default colors
+  }
+};
+
+
+
+// Node rendering with events
+const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip, showContextMenu, selectNode }) => {
+  const y = -35;
+  const x = -18;
+
+  const tooltipData = nodeDatum.attributes || {};
+
+  const nodeColor = getNodeColor(tooltipData.view);
+  
+  return (
+    <g
+      ref={wrapper}
+      onMouseEnter={(e) => setTooltip({
+        visible: true,
+        position: { x: e.pageX, y: e.pageY },
+        data: tooltipData,
+      })}
+      onMouseLeave={() => setTooltip({
+        visible: false,
+        position: { x: 0, y: 0 },
+        data: {},
+      })}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        showContextMenu(nodeDatum, e.pageX, e.pageY);
+      }}
+      onClick={() => selectNode(nodeDatum)}
+    >
+      <circle
+        r="20"
+        fill={nodeColor}
+        onClick={toggleNode}
+      />
+      <text fill={theme == "light" ? "black" : "white"} stroke="none" fontSize="18px" fontWeight={600}  x={x} y={y} >
+  {nodeDatum?.attributes?.Link || nodeDatum.name}
+</text>
+
+    </g>
+  );
+};
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/route`)
       .then(response => {
         const transformedData = transformData(response.data);
-        console.log("response.data &&",response.data)
-        console.log("transformedData &&",transformedData)
         setData(transformedData);
         setLoading(false);
       })
@@ -194,6 +155,7 @@ export default function TreePath() {
       position: { x, y },
       nodeData
     });
+
   };
 
   const handleDeleteNode = () => {
@@ -207,74 +169,151 @@ export default function TreePath() {
     });
   };
 
+  const selectNode = (nodeData) => {
+    setSelectedNode(nodeData);
+    // setShowNew(true); // Show the CreateRoute component for editing
+  };
+
+  const transformData = (routeData) => {
+    let tree;
+
+    const addNode = (pathParts, route, currentNode, routeId) => {
+        pathParts.forEach((part, index) => {
+            let childNode = currentNode.children.find(child => child.name === part);
+
+            if (!childNode) {
+                childNode = {
+                    name: part,
+                    attributes: { routeId }, // Assign routeId
+                    children: [],
+                    tooltip: `Nœud: ${part}`,
+                };
+                currentNode.children.push(childNode);
+            }
+
+            // If at the last part of the path, add the route details as attributes
+            if (index === pathParts.length - 1) {
+                childNode.attributes = {
+                    ...route, // Use the entire route object for attributes
+                    routeId
+                };
+                childNode.tooltip = `Titre: ${route.title}`;
+            }
+
+            currentNode = childNode;
+        });
+    };
+
+    routeData.forEach(route => {
+        const { path, _id: routeId } = route;
+
+        if (path === '/') {
+            // Initialize the tree with the first route that has path "/"
+            tree = {
+                name: route.title || 'Racine',
+                attributes: { ...route, routeId },
+                children: [],
+                tooltip: `Titre: ${route.title || 'Racine Nœud'}`,
+            };
+        } else if (tree) {
+            const pathParts = path.split('/').filter(part => part);
+            addNode(pathParts, route, tree, routeId);
+        }
+    });
+
+    // Return the tree object if it was created, otherwise return null or an empty tree structure
+    return tree || { name: 'No Root Found', children: [], tooltip: 'No Root Node' };
+};
+
+
   const confirmDeleteNode = async () => {
-    const routeToDelete = confirmModal.nodeData;
-  
-    if (routeToDelete) {
-      const { routeId, itemId } = routeToDelete.attributes;  // Extract routeId and itemId
-  
+    const nodeToDelete = confirmModal.nodeData;
+    
+    if (nodeToDelete) {
+      const { routeId } = nodeToDelete.attributes;
+
       try {
-        // /:routeId/data/:itemId
-        await axios.delete(`${import.meta.env.VITE_API_URL}/route/${routeId}/data/${itemId}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/route/${routeId}`);
         setConfirmModal({ visible: false, nodeData: null });
-        axios.get(`${import.meta.env.VITE_API_URL}/route`)
-          .then(response => {
-            const transformedData = transformData(response.data);
-            setData(transformedData);
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
+        const transformedData = transformData(response.data);
+        setData(transformedData);
+        sucess_toast('Nœud supprimé avec succès');
       } catch (error) {
-        console.error('Error deleting node:', error);
+        console.error('Erreur lors de la suppression du nœud:', error);
+        error_toast('Erreur lors de la suppression du nœud');
       }
     }
   };
-  
 
-  const AddRoute = () => {
+  const AddRoute = (nodeData) => {
+    setSelectedNode(nodeData);
     setShowNew(true);
+    setContextMenu({
+      ...contextMenu,
+      visible: false
+    });
+  };
+
+  const ContextMenu = ({ position, onDelete, nodeData }) => (
+    <div className="context-menu fixed bg-mainLightBg shadow-2xl rounded-3xl p-7" style={{ top: position.y, left: position.x }}>
+      <div className='absolute top-2 right-2 hover:opacity-70 '>
+      <AiOutlineCloseCircle  className='text-xl cursor-pointer' onClick={() => setContextMenu({ ...contextMenu, visible: false })}/>
+
+      </div>
+      <ul className='flex flex-col gap-3'>
+        <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
+        <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddRoute(nodeData)}><RxUpdate className='text-2xl' /> Mise à jour</li>
+      </ul>
+    </div>
+  );
+
+  const ConfirmModal = ({ isOpen, onClose, onConfirm }) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="bg-white p-6 rounded-md shadow-md">
+          <h2 className="mb-4 text-xl">Es-tu sûr?</h2>
+          <div className="flex justify-end">
+            <button onClick={onConfirm} className="bg-red-500 text-white py-1 px-4 rounded mr-2">Oui</button>
+            <button onClick={onClose} className="bg-gray-500 text-white py-1 px-4 rounded">Non</button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
     <>
-      {showNew && <CreateRoute />}
+      {showNew && <CreateRoute routeId={selectedNode?.attributes?.routeId} />}
       {loading ? (
         <LoadingScreen />
       ) : (
-        <>
-          <div className="flex flex-row">
-            <SideBar />
-            <Navbar />
+        <div className='py-24 bg-mainLightBg dark:bg-mainDarkBg'>
+          <div className="flex flex-row justify-center items-center">
+            <h3 className="text-3xl font-bold text-primary dark:text-textDarkColor">Routes</h3>
           </div>
-          <div className="pt-24">
-            <div className="flex justify-start p-4 bg-gray-200" onClick={() => AddRoute()}>
-              <Button Text="Add Route" />
+          <div className="">
+            <div className="flex justify-start p-4 " onClick={() => AddRoute()}>
+              <Button Text="Ajouter un Route" />
             </div>
-            <div className="w-full h-screen bg-gray-200" ref={containerRef}>
+            <div className="w-full h-screen" ref={containerRef}>
               <Tree
                 data={data}
                 translate={translate}
                 renderCustomNodeElement={(rd3tProps) =>
-                  renderNodeWithCustomEvents({ ...rd3tProps, setTooltip, showContextMenu })
+                  renderNodeWithCustomEvents({ ...rd3tProps, setTooltip, showContextMenu, selectNode })
                 }
                 orientation="vertical"
+                
               />
-              <CustomTooltip {...tooltip} />
-              {contextMenu.visible && (
-                <ContextMenu
-                  position={contextMenu.position}
-                  onDelete={handleDeleteNode}
-                />
-              )}
-              <ConfirmModal
-                isOpen={confirmModal.visible}
-                onClose={() => setConfirmModal({ visible: false, nodeData: null })}
-                onConfirm={confirmDeleteNode}
-              />
+              {contextMenu.visible && <ContextMenu position={contextMenu.position} onDelete={handleDeleteNode} nodeData={contextMenu.nodeData} />}
+              <ConfirmModal isOpen={confirmModal.visible} onClose={() => setConfirmModal({ visible: false, nodeData: null })} onConfirm={confirmDeleteNode} />
+              <CustomTooltip visible={tooltip.visible} position={tooltip.position} data={tooltip.data} />
             </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

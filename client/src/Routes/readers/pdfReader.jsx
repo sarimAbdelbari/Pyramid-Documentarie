@@ -11,13 +11,16 @@ const PdfReader = (route) => {
   return (
     <div className="min-h-screen">
       <div className="py-32">
-        <div className='bg-white flex justify-end items-center py-4 px-8 shadow-lg my-8'>
+        <div className='bg-white dark:bg-mainDarkBg dark:shadow-white flex justify-end items-center py-4 px-8 shadow-lg my-8'>
           <div className="">
            <Button Text="Télécharger"/>
           </div>
         </div>
-        <div className="w-full max-w-7xl p-12 bg-white  rounded-lg mx-auto">
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+        <div className="relative px-5  max-w-7xl  py-12 bg-white mx-auto  rounded-lg shadow-lg" >
+            
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js" >
+          <div className='h-full w-full absolute top-0 left-0 bg-[#ffffff00] z-40'>
+          </div>
             <Viewer fileUrl={pdfUrl} defaultScale={1.5} />
           </Worker>
         </div>

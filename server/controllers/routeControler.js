@@ -89,11 +89,20 @@ const updateRouteById = async (req, res) => {
 const deleteRouteById = async (req, res) => {
   try {
     const { id } = req.params;
-    const route = await Route.findByIdAndDelete(id);
+
+    // Find the route with the given id
+    const route = await Route.findById(id);
     if (!route) {
       return res.status(404).json({ message: 'Route not found' });
     }
-    res.status(200).json({ message: 'Route deleted' });
+
+    // Delete all routes that have this route as their parent
+    await Route.deleteMany({ parrentPath: id });
+
+    // Now delete the route itself
+    await Route.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Route and its children deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: `Error deleting route: ${error.message}` });
   }

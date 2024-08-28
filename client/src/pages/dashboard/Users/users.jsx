@@ -15,6 +15,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { sucess_toast, error_toast } from '@/utils/toastNotification';
+import Select from 'react-select';
+
 
 const Users = () => {
   const { isLoading } = useStateContext();
@@ -25,6 +27,15 @@ const Users = () => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
+
+  const groopOptions = [
+    { value: 'Administrator', label: 'Admin' },
+    { value: 'User', label: 'User' },
+    { value: 'editor', label: 'Editor' },
+    { value: 'viewer', label: 'Viewer' },
+    { value: 'Devaloper', label: 'Devaloper' },
+  ];
+
 
   useEffect(() => {
     fetchUsers();
@@ -59,6 +70,9 @@ const Users = () => {
 
   const handleUpdateUser = async () => {
     try {
+      
+      // console.log("selectedUser" ,selectedUser)
+
       const { data } = await axios.patch(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
       sucess_toast("Mise à jour de l'utilisateur réussie");
       setUsersData(prevState => prevState.map(user => (user._id === data._id ? { ...data, id: user.id } : user)));
@@ -132,6 +146,10 @@ const Users = () => {
     setColumnVisibilityModel(newModel);
     localStorage.setItem('columnVisibilityModelUsers', JSON.stringify(newModel));
   };
+  
+  const onSelectGroop =(selectedOption) => {
+      setSelectedUser({ ...selectedUser, groop: selectedOption.value })
+  }
 
   return  (
     <div className='min-h-screen bg-mainLightBg dark:bg-mainDarkBg text-textLightColor '>
@@ -182,9 +200,10 @@ const Users = () => {
           />
         </div>
       </div>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog open={openDialog} onClose={handleCloseDialog}  maxWidth="lg"
+        sx={{ "& .MuiDialog-paper": { height: "65%", overflowX: "hidden"} }}>
         <DialogTitle>{dialogType === 'create' ? 'Créer un utilisateur' : "Mettre à jour l'utilisateur" }</DialogTitle>
-        <DialogContent>
+        <DialogContent >
           <TextField
             label="Nom d'utilisateur"
             value={selectedUser.userName}
@@ -208,12 +227,19 @@ const Users = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+          {/* <TextField
             label="group"
             value={selectedUser.groop}
             onChange={(e) => setSelectedUser({ ...selectedUser, groop: e.target.value })}
             fullWidth
             margin="normal"
+          /> */}
+          <Select
+            value={groopOptions.find(option => option.value === selectedUser.groop)}
+            onChange={onSelectGroop}
+            options={groopOptions}
+            placeholder="Sélectionner un rôle"
+            className="mt-4"
           />
         </DialogContent>
         <DialogActions>

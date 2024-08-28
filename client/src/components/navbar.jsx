@@ -21,10 +21,14 @@ const Navbar = () => {
 
   const Logout = async () => {
     try {
+
         await axios.post('http://localhost:5000/api/auth/logout',{},{
-          withCredentials: true // Important: Include credentials in request
+          withCredentials: true 
+          // Important: Include credentials in request
         });
+
         // Redirect to the login page
+
         localStorage.setItem('userInfo', JSON.stringify(''));
 
         window.location.href = '/login';

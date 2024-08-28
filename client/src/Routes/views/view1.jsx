@@ -30,18 +30,18 @@ const Main = (route) => {
   return (
 <>
       <div className='py-28'>
-        <div className='grid grid-flow-row grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-12 place-content-center'>
+        <div className='grid grid-flow-row grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 lg:gap-7 place-content-center'>
           {Object.values(data).map((data, index) => (
             <div key={index} className='flex justify-center items-center flex-col m-4 '>
               <Link
                 to={data.path}
-                className='w-96 h-96 gap-2 flex flex-col justify-center items-center rounded-full shadow-2xl dark:shadow-sm dark:shadow-white p-7 bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
+                className='xl:w-96 xl:h-96 lg:h-80 lg:w-80  w-72 h-72 gap-2 flex flex-col justify-center items-center rounded-full shadow-2xl dark:shadow-md dark:shadow-white p-7 bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
               >
                 {data.image && (
                   <img
                     src={getImageSrc(data.image)}
                     alt={data.title}
-                    className='object-contain h-32 md:h-48 pointer-events-none rounded-xl'
+                    className='object-contain h-36 lg:h-40 xl:h-48  pointer-events-none rounded-xl '
                   />
                 )}
                 {data.title && (

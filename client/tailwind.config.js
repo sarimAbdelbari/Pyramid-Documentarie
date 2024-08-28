@@ -13,8 +13,8 @@ export default {
       colors: {
         mainLightBg: '#f2f2f2', // Slightly darker off-white background
         secLightBg: '#d0d0d0', // Medium light gray background
-        mainDarkBg: '#001f3f', // Deeper navy blue background
-        secDarkBg: '#00274d', // Darker blue background
+        secDarkBg: '#001428', // Deeper navy blue background
+        mainDarkBg: '#002040', // Darker blue background
         textLightColor: '#1c1c1c', // Darker gray text
         textSecLightColor: '#3f3f3f', // Darker medium gray text
         textDarkColor: '#e0e0e0', // Lighter almost white text

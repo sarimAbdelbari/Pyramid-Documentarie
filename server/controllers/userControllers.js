@@ -131,8 +131,8 @@ const updateUser = async (req, res) => {
           const hash = await bcrypt.hash(req.body.password, salt);
           user.password = hash;
           break;
-        case 'permission':
-          user.permission = req.body.permission;
+        case 'groop':
+          user.groop = req.body.groop;
           break;
         default:
           break;
