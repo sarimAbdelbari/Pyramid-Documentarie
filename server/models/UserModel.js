@@ -5,10 +5,33 @@ const userSchema = new mongoose.Schema({
   userName: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true }, // hashed password
-  groop: { type: String, required: true }
+  groop: { type: [String], required: true }
 }, { timestamps: true });
 
 
+userSchema.statics.login = async function (email, password) {
+  if (!email || !password) {
+    throw Error('All fields must be filled');
+  }
+
+  const user = await this.findOne({ email });
+
+  if (!user) {
+    throw Error('Incorrect email');
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+
+  if (!match) {
+    throw Error('Incorrect password');
+  }
+
+  return user;
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
 
 // userSchema.statics.signup = async function (userName, email, password) {
 //   if (!email || !password || !userName) {
@@ -50,27 +73,3 @@ const userSchema = new mongoose.Schema({
 
 //   return user;
 // };
-
-userSchema.statics.login = async function (email, password) {
-  if (!email || !password) {
-    throw Error('All fields must be filled');
-  }
-
-  const user = await this.findOne({ email });
-
-  if (!user) {
-    throw Error('Incorrect email');
-  }
-
-  const match = await bcrypt.compare(password, user.password);
-
-  if (!match) {
-    throw Error('Incorrect password');
-  }
-
-  return user;
-};
-
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;

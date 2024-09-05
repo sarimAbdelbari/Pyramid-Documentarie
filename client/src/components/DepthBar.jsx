@@ -20,7 +20,7 @@ const DepthBar = () => {
 
   return (
     <div className="fixed z-50 bottom-5 right-5 bg-white text-textLightColor dark:bg-secDarkBg dark:text-textDarkColor dark:shadow-white p-6 rounded-2xl shadow-lg flex justify-center items-center gap-2">
-      <Link to="/" className='text-2xl cursor-pointer mx-3'>
+      <Link to="/main" className='text-2xl cursor-pointer mx-3'>
         <FaHome />
       </Link>
       {pathArray.map((path, index) => {

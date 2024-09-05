@@ -19,6 +19,7 @@ const Navbar = () => {
   const { setVisible , userInfo } = useStateContext()
  
 
+
   const Logout = async () => {
     try {
 
@@ -29,7 +30,6 @@ const Navbar = () => {
 
         // Redirect to the login page
 
-        localStorage.setItem('userInfo', JSON.stringify(''));
 
         window.location.href = '/login';
     } catch (error) {
@@ -39,15 +39,15 @@ const Navbar = () => {
 };
 
   return (
-    <div className='fixed top-0 left-0 z-30 w-full  shadow-xl dark:shadow-md dark:shadow-white py-2 dark:bg-mainDarkBg bg-mainLightBg' >
+    <div className='fixed top-0 left-0 z-40 w-full  shadow-xl dark:shadow-md dark:shadow-white py-2 dark:bg-mainDarkBg bg-mainLightBg' >
       <div className='p-3 mx-7 flex justify-between items-center gap-7'>
-        {userInfo && userInfo.groop !== "Administrator" && (
+        {userInfo && userInfo.groop[0] !== "Administrator" && (
           
           <Link  to="/">
           <img src={LogoPngChiali} className='w-14' alt='LogoPngChiali' onClick={() => setVisible(true)}/>
           </Link>
         )}
-        {userInfo && userInfo.groop == "Administrator" && (
+        {userInfo && userInfo.groop[0] == "Administrator" && (
           <IoMdMore  className='text-4xl font-extrabold hover:text-primary hover:dark:text-primary duration-400 ease-in-out  text-textlightColor dark:text-textDarkColor  cursor-pointer' onClick={() => setVisible(true)} />
         )}
 

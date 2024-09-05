@@ -4,6 +4,7 @@ const {
   createRoute,
   getRoutes,
   getRouteById,
+  getRouteByManyId,
   getRouteByParrentId,
   updateRouteById,
   deleteRouteById
@@ -13,6 +14,7 @@ const {
 router.post('/', createRoute);
 router.get('/', getRoutes);
 router.get('/:id', getRouteById);
+router.post('/all', getRouteByManyId);
 router.get('/parrentId/:parrentPath', getRouteByParrentId);
 router.patch('/:id', updateRouteById);
 router.delete('/:id', deleteRouteById);

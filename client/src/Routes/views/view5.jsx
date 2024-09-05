@@ -1,42 +1,58 @@
 import { Link } from 'react-router-dom';
 import {useState , useEffect} from 'react';
 import axios from 'axios';
+import { useStateContext } from '@/contexts/ContextProvider';
 
 const View5 = ({route}) => {
-
   const [data, setData] = useState([]);
+
+ 
+  const {routeData} = useStateContext();
+
+
   
-  useEffect(() => {
-    const getViewData = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`);
+ 
+ useEffect(() => {
+   const getViewData = async () => {
+     try {
+       const response = await axios.get(
+         `${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`
+       );
+ 
+       
+       // Extract the IDs from response.data
+       const responseIds = response.data.map((item) => item._id);
+       
+       const routes = routeData.map((route) => route.route);
+       
+       // Filter routes based on whether their _id is in the responseIds array
+       const newRoutes = routes.filter((route) => responseIds.includes(route._id));
+       
+       setData(newRoutes);
+     } catch (error) {
+       console.error(error);
+     }
+   };
+ 
+   getViewData();
+ }, [route]);
+ 
 
-        console.log("response.data",response.data);
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    getViewData();
-  },[route])
-
-console.log("Route" , route)
 
   return (
 <>
       <div className="py-28 h-full">
         <div className="text-center my-11 flex justify-center flex-col gap-14 items-center">
           <h1 className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
-            {/* ISO Surface-Mount Technology <br /> (SMT) Standards */}
+            ISO Surface-Mount Technology <br /> (SMT) Standards
              {route.title}
           </h1>
           <p className="text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
              {route.details}
-            {/* ISO standards for SMT ensure quality and consistency in electronics
+            ISO standards for SMT ensure quality and consistency in electronics
             manufacturing, covering design, assembly, and testing. They help
             reduce defects and enhance product performance, essential for
-            meeting international quality benchmarks. */}
+            meeting international quality benchmarks.
           </p>
         </div>
         <div className="mt-24 flex justify-center items-center flex-col gap-7 w-full ">

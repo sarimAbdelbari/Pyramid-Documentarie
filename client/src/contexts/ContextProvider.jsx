@@ -19,6 +19,7 @@ export const ContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(initialState.authenticated);
   const [selectedRoute, setSelectedRoute] = useState({});
   const [routeData, setRouteData] = useState({});
+  const [groopData, setGroopData] = useState({});
   const [dropdowns, setDropdowns] = useState({
     favorites: false,
     users: false,
@@ -50,7 +51,9 @@ export const ContextProvider = ({ children }) => {
         selectedRoute,
         setSelectedRoute,
         userInfo,
-        setUserInfo
+        setUserInfo,
+        groopData,
+        setGroopData
       }}
     >
       {children}

@@ -39,10 +39,10 @@ const logoutUser = async (req, res) => {
 
         // console.log(res.getHeaders())
 
-        res.status(200).json({ message: 'Logged out successfully' });
+        res.status(200).json({ message: 'Déconnexion réussie' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to log out' });
+        res.status(500).json({ message: 'Impossible de se déconnecter' });
     }
 }
 
@@ -51,12 +51,12 @@ const checkAuth = async (req, res) => {
         const user = await User.findById(req.userId); // Retrieve the user using the userId set in the middleware
 
         if (!user) {
-            return res.status(404).json({ authenticated: false, message: 'User not found' });
+            return res.status(404).json({ authenticated: false, message: 'Utilisateur non trouvé' });
         }
 
         res.status(200).json({ authenticated: true, user }); // Send back the user data and authentication status
     } catch (error) {
-        res.status(500).json({ authenticated: false, message: 'Server error' });
+        res.status(500).json({ authenticated: false, message: 'Erreur de serveur' });
     }
 };
 

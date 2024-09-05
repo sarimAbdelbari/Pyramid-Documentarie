@@ -2,43 +2,10 @@ const User = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
-// * Get All Users
-
-const getUsers = async (req , res) =>{
-    try {
-        const users = await User.find({}).sort({createdAt:-1});
-        res.status(200).json(users);
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: error.message });
-  }
-}
-
-
-// * Get A Single User
-
-const getUser = async (req , res) => {
-  const { id } = req.params;
-
-  if(!id) {
-    return res.status(404).json({message : 'id Not found'})
-  }
-
-  try {
-    const user = await User.findById(id);
-    if (user == null) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json(user);
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: error.message });
-  }
-}
-
 // * Create A new User
 const createUser = async (req, res) => { 
   try {
+    
     const { userName, email, password, groop } = req.body;
 
     if (!email || !password || !userName) {
@@ -78,6 +45,40 @@ const createUser = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+// * Get All Users
+
+const getUsers = async (req , res) =>{
+    try {
+        const users = await User.find({}).sort({createdAt:-1});
+        res.status(200).json(users);
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: error.message });
+  }
+}
+
+
+// * Get A Single User
+
+const getUser = async (req , res) => {
+  const { id } = req.params;
+
+  if(!id) {
+    return res.status(404).json({message : 'id Not found'})
+  }
+
+  try {
+    const user = await User.findById(id);
+    if (user == null) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: error.message });
+  }
+}
+
     
     
     // * delete A User
@@ -148,7 +149,31 @@ const updateUser = async (req, res) => {
 };
 
 
+const updateManyUsers = async (req, res) => {
+
+  const { ids, groopName } = req.body;
+
+  if (!Array.isArray(ids) || !groopName) {
+      return res.status(400).json({ message: 'Invalid input data' });
+  }
+
+  try {
+      const result = await User.updateMany(
+          { _id: { $in: ids } },
+          { $set: { groop: groopName } }
+      );
+
+      res.status(200).json({ message: 'Users updated successfully', result });
+  } catch (error) {
+      console.error("Error updating users:", error);
+      res.status(500).json({ message: 'Error updating users', error: error.message });
+  }
+};
+;
+
+
+
 
 module.exports = {
-    createUser ,getUsers,deleteUser ,updateUser,getUser 
+    createUser ,getUsers,deleteUser ,updateUser,getUser ,updateManyUsers
 }

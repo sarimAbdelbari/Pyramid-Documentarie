@@ -14,11 +14,10 @@ import LoadingScreen from "@/utils/loadingScreen";
 import Select from "react-select";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+// nb
 
 const CreateRoute = ({ routeId }) => {
-  const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch } = useStateContext();
+  const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch ,reloadfetch } = useStateContext();
   const [routes, setRoutes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
@@ -151,9 +150,13 @@ const CreateRoute = ({ routeId }) => {
         updatedFields[index] = { ...updatedFields[index], [field]: value };
 
         const dataObject = updatedFields.reduce((obj, item) => {
+
             if (item.tableCol) {
+
                 obj[item.tableCol] = item.value; // Column name as key, value as the content
+                
             }
+
             return obj;
         }, {});
 
@@ -221,16 +224,28 @@ const handleFieldRowChange = (index, event, key) => {
 
   const handleCreateRoute = async () => {
     try {
-      const dataParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${selectedRoute.parrentPath}`);
-      const dataRoute = { ...selectedRoute, path: `${dataParrent.data.path}${selectedRoute.path}` };
+
+      if(!selectedRoute.path.includes("/")){
+        error_toast("Le chemin de la route doit contenir un '/'.");
+        return;
+      }
+
+      
+      // const dataParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${selectedRoute.parrentPath}`);
+      const dataRoute = { ...selectedRoute, path: `${selectedRoute.path}` };
+
+      
+      console.log("dataRoute",dataRoute);
 
       await axios.post(`${import.meta.env.VITE_API_URL}/route`, dataRoute);
+ 
+
 
       sucess_toast("Route créé avec succès");
       
       setSelectedRoute({});
       setShowNew(false);
-      setReloadfetch(true);
+      setReloadfetch(!reloadfetch);
     } catch (error) {
       error_toast(`Échec de la création de route: ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
@@ -239,12 +254,19 @@ const handleFieldRowChange = (index, event, key) => {
 
   const handleUpdateRoute = async () => {
     try {
+
+      if(!selectedRoute.path.includes("/")){
+        error_toast("Le chemin de la route doit contenir un '/'.");
+        return;
+      }
+      
       await axios.patch(`${import.meta.env.VITE_API_URL}/route/${selectedRoute._id}`, selectedRoute);
       sucess_toast("Route mis à jour avec succès");
 
       setSelectedRoute({});
       setShowNew(false);
-      setReloadfetch(true);
+      setReloadfetch(!reloadfetch);
+
     } catch (error) {
       error_toast(`Échec de la mise à jour de route: ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
@@ -314,26 +336,36 @@ const handleFieldRowChange = (index, event, key) => {
   };
 
   const parrentSData = async (id) =>{
-    console.log("id",id)
+    // console.log("id",id)
     const dataWithId = await axios.get(`${import.meta.env.VITE_API_URL}/route/${id}`);
 
-    // console.log("dataWithId ",dataWithId)
-    // console.log("dataWithId data §::::",dataWithId.data)
+
     setParrentData(dataWithId.data)
 
  
   }
 
   const onChangeParrentPath = async (selectedOption) => {
+
+    // const pathArray =  selectedRoute.path.split("/"); 
+    
+    // const path = pathArray[pathArray.length - 1]
+
+ 
     setSelectedRoute({
       ...selectedRoute,
       parrentPath: selectedOption.value,
+      // path: `${selectedOption.label}/${path}`,
     });
+    
+    
     await parrentSData(selectedOption.value);
+    
     setSelectedParrent({
-      value: selectedOption.value,
-      label: selectedOption.label,
+        value: selectedOption.value,
+        label: selectedOption.label,
     });
+    
   };
 
 
@@ -376,7 +408,7 @@ const handleFieldRowChange = (index, event, key) => {
               label="/Chemin"
               type="text"
               fullWidth
-              value={selectedRoute.path}
+              value={selectedRoute.path || ""}
               onChange={(e) =>
                 setSelectedRoute({ ...selectedRoute, path: e.target.value })
               }
@@ -504,13 +536,19 @@ const handleFieldRowChange = (index, event, key) => {
           {selectedRoute.view == "PdfReader" &&
           <div className="my-4 flex flex-col">
             <label>  Date de création du fichier</label>
-          <DatePicker
+          {/* <DatePicker
       selected={selectedRoute?.expiredate || ""}
       onChange={handleDateChange}
       dateFormat="yyyy/MM/dd"
       placeholderText="Select a date"
       className="p-2  border border-primary rounded-lg"
-      />
+      /> */}
+      <input
+  type="date"
+  className="w-1/4 p-2  border border-primary rounded-lg"
+  onChange={(e) => handleDateChange(e.target.value)}
+  value={selectedRoute?.expiredate || ""}
+/>
          </div>
     }
           <div className="my-4">

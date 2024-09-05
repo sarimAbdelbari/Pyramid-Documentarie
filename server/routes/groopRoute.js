@@ -2,17 +2,19 @@ const express = require('express');
 const router = express.Router();
 const {
   createGroop,
-  getGroops,
+  getAllGroops,
   getGroopById,
-  updateGroopById,
-  deleteGroopById
+  getGroupsByManyIds,
+  updateGroop,
+  deleteGroop
 } = require('../controllers/groopController');
 
 // Groop CRUD endpoints
 router.post('/', createGroop);
-router.get('/', getGroops);
+router.get('/', getAllGroops);
 router.get('/:id', getGroopById);
-router.patch('/:id', updateGroopById);
-router.delete('/:id', deleteGroopById);
+router.post('/all', getGroupsByManyIds);
+router.patch('/:id', updateGroop);
+router.delete('/:id', deleteGroop);
 
 module.exports = router;

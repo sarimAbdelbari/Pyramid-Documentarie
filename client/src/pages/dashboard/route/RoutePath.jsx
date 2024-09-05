@@ -22,7 +22,9 @@ const Routes = () => {
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
 
   useEffect(() => {
+    
     fetchRoutes();
+
     setReloadfetch(false);
 
     const savedVisibilityModel = localStorage.getItem('columnVisibilityModelRoute');

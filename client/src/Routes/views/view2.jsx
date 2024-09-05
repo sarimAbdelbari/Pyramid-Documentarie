@@ -1,34 +1,58 @@
 import { Link } from 'react-router-dom';
 import {useState , useEffect} from 'react';
 import axios from 'axios';
-const View2 = ( route ) => {
+import { useStateContext } from '@/contexts/ContextProvider';
 
+const View2 = ( {route} ) => {
 
   const [data, setData] = useState([]);
+
+ 
+  const {routeData} = useStateContext();
+
+
   
-  useEffect(() => {
-    const getViewData = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`);
+ 
+ useEffect(() => {
+   const getViewData = async () => {
+     try {
+       const response = await axios.get(
+         `${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`
+       );
+ 
+        
 
-        console.log("response.data",response.data);
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+       console.log("response" , response.data)
 
-    getViewData();
-  },[route])
+      console.log("routeData" , routeData)
 
 
-  const getImageSrc = (src) => {
-    if (src.startsWith('http')) {
-      return src;
-    }
-    
-    return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
-  };
+       // Extract the IDs from response.data
+       const responseIds = response.data.map((item) => item._id);
+       
+       const routes = routeData.map((route) => route.route);
+       
+       // Filter routes based on whether their _id is in the responseIds array
+       const newRoutes = routes.filter((route) => responseIds.includes(route._id));
+       
+      console.log("newRoutes",newRoutes)
+
+       setData(newRoutes);
+     } catch (error) {
+       console.error(error);
+     }
+   };
+ 
+   getViewData();
+ }, [route]);
+ 
+
+ const getImageSrc = (src) => {
+   if (src.startsWith('http')) {
+     return src;
+   }
+   return `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+ };
 
   return (
     <>

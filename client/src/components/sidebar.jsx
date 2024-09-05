@@ -135,7 +135,13 @@ export default function SideBar() {
                                         </div>
                                         <ul className={`space-y-2 pl-4 ${dropdowns.permissions ? '' : 'hidden'}`}>
                                             <li>
-                                                <Link className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
+                                                <Link to="/dashboard/groop/create" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
+                                                    <IoIosCreate  className="mr-2" />
+                                                    <span>Create</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="/dashboard/groop/table" className="flex items-center p-3 rounded hover:bg-gray-300 hover:dark:bg-gray-700">
                                                     <FaTable className="mr-2" />
                                                     <span>View</span>
                                                 </Link>

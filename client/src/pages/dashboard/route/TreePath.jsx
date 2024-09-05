@@ -38,28 +38,29 @@ export default function TreePath() {
   const [selectedNode, setSelectedNode] = useState(null);
 
   // Tooltip component
-  const CustomTooltip = ({ visible, position, data }) => (
-    visible ? 
-      data && (<>
-        <div  className="custom-tooltip flex gap-6 flex-col shadow-2xl" style={{ top: position.y, left: position.x }}>
-        {/* {data.image && <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${data.image}`} alt={data.title} style={{ width: '100px', height: 'auto' }} />}
-        <h4>{data.title}</h4>
-        <p>{data.view}</p> */}
+  const CustomTooltip = ({ visible, position, data }) => {
+  
+  
+    if (!visible) return null; // Early return if tooltip is not visible
+  
+    return (
+      <div className="custom-tooltip" style={{ top: position.y, left: position.x }}>
+        <p className='text-center text-xl my-3 font-medium text-black'>{data.title}</p>
         {viewOptions.map((view) => {
           if (view.name === data.view) {
             return (
               <>
-                <h4 className='text-center text-xl my-3 font-medium' >{view.titre}</h4>
+                <h4 className='text-center text-xl my-3 font-medium text-black'>{view.titre}</h4>
                 <img src={view.imgSrc} alt={data.title} style={{ width: '550px', height: 'auto' }} />
               </>
             );
           }
-          return null; // Ensure to return null when condition is not met
+          return null;
         })}
-        </div>
-        </>) 
-    : null
-  );
+      </div>
+    );
+  };
+  
   
 const viewOptions = [
   { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
@@ -98,7 +99,8 @@ const getNodeColor = (viewType) => {
 // Node rendering with events
 const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip, showContextMenu, selectNode }) => {
   const y = -35;
-  const x = -18;
+  const x = 5;
+
 
   const tooltipData = nodeDatum.attributes || {};
 
@@ -127,14 +129,20 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
         r="20"
         fill={nodeColor}
         onClick={toggleNode}
+        style={{
+          transition: 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out',
+          transform: 'scale(0.1)', // Start with a small scale
+          opacity: 0, // Start with opacity 0
+          animation: `nodeAppear 0.5s forwards ease-in-out`,
+        }}
       />
       <text fill={theme == "light" ? "black" : "white"} stroke="none" fontSize="18px" fontWeight={600}  x={x} y={y} >
-  {nodeDatum?.attributes?.Link || nodeDatum.name}
-</text>
-
+        {nodeDatum?.path.split("/") || nodeDatum.title}
+      </text>
     </g>
   );
 };
+
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/route`)
@@ -170,70 +178,100 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
   };
 
   const selectNode = (nodeData) => {
-    setSelectedNode(nodeData);
+   
+    setSelectedNode(nodeData._id);
     // setShowNew(true); // Show the CreateRoute component for editing
   };
 
   const transformData = (routeData) => {
-    let tree;
 
-    const addNode = (pathParts, route, currentNode, routeId) => {
-        pathParts.forEach((part, index) => {
-            let childNode = currentNode.children.find(child => child.name === part);
-
-            if (!childNode) {
-                childNode = {
-                    name: part,
-                    attributes: { routeId }, // Assign routeId
-                    children: [],
-                    tooltip: `Nœud: ${part}`,
-                };
-                currentNode.children.push(childNode);
-            }
-
-            // If at the last part of the path, add the route details as attributes
-            if (index === pathParts.length - 1) {
-                childNode.attributes = {
-                    ...route, // Use the entire route object for attributes
-                    routeId
-                };
-                childNode.tooltip = `Titre: ${route.title}`;
-            }
-
-            currentNode = childNode;
-        });
-    };
-
+    const routeMap = {};
+    const roots = [];
+  
     routeData.forEach(route => {
-        const { path, _id: routeId } = route;
-
-        if (path === '/') {
-            // Initialize the tree with the first route that has path "/"
-            tree = {
-                name: route.title || 'Racine',
-                attributes: { ...route, routeId },
-                children: [],
-                tooltip: `Titre: ${route.title || 'Racine Nœud'}`,
-            };
-        } else if (tree) {
-            const pathParts = path.split('/').filter(part => part);
-            addNode(pathParts, route, tree, routeId);
-        }
+      route.children = [];
+      routeMap[route._id] = route;
     });
+  
+    routeData.forEach(route => {
+      if (route.parrentPath) {
+        const parent = routeMap[route.parrentPath];
+        if (parent) {
+          parent.children.push(route);
+        }
+      } else {
+        roots.push(route);
+      }
+    });
+    const addAttributes = (node) => {
+      node.attributes = { ...node };  // Copy the node properties to attributes
+      node.children.forEach(addAttributes);  // Recursively add attributes to children
+    };
+  
+    roots.forEach(addAttributes);  // Apply attributes to all root nodes
+  
+    return roots;
+    
+    // const addNode = (pathParts, route, currentNode, routeId) => {
+    //     pathParts.forEach((part, index) => {
+    //         let childNode = currentNode.children.find(child => child.name === part);
 
-    // Return the tree object if it was created, otherwise return null or an empty tree structure
-    return tree || { name: 'No Root Found', children: [], tooltip: 'No Root Node' };
+    //         if (!childNode) {
+    //             childNode = {
+    //                 name: part,
+    //                 attributes: { routeId }, // Assign routeId
+    //                 children: [],
+    //                 tooltip: `Nœud: ${part}`,
+    //             };
+    //             currentNode.children.push(childNode);
+    //         }
+
+    //         // If at the last part of the path, add the route details as attributes
+    //         if (index === pathParts.length - 1) {
+    //             childNode.attributes = {
+    //                 ...route, // Use the entire route object for attributes
+    //                 routeId
+    //             };
+    //             childNode.tooltip = `Titre: ${route.title}`;
+    //         }
+
+    //         currentNode = childNode;
+    //     });
+    // };
+
+    // routeData.forEach(route => {
+    //     const { path, _id: routeId } = route;
+
+    //     if (path === '/main') {
+    //         // Initialize the tree with the first route that has path "/"
+    //         tree = {
+    //             name: route.title || 'Racine',
+    //             attributes: { ...route, routeId },
+    //             children: [],
+    //             tooltip: `Titre: ${route.title || 'Racine Nœud'}`,
+    //         };
+    //     } else if (tree) {
+    //         const pathParts = path.split('/').filter(part => part);
+    //         addNode(pathParts, route, tree, routeId);
+    //     }
+    // });
+
+    // // Return the tree object if it was created, otherwise return null or an empty tree structure
+    // return tree || { name: 'Aucune racine trouvée', children: [], tooltip: 'Pas de nœud racine' };
 };
 
 
   const confirmDeleteNode = async () => {
     const nodeToDelete = confirmModal.nodeData;
     
+
     if (nodeToDelete) {
-      const { routeId } = nodeToDelete.attributes;
+      const routeId  = nodeToDelete._id;
 
       try {
         await axios.delete(`${import.meta.env.VITE_API_URL}/route/${routeId}`);
+
+        
         setConfirmModal({ visible: false, nodeData: null });
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
         const transformedData = transformData(response.data);
@@ -247,7 +285,8 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
   };
 
   const AddRoute = (nodeData) => {
-    setSelectedNode(nodeData);
+
+    setSelectedNode(nodeData?._id ||"");
     setShowNew(true);
     setContextMenu({
       ...contextMenu,
@@ -286,13 +325,13 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 
   return (
     <>
-      {showNew && <CreateRoute routeId={selectedNode?.attributes?.routeId} />}
+      {showNew && <CreateRoute routeId={selectedNode} />}
       {loading ? (
         <LoadingScreen />
       ) : (
         <div className='py-24 bg-mainLightBg dark:bg-mainDarkBg'>
           <div className="flex flex-row justify-center items-center">
-            <h3 className="text-3xl font-bold text-primary dark:text-textDarkColor">Routes</h3>
+            <h3 className="text-3xl pt-3 font-bold text-primary dark:text-textDarkColor">Routes</h3>
           </div>
           <div className="">
             <div className="flex justify-start p-4 " onClick={() => AddRoute()}>
@@ -306,7 +345,10 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
                   renderNodeWithCustomEvents({ ...rd3tProps, setTooltip, showContextMenu, selectNode })
                 }
                 orientation="vertical"
-                
+                // initialDepth={0}
+                separation={{ siblings: 2, nonSiblings: 2 }}
+                allowForeignObjects={true}
+          
               />
               {contextMenu.visible && <ContextMenu position={contextMenu.position} onDelete={handleDeleteNode} nodeData={contextMenu.nodeData} />}
               <ConfirmModal isOpen={confirmModal.visible} onClose={() => setConfirmModal({ visible: false, nodeData: null })} onConfirm={confirmDeleteNode} />

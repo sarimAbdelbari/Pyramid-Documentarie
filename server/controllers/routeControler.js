@@ -8,14 +8,17 @@ const createRoute = async (req, res) => {
 
     const existingRoute = await Route.findOne({ path });
     if (existingRoute) {
-      return res.status(400).json({ message: 'Route with this path already exists' });
+      return res.status(400).json({ message: 'Route avec ce chemin existe déjà' });
     }
-
+    
     const newRoute = new Route({parrentPath, title, path, view, image ,file, expiredate , details ,data});
+
     await newRoute.save();
+
     res.status(201).json(newRoute);
+    
   } catch (error) {
-    res.status(500).json({ message: `Error creating route: ${error.message}` });
+    res.status(500).json({ message: `Erreur lors de la création route: ${error.message}` });
   }
 };
 
@@ -26,7 +29,7 @@ const getRoutes = async (req, res) => {
     const routes = await Route.find();
     res.status(200).json(routes);
   } catch (error) {
-    res.status(500).json({ message: `Error fetching routes: ${error.message}` });
+    res.status(500).json({ message: `Erreur lors de la récupération routes: ${error.message}` });
   }
 };
 
@@ -36,13 +39,36 @@ const getRouteById = async (req, res) => {
     const { id } = req.params;
     const route = await Route.findById(id);
     if (!route) {
-      return res.status(404).json({ message: 'Route not found' });
+      return res.status(404).json({ message: 'Route non trouvé' });
     }
     res.status(200).json(route);
   } catch (error) {
-    res.status(500).json({ message: `Error fetching route: ${error.message}` });
+    res.status(500).json({ message: `Erreur lors de la récupération route: ${error.message}` });
   }
 };
+
+const getRouteByManyId = async (req, res) => {
+  try {
+    const { ids } = req.body; // Assuming you send an array of IDs in the request body
+
+    // Check if ids array is provided
+    if (!ids || !Array.isArray(ids)) {
+      return res.status(400).json({ message: 'Invalid or missing "ids" array in the request body.' });
+    }
+
+    // Use the $in operator to find routes with any of the given IDs
+    const routes = await Route.find({ _id: { $in: ids } });
+
+    if (routes.length === 0) {
+      return res.status(404).json({ message: 'No routes found with the provided IDs.' });
+    }
+
+    res.status(200).json(routes);
+  } catch (error) {
+    res.status(500).json({ message: `Error retrieving routes: ${error.message}` });
+  }
+};
+
 
 const getRouteByParrentId = async (req, res) => {
   try {
@@ -50,7 +76,7 @@ const getRouteByParrentId = async (req, res) => {
 
     // Validate if parrentPath is provided
     if (!parrentPath) {
-      return res.status(400).json({ message: 'parrentPath parameter is required' });
+      return res.status(400).json({ message: 'Le paramètre parentPath est obligatoire' });
     }
 
     // Find all routes with the specified parrentPath
@@ -58,13 +84,13 @@ const getRouteByParrentId = async (req, res) => {
 
     // Check if any routes are found
     if (routes.length === 0) {
-      return res.status(204).json({ message: 'No routes found with the provided parrentPath' });
+      return res.status(204).json({ message: 'Aucun route trouvé avec le parentPath fourni' });
     }
 
     // Return the found routes
     res.status(200).json(routes);
   } catch (error) {
-    res.status(500).json({ message: `Error fetching routes: ${error.message}` });
+    res.status(500).json({ message: `Erreur lors de la récupération routes: ${error.message}` });
   }
 };
 
@@ -77,11 +103,11 @@ const updateRouteById = async (req, res) => {
     const {parrentPath , title , path , view ,  image ,file, expiredate, details ,data} = req.body;
     const route = await Route.findByIdAndUpdate(id, {parrentPath , title, path, view,  image ,file , expiredate, details ,data }, { new: true });
     if (!route) {
-      return res.status(404).json({ message: 'Route not found' });
+      return res.status(404).json({ message: 'Aucun route trouvé' });
     }
     res.status(200).json(route);
   } catch (error) {
-    res.status(500).json({ message: `Error updating route: ${error.message}` });
+    res.status(500).json({ message: `Erreur lors de la mise à jour route: ${error.message}` });
   }
 };
 
@@ -93,18 +119,29 @@ const deleteRouteById = async (req, res) => {
     // Find the route with the given id
     const route = await Route.findById(id);
     if (!route) {
-      return res.status(404).json({ message: 'Route not found' });
+      return res.status(404).json({ message: 'Aucun route trouvé' });
     }
 
-    // Delete all routes that have this route as their parent
-    await Route.deleteMany({ parrentPath: id });
+    // Recursive function to delete a route and its children
+    const deleteRouteAndChildren = async (routeId) => {
+      // Find all child routes
+      const childRoutes = await Route.find({ parrentPath: routeId });
 
-    // Now delete the route itself
-    await Route.findByIdAndDelete(id);
+      // Recursively delete each child route and its children
+      for (const childRoute of childRoutes) {
+        await deleteRouteAndChildren(childRoute._id);
+      }
 
-    res.status(200).json({ message: 'Route and its children deleted successfully' });
+      // Finally, delete the route itself
+      await Route.findByIdAndDelete(routeId);
+    };
+
+    // Start the recursive deletion with the selected route
+    await deleteRouteAndChildren(id);
+
+    res.status(200).json({ message: 'Route et ses enfants ont été supprimés avec succès' });
   } catch (error) {
-    res.status(500).json({ message: `Error deleting route: ${error.message}` });
+    res.status(500).json({ message: `Erreur lors de la suppression route: ${error.message}` });
   }
 };
 
@@ -115,6 +152,7 @@ module.exports = {
   createRoute,
   getRoutes,
   getRouteById,
+  getRouteByManyId,
   getRouteByParrentId,
   updateRouteById,
   deleteRouteById

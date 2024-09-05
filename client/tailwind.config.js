@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-import forms from '@tailwindcss/forms';
+// import forms from '@tailwindcss/forms';
 
 export default {
   darkMode: 'class',
@@ -25,8 +25,8 @@ export default {
         darkAccent: '#c62839', // Darker deep pink
       },
     },
-  },
-  plugins: [
-    forms,
-  ],
+  }
+  // plugins: [
+  //   forms,
+  // ],
 }
