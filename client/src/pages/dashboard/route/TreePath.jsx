@@ -35,7 +35,8 @@ export default function TreePath() {
     visible: false,
     nodeData: null
   });
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedNode, setSelectedNode] =  useState(null);
+
 
   // Tooltip component
   const CustomTooltip = ({ visible, position, data }) => {
@@ -180,6 +181,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
   const selectNode = (nodeData) => {
    
     setSelectedNode(nodeData._id);
+
     // setShowNew(true); // Show the CreateRoute component for editing
   };
 
@@ -294,6 +296,14 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
     });
   };
 
+//  const AddChildRoute = (nodeData) => {
+//   setSelectedNode(nodeData?._id ||"");
+//   setShowNew(true);
+//   setContextMenu({
+//     ...contextMenu,
+//     visible: false
+//   });
+//   }
   const ContextMenu = ({ position, onDelete, nodeData }) => (
     <div className="context-menu fixed bg-mainLightBg shadow-2xl rounded-3xl p-7" style={{ top: position.y, left: position.x }}>
       <div className='absolute top-2 right-2 hover:opacity-70 '>
@@ -301,8 +311,9 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 
       </div>
       <ul className='flex flex-col gap-3'>
-        <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
+        {/* <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddChildRoute(nodeData)}><RxUpdate className='text-2xl' />Ajouter un Route enfant</li> */}
         <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddRoute(nodeData)}><RxUpdate className='text-2xl' /> Mise à jour</li>
+        <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
       </ul>
     </div>
   );
@@ -325,7 +336,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 
   return (
     <>
-      {showNew && <CreateRoute routeId={selectedNode} />}
+      {showNew && <CreateRoute routeId={selectedNode} parrentId={selectedNode} />}
       {loading ? (
         <LoadingScreen />
       ) : (

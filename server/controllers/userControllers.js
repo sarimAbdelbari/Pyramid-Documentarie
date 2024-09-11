@@ -1,41 +1,56 @@
-const User = require('../models/UserModel');
-const bcrypt = require('bcryptjs');
-const validator = require('validator');
+const User = require("../models/UserModel");
+const Groop = require("../models/GroopModel");
+const bcrypt = require("bcryptjs");
+const validator = require("validator");
 
 // * Create A new User
-const createUser = async (req, res) => { 
+const createUser = async (req, res) => {
   try {
-    
     const { userName, email, password, groop } = req.body;
 
     if (!email || !password || !userName) {
-      throw Error('All fields must be filled');
+      throw Error("All fields must be filled");
     }
 
     if (!validator.isEmail(email)) {
-      throw Error('Email is not valid');
+      throw Error("Email is not valid");
     }
 
     if (!validator.isStrongPassword(password)) {
-      throw Error('Password not strong enough');
+      throw Error("Password not strong enough");
     }
 
     const existUserName = await User.findOne({ userName });
 
     if (existUserName) {
-      throw Error('UserName already in use');
+      throw Error("UserName already in use");
     }
 
     const existEmail = await User.findOne({ email });
 
     if (existEmail) {
-      throw Error('Email already in use');
+      throw Error("Email already in use");
     }
 
     const salt = await bcrypt.genSalt(10);
+
     const hash = await bcrypt.hash(password, salt);
 
+    // ? add a user to the groop
+
     const newUser = new User({ userName, email, password: hash, groop });
+
+    const groopOfUser = await Groop.find({ _id: { $in: groop } });
+
+    if (!groopOfUser || groopOfUser.length === 0) {
+      throw Error("Groop not found");
+    }
+
+    // Add the new user to each group's `groopUsers`
+    groopOfUser.forEach((group) => {
+      group.groopUsers.push(newUser._id);
+      group.save(); // Save each updated group document
+    });
 
     await newUser.save();
 
@@ -45,135 +60,161 @@ const createUser = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 // * Get All Users
 
-const getUsers = async (req , res) =>{
-    try {
-        const users = await User.find({}).sort({createdAt:-1});
-        res.status(200).json(users);
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: error.message });
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).sort({ createdAt: -1 });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
-}
-
+};
 
 // * Get A Single User
 
-const getUser = async (req , res) => {
+const getUser = async (req, res) => {
   const { id } = req.params;
 
-  if(!id) {
-    return res.status(404).json({message : 'id Not found'})
+  if (!id) {
+    return res.status(404).json({ message: "id Not found" });
   }
 
   try {
     const user = await User.findById(id);
     if (user == null) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
-}
-
-    
-    
-    // * delete A User
-    
-    const deleteUser = async (req, res ) => {
-
-      const { id } = req.params;
-
-        try {
-            const user = await User.findByIdAndDelete(id);
-            if (user == null) {
-            return res.status(404).json({ message: 'User not found' });
-            }
-        
-        res.status(201).json({ message: 'User deleted' });
-        
-       } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: error.message });
-       }
-
-       
-    }
+};
 
 
 // * update A User
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
+  const { userName, email, password, groop } = req.body;
 
   try {
     const user = await User.findById(id);
 
-    if (user == null) {
-      return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    for (const key of Object.keys(req.body)) {
-      switch (key) {
-        case 'uid':
-          user.uid = req.body.uid;
-          break;
-        case 'userName':
-          user.userName = req.body.userName;
-          break;
-        case 'email':
-          user.email = req.body.email;
-          break;
-        case 'password':
-          const salt = await bcrypt.genSalt(10);
-          const hash = await bcrypt.hash(req.body.password, salt);
-          user.password = hash;
-          break;
-        case 'groop':
-          user.groop = req.body.groop;
-          break;
-        default:
-          break;
-      }
+    // Store the old group memberships
+    const oldGroops = user.groop.map(g => g.toString());  // Convert ObjectIds to strings
+
+    // Update user details
+    if (userName) user.userName = userName;
+    if (email) user.email = email;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+    if (groop) {
+      user.groop = groop;
     }
 
+    // Find the new groups for the user
+    const newGroops = await Groop.find({ _id: { $in: groop } });
+
+    if (newGroops.length === 0) {
+      return res.status(400).json({ message: "No valid groops found" });
+    }
+
+    // Update groups
+    // 1. Remove user from old groups not in the new groop list
+    const groupsToRemove = oldGroops.filter(g => !groop.includes(g));
+    if (groupsToRemove.length > 0) {
+      await Groop.updateMany(
+        { _id: { $in: groupsToRemove } },
+        { $pull: { groopUsers: user._id } }
+      );
+    }
+
+    // 2. Add user to new groups not already in old groops
+    const groupsToAdd = groop.filter(g => !oldGroops.includes(g));
+    
+    if (groupsToAdd.length > 0) {
+      await Groop.updateMany(
+        { _id: { $in: groupsToAdd } },
+        { $addToSet: { groopUsers: user._id } }
+      );
+    }
+
+    // Save the updated user
     await user.save();
 
-    res.json(user);
+    res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
 
-const updateManyUsers = async (req, res) => {
-
-  const { ids, groopName } = req.body;
-
-  if (!Array.isArray(ids) || !groopName) {
-      return res.status(400).json({ message: 'Invalid input data' });
-  }
-
-  try {
-      const result = await User.updateMany(
-          { _id: { $in: ids } },
-          { $set: { groop: groopName } }
+  // * delete A User
+  
+  const deleteUser = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      // Find the user to be deleted
+      const user = await User.findById(id);
+      if (user == null) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Remove the user from all groops they belong to
+      await Groop.updateMany(
+        { groopUsers: user._id },  // Find all groops that include the user
+        { $pull: { groopUsers: user._id } }  // Remove the user from groopUsers array
       );
-
-      res.status(200).json({ message: 'Users updated successfully', result });
-  } catch (error) {
-      console.error("Error updating users:", error);
-      res.status(500).json({ message: 'Error updating users', error: error.message });
-  }
+  
+      // Delete the user
+      await User.findByIdAndDelete(id);
+  
+      res.status(200).json({ message: "User deleted and removed from all groops" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  
+  // const updateManyUsers = async (req, res) => {
+    
+    //   const { ids, groopName } = req.body;
+    
+    //   if (!Array.isArray(ids) || !groopName) {
+      //       return res.status(400).json({ message: 'Invalid input data' });
+      //   }
+      
+      //   try {
+        //       const result = await User.updateMany(
+          //           { _id: { $in: ids } },
+          //           { $set: { groop: groopName } }
+          //       );
+          
+          //       res.status(200).json({ message: 'Users updated successfully', result });
+          //   } catch (error) {
+            //       console.error("Error updating users:", error);
+            //       res.status(500).json({ message: 'Error updating users', error: error.message });
+            //   }
+            // };
+            // ;
+            
+            module.exports = {
+  createUser,
+  getUsers,
+  deleteUser,
+  updateUser,
+  getUser,
 };
-;
-
-
-
-
-module.exports = {
-    createUser ,getUsers,deleteUser ,updateUser,getUser ,updateManyUsers
-}

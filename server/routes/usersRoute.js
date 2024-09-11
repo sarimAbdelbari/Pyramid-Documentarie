@@ -12,7 +12,7 @@ router.post('/', createUser );
 router.get('/', getUsers);
 
 
-router.patch('/updateMany', updateManyUsers);
+// router.patch('/updateMany', updateManyUsers);
 
 
 // Get a user by ID

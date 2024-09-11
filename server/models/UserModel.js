@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   userName: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true }, // hashed password
-  groop: { type: [String], required: true }
+  groop: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Groop' }],
 }, { timestamps: true });
 
 

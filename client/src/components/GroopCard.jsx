@@ -1,3 +1,5 @@
+import { FaEdit } from "react-icons/fa"; 
+import { Link } from "react-router-dom";
 
 const GroopCard = ({ groop, onDelete }) => {
 
@@ -29,12 +31,20 @@ const GroopCard = ({ groop, onDelete }) => {
           </ul>
         </div>
             </div>
+        <div className="flex justify-between">
+
+        <Link to={`/dashboard/groop/update/${groop._id}`} className="bg-gray-100 hover:bg-gray-300  text-black px-4 py-2 rounded-lg flex justify-center text-center items-center gap-7">
+          
+          <p>Update</p>
+           <FaEdit className="text-blue-500 hover:text-blue-700" />
+        </Link>
         <button
           onClick={() => onDelete(groop._id)}
           className="bg-red-500 text-white px-4 py-2 rounded-lg"
-        >
+          >
           Delete
         </button>
+          </div>
       </div>
     );
   };

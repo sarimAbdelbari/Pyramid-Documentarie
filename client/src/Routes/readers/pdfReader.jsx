@@ -5,11 +5,8 @@ import Button from "@/components/button";
 const PdfReader = ({route}) => {
   // const pdfUrl = 'https://pdfobject.com/pdf/sample.pdf'; // Replace with your PDF file path
   // const pdfUrl =   `VITE_PUBLIC_URLFILE route.route.file`; 
-  const pdfUrl =   `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.route.file}`; 
+  const pdfUrl =   `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`; 
 
-  console.log("pdfUrl",pdfUrl)
-
-  console.log("Route ::::::::::::::",route);
 
   return (
     <div className="min-h-screen">

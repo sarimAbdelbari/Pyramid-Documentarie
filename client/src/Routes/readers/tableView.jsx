@@ -3,12 +3,14 @@ import { DataGrid } from '@mui/x-data-grid';
 // import { error_toast } from '../../utils/toastNotification';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useStateContext } from '@/contexts/ContextProvider';
 
 const TableView = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [columnsUi, setColumnsUi] = useState([]);
   const [rowsUi, setRowsUi] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
+  const {routeData} = useStateContext();
 
   const fetchData = async () => {
     try {
@@ -65,12 +67,25 @@ const TableView = ({ route }) => {
 
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`);
 
-      if(response.data.length === 0) {
-        setIsLoading(false);
-        return;
-      }
+       
+        // Extract the IDs from response.data
+        const responseIds = response.data.map((item) => item._id);
 
-      const tableRows = response.data.map((row, index) => {
+        
+        
+        if(response.data.length === 0) {
+          setIsLoading(false);
+          return;
+        }
+
+        const routes = routeData.map((route) => route);
+        
+        // Filter routes based on whether their _id is in the responseIds array
+        const newRoutes = routes.filter((route) => responseIds.includes(route._id));
+
+
+
+      const tableRows = newRoutes.map((row, index) => {
         const combinedRow = row.data.tableRow.reduce((acc, current) => {
           return { ...acc, ...current };
         }, {});

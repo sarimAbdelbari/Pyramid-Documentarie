@@ -5,31 +5,47 @@ import { useStateContext } from '../contexts/ContextProvider';
 const useRouteAuth = () => {
   const { routeData, setRouteData, userInfo} = useStateContext();
 
+
   useEffect(() => {
 
-    if (!userInfo) {
+     
+
+    if (!userInfo.groop) {
       return;
     }
 
     const getData = async () => {
+      
       try {
+ 
+
         const responseGroop = await axios.post(`${import.meta.env.VITE_API_URL}/groop/all` ,{
-          groupsIds: userInfo.groop
+          groupsIds: userInfo?.groop
         });
         
- 
-         console.log("responseGroop" , responseGroop.data)
+        if(responseGroop.length === 0){
+          return;
+        }
+         
 
           const AllRoute = responseGroop.data.map((route)=>{
            return route.groopRoutes;
           })
-      
+          const routes = AllRoute.flat().map((route)=>{
+            return route.route;
+          })
+           
+  
+          if(routes.length ===0) {
+            return;
+          }
 
-
-          console.log("AllRoute.flat()",AllRoute.flat())
-        // const responseRoutes = await axios.get('http://localhost:5000/api/route');
+        const responseRoutes = await axios.post('http://localhost:5000/api/route/all',{ids:routes});
         
-        setRouteData(AllRoute.flat());
+      
+ 
+
+        setRouteData(responseRoutes.data);
 
       } catch (error) {
         console.error("Error fetching route data:", error);
@@ -41,7 +57,7 @@ const useRouteAuth = () => {
       getData();
  
     }
-  }, [setRouteData, routeData, userInfo]);
+  }, [userInfo.groop]);
 
 
 

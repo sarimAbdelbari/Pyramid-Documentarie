@@ -1,13 +1,22 @@
 const Groop = require('../models/GroopModel');
-
+const User = require('../models/UserModel');
 
 // Create a new Groop
 const createGroop = async (req, res) => {
   try {
     const { groopName, groopUsers, groopRoutes } = req.body;
+
+    // Create and save the new group
     const newGroop = new Groop({ groopName, groopUsers, groopRoutes });
     const savedGroop = await newGroop.save();
-    res.status(201).json(savedGroop);
+
+    // Add the group to the users' groop arrays without duplication
+    await User.updateMany(
+      { _id: { $in: groopUsers } },
+      { $addToSet: { groop: savedGroop._id } }  // $addToSet prevents duplicate group entries
+    );
+
+    res.status(201).json({ message: 'Group created and users updated successfully', savedGroop });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -31,12 +40,12 @@ const getGroupsByManyIds = async (req, res) => {
 
     const { groupsIds } = req.body;
 
-    if (!groupsIds || !Array.isArray(groupsIds)) {
+    if (!groupsIds || !Array.isArray(groupsIds) || groupsIds.length === 0) {
       return res.status(400).json({
         message: 'Invalid or missing "ids" array in the request body.',
       });
     }
-
+    
     const groupPromises = groupsIds.map((id) => Groop.findById(id));
 
     const groups = await Promise.all(groupPromises);
@@ -71,25 +80,65 @@ const getGroopById = async (req, res) => {
 // Update a Groop by ID
 const updateGroop = async (req, res) => {
   try {
-    const updatedGroop = await Groop.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    })
-      .populate('groopUsers')
-      .populate('groopRoutes.route');
-    if (!updatedGroop) return res.status(404).json({ error: 'Groupe non trouvé' });
-    res.status(200).json(updatedGroop);
+    const { groopName, groopUsers, groopRoutes } = req.body;
+
+    // Find the existing group
+    const existingGroop = await Groop.findById(req.params.id);
+    if (!existingGroop) return res.status(404).json({ error: 'Group not found' });
+
+    // Get the previous list of users in the group
+    const previousUsers = existingGroop.groopUsers.map(user => user.toString()); // Convert to string for easy comparison
+
+  
+    // Update the group details (name, routes, users)
+    existingGroop.groopName = groopName || existingGroop.groopName;
+    existingGroop.groopRoutes = groopRoutes || existingGroop.groopRoutes;
+    existingGroop.groopUsers = groopUsers || existingGroop.groopUsers;
+
+    // Save the updated group
+    const updatedGroop = await existingGroop.save();
+
+    // Handle user additions and removals
+
+    // Users to be added (new users that are not in previous group)
+    const usersToAdd = groopUsers.filter(user => !previousUsers.includes(user));
+
+    // Users to be removed (old users that are no longer in the updated group)
+    const usersToRemove = previousUsers.filter(user => !groopUsers.includes(user));
+
+    // Add group to new users
+    await User.updateMany(
+      { _id: { $in: usersToAdd } },
+      { $addToSet: { groop: updatedGroop._id } }
+    );
+
+    // Remove group from removed users
+    await User.updateMany(
+      { _id: { $in: usersToRemove } },
+      { $pull: { groop: updatedGroop._id } }
+    );
+
+    res.status(200).json({ message: 'Group updated successfully', updatedGroop });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
+
 // Delete a Groop by ID
 const deleteGroop = async (req, res) => {
   try {
+    // Find and delete the group by ID
     const deletedGroop = await Groop.findByIdAndDelete(req.params.id);
-    if (!deletedGroop) return res.status(404).json({ error: 'Groupe non trouvé' });
-    res.status(200).json({ message: 'Groop a été supprimé avec succès' });
+    if (!deletedGroop) return res.status(404).json({ error: 'Group not found' });
+
+    // Remove the group from all users' groop arrays
+    await User.updateMany(
+      { groop: req.params.id },
+      { $pull: { groop: req.params.id } }  // Use $pull to remove the group from users
+    );
+
+    res.status(200).json({ message: 'Group deleted successfully' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

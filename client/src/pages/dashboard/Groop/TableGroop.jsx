@@ -39,7 +39,7 @@ const TableGroop = () => {
   return (
     <div className="py-28">
       <h1 className="text-center text-3xl my-7 text-primary font-medium">Groop Cards</h1>
-      <div className="flex flex-wrap gap-14 mx-11  lg:justify-between  justify-center">
+      <div className="flex flex-wrap gap-14 mx-11  lg:justify-around  justify-center">
         <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-6 my-4 text-center flex justify-center items-center min-w-96 ">
           <Link to="/dashboard/groop/create" > 
           <CiCirclePlus className="text-6xl text-primary"/>

@@ -10,29 +10,28 @@ const View3 = ({route}) => {
    const {routeData} = useStateContext();
 
 
-   
-  
+
+
   useEffect(() => {
     const getViewData = async () => {
       try {
+         
+
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`
+          `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
 
         
-        
         // Extract the IDs from response.data
         const responseIds = response.data.map((item) => item._id);
+
         
-        const routes = routeData.map((route) => route.route);
+        const routes = routeData.map((route) => route);
         
         // Filter routes based on whether their _id is in the responseIds array
         const newRoutes = routes.filter((route) => responseIds.includes(route._id));
 
-        
-        console.log("response" , response.data)
-        console.log("routeData" , routeData)
-        console.log("newRoutes",newRoutes)
+ 
         
         setData(newRoutes);
       } catch (error) {
@@ -43,6 +42,8 @@ const View3 = ({route}) => {
     getViewData();
   }, [route]);
   
+
+  // console.log("data" , data)
 
   const getImageSrc = (src) => {
     if (src.startsWith('http')) {
@@ -56,10 +57,10 @@ const View3 = ({route}) => {
       <div className="py-28">
         <div className="text-center my-11 flex justify-center flex-col gap-7 items-center">
           <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
-            {route.route.title}
+            {route?.title}
           </h1>
           <p className="text-sm lg:text-xl text-textLightColor dark:text-textDarkColor font-normal w-3/5 leading-relaxed">
-            {route.route.details}
+            {route?.details}
           </p>
         </div>
         <div className="mt-11 mx-10">

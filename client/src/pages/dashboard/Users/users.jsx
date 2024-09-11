@@ -27,15 +27,22 @@ const Users = () => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
+ const [groopList,setGroopList] = useState([]);
 
-  const groopOptions = [
-    { value: 'Administrator', label: 'Admin' },
-    { value: 'User', label: 'User' },
-    { value: 'editor', label: 'Editor' },
-    { value: 'viewer', label: 'Viewer' },
-    { value: 'Devaloper', label: 'Devaloper' },
-  ];
 
+  // const groopOptions = [
+  //   { value: 'Administrator', label: 'Admin' },
+  //   { value: 'User', label: 'User' },
+  //   { value: 'editor', label: 'Editor' },
+  //   { value: 'viewer', label: 'Viewer' },
+  //   { value: 'Devaloper', label: 'Devaloper' },
+  // ];
+
+  const groopOptions = groopList.map((groop) => ({
+    value: groop._id,
+    label: groop.groopName,
+  }));
+  
 
   useEffect(() => {
     fetchUsers();
@@ -47,20 +54,27 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/users`);
-      const dataWithId = data.map((user, index) => ({ ...user, id: index + 1 }));
+      const { data: usersData } = await axios.get('http://localhost:5000/api/users');
+      const { data: groopData } = await axios.get('http://localhost:5000/api/groop');
+  
+        //  console.log("groopData ::" ,groopData)
+
+      setGroopList(groopData); // Populate group list
+  
+      // Update users with unique ID
+      const dataWithId = usersData.map((user, index) => ({ ...user, id: index + 1 }));
       setUsersData(dataWithId);
     } catch (error) {
       error_toast('Impossible de récupérer les utilisateurs');
       console.error(error);
     }
   };
-
+  
   const handleCreateUser = async () => {
     try {
       const { data } = await axios.post(`http://localhost:5000/api/users`, selectedUser);
       sucess_toast('Utilisateur créé avec succès');
-      setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
+      // setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
       handleCloseDialog();
     } catch (error) {
       error_toast("Échec de la création de l'utilisateur");
@@ -99,7 +113,22 @@ const Users = () => {
     { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'userName', headerName: "Nom d'utilisateur", flex: 2 },
     { field: 'email', headerName: 'Email', flex: 2 },
-    { field: 'groop', headerName: 'Group', flex: 2 },
+    {
+      field: 'groop',
+      headerName: 'Group',
+      flex: 2,
+      renderCell: (params) => {
+        const groopLabels = (params.row.groop || [])
+          .map(groopId => groopOptions.find(option => option.value === groopId)?.label)
+          .filter(label => label);  // Filter out undefined labels, if any
+        return groopLabels.map((groopLabels, index) => (
+          <span key={index} className='bg-primary p-2 mx-2 text-white rounded-xl'>{groopLabels ? groopLabels: 'No Group'}</span>
+        ))
+      }
+    }
+    
+    ,
+    
     { field: 'createdAt', headerName: 'Créé à', flex: 1 },
     { field: 'updatedAt', headerName: 'Mis à jour à', flex: 1 },
     {
@@ -147,8 +176,9 @@ const Users = () => {
     localStorage.setItem('columnVisibilityModelUsers', JSON.stringify(newModel));
   };
   
-  const onSelectGroop =(selectedOption) => {
-      setSelectedUser({ ...selectedUser, groop: selectedOption.value })
+  const onSelectGroop =(selectedOptions) => {
+    const selectedGroopIds = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    setSelectedUser({ ...selectedUser, groop: selectedGroopIds });
   }
 
   return  (
@@ -235,10 +265,11 @@ const Users = () => {
             margin="normal"
           /> */}
           <Select
-            value={groopOptions.find(option => option.value === selectedUser.groop)}
-            onChange={onSelectGroop}
+            isMulti
+            value={groopOptions.filter(option => selectedUser.groop.includes(option.value))}
+            onChange={(selectedOptions) => onSelectGroop(selectedOptions)}
             options={groopOptions}
-            placeholder="Sélectionner un rôle"
+            placeholder="Sélectionner un ou plusieurs rôles"
             className="mt-4"
           />
         </DialogContent>

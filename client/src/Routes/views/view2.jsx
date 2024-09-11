@@ -4,39 +4,35 @@ import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
 const View2 = ( {route} ) => {
-
   const [data, setData] = useState([]);
 
  
   const {routeData} = useStateContext();
 
 
-  
- 
+
+
  useEffect(() => {
    const getViewData = async () => {
      try {
-       const response = await axios.get(
-         `${import.meta.env.VITE_API_URL}/route/parrentId/${route.route._id}`
-       );
- 
         
 
-       console.log("response" , response.data)
+       const response = await axios.get(
+         `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
+       );
 
-      console.log("routeData" , routeData)
-
-
+       
        // Extract the IDs from response.data
        const responseIds = response.data.map((item) => item._id);
+
        
-       const routes = routeData.map((route) => route.route);
+       const routes = routeData.map((route) => route);
        
        // Filter routes based on whether their _id is in the responseIds array
        const newRoutes = routes.filter((route) => responseIds.includes(route._id));
-       
-      console.log("newRoutes",newRoutes)
 
+
+       
        setData(newRoutes);
      } catch (error) {
        console.error(error);
@@ -46,6 +42,8 @@ const View2 = ( {route} ) => {
    getViewData();
  }, [route]);
  
+
+ // console.log("data" , data)
 
  const getImageSrc = (src) => {
    if (src.startsWith('http')) {
