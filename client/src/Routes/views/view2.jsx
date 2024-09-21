@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
 const View2 = ( {route} ) => {
+
   const [data, setData] = useState([]);
 
  
@@ -18,7 +19,9 @@ const View2 = ( {route} ) => {
         
 
        const response = await axios.get(
+
          `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
+
        );
 
        
@@ -34,12 +37,17 @@ const View2 = ( {route} ) => {
 
        
        setData(newRoutes);
+
      } catch (error) {
+
        console.error(error);
+
      }
+
    };
  
    getViewData();
+
  }, [route]);
  
 
@@ -54,8 +62,8 @@ const View2 = ( {route} ) => {
 
   return (
     <>
-      <div className='py-28'>
-        <div className='flex justify-center items-start flex-col'>
+      <div className='pt-12'>
+        <div className='flex justify-around items-center flex-col mx-11'>
           {Object.values(data).map((item, index) => (
             <div
               key={index}
@@ -72,7 +80,7 @@ const View2 = ( {route} ) => {
                     </p>
                   )}
                   {item.details && (
-                    <p className='text-center text-lg text-textLightColor dark:text-textDarkColor font-medium'>
+                    <p className='text-center text-lg text-textSecLightColor dark:text-textDarkColor font-medium'>
                       {item.details}
                     </p>
                   )}

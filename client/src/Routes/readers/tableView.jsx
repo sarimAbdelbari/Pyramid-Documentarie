@@ -124,18 +124,18 @@ const TableView = ({ route }) => {
 
   return (
     <>
-      <div className="py-28">
+      <div className="pt-12">
         <div className="text-center mt-11 flex justify-center flex-col gap-7 items-center">
           <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             {route.title}
           </h1>
-          <p className="text-md lg:text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
+          <p className="text-md lg:text-lg text-textSecLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
             {route.details}
           </p>
         </div>
       </div>
-      <div className="w-full flex justify-center items-center">
-        <div style={{ height: 800, width: '80%' }}>
+      <div className="w-full flex justify-center items-center my-12">
+        <div style={{ height: 800, width: '90%' }}>
           <DataGrid
             rows={rowsUi}
             columns={columnsUi} // Use the dynamic columns here

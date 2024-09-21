@@ -1,4 +1,20 @@
+const mongoose = require('mongoose');
 const Route = require('../models/RouteModel');
+const Groop = require('../models/GroopModel');
+
+
+// Helper function to convert string IDs to ObjectId
+const normalizeObjectIds = (ids) => {
+  console.log("Original IDs: ", ids);
+  return ids.map(id => {
+    try {
+      return (typeof id === 'string' ? mongoose.Types.ObjectId(id) : id);
+    } catch (error) {
+      console.error(`Invalid ID format: ${id}`);
+      return id; // Return the ID as is if it cannot be converted (for further debugging)
+    }
+  });
+};
 
 // Create a new route
 
@@ -111,7 +127,19 @@ const updateRouteById = async (req, res) => {
   }
 };
 
-// Delete a route by ID
+// Recursive function to get all child routes of a given route
+const getAllRouteChildren = async (routeId) => {
+  let routes = await Route.find({ parrentPath: routeId });
+  
+  for (const route of routes) {
+    const children = await getAllRouteChildren(route._id); // Recursive call to get children of each child route
+    routes.push(...children); // Add all children recursively to the array
+  }
+
+  return routes.map(route => route._id); // Return an array of route IDs
+};
+
+
 const deleteRouteById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -122,21 +150,37 @@ const deleteRouteById = async (req, res) => {
       return res.status(404).json({ message: 'Aucun route trouvé' });
     }
 
+    // Get all the child routes (recursively) including the parent route
+    let allRouteIds = await getAllRouteChildren(id);
+    allRouteIds.push(id); // Include the parent route itself
+
+    console.log("All Route IDs before normalization: ", allRouteIds);
+
+    // Ensure all route IDs are ObjectId instances
+    let allRoutesIds = normalizeObjectIds(allRouteIds);
+
+    console.log("Normalized Route IDs: ", allRoutesIds);
+    
+    // Remove these routes from all groups
+    await Groop.updateMany(
+      { 'groopRoutes.route': { $in: allRoutesIds } }, // Use the normalized array here
+      { $pull: { groopRoutes: { route: { $in: allRoutesIds } } } } // Use the normalized array here
+    );
+
+    console.log("Routes successfully removed from groups.");
+
     // Recursive function to delete a route and its children
     const deleteRouteAndChildren = async (routeId) => {
-      // Find all child routes
       const childRoutes = await Route.find({ parrentPath: routeId });
 
-      // Recursively delete each child route and its children
       for (const childRoute of childRoutes) {
         await deleteRouteAndChildren(childRoute._id);
       }
 
-      // Finally, delete the route itself
-      await Route.findByIdAndDelete(routeId);
+      await Route.findByIdAndDelete(routeId); // Delete the route itself
     };
 
-    // Start the recursive deletion with the selected route
+    // Start the recursive deletion process for the selected route
     await deleteRouteAndChildren(id);
 
     res.status(200).json({ message: 'Route et ses enfants ont été supprimés avec succès' });

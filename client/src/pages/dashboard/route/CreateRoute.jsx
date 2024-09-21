@@ -14,7 +14,10 @@ import LoadingScreen from "@/utils/loadingScreen";
 import Select from "react-select";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-// nb
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { fr } from "date-fns/locale";
+
 
 const CreateRoute = ({ routeId }) => {
   const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch ,reloadfetch } = useStateContext();
@@ -533,9 +536,14 @@ const handleFieldRowChange = (index, event, key) => {
               inputprops={{ style: { color: "inherit" } }}
             />
           </div>
+          <div className="my-4">
+            {selectedRoute.createdAt && (
+              <p className="text-textLightColor">Date de creation: <br/>{selectedRoute.createdAt}</p>
+            )}
+          </div>
           {selectedRoute.view == "PdfReader" &&
           <div className="my-4 flex flex-col">
-            <label>  Date de création du fichier</label>
+            <label>  expiredate du fichier</label>
           {/* <DatePicker
       selected={selectedRoute?.expiredate || ""}
       onChange={handleDateChange}
@@ -543,12 +551,24 @@ const handleFieldRowChange = (index, event, key) => {
       placeholderText="Select a date"
       className="p-2  border border-primary rounded-lg"
       /> */}
-      <input
+      {/* i want to Translate this to franch language    */}
+      <DatePicker
+        selected={selectedRoute?.expiredate || ""}
+        onChange={handleDateChange}
+        dateFormat="dd/MM/yyyy" // Set the date format
+        placeholderText="Sélectionner une date"
+        className=" p-2 border border-primary rounded-lg"
+        locale={fr} // Set locale to French
+        isClearable
+      />
+      {/* <input
   type="date"
   className="w-1/4 p-2  border border-primary rounded-lg"
   onChange={(e) => handleDateChange(e.target.value)}
   value={selectedRoute?.expiredate || ""}
-/>
+   lang="fr"
+  
+/> */}
          </div>
     }
           <div className="my-4">

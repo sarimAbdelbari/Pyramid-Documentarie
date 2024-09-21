@@ -53,8 +53,9 @@ const Main = ({route}) => {
  };
   return (
 <>
-      <div className='py-28'>
-        <div className='grid grid-flow-row grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 lg:gap-7 place-content-center'>
+      <div className='pt-12'>
+        <div className='flex  items-center justify-around flex-wrap gap-7'>
+        {/* <div className='grid grid-flow-row  grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 lg:gap-7 place-content-center'> */}
           {Object.values(data).map((data, index) => (
             <div key={index} className='flex justify-center items-center flex-col m-4 '>
               <Link

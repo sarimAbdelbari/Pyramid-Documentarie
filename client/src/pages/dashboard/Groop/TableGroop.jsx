@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import GroopCard from "@/components/GroopCard"; // Assuming GroopCard is in the same directory
+import GroopCard from "@/components/GroopCard";
 import { Link } from "react-router-dom";
 import { CiCirclePlus } from "react-icons/ci";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
 
 const TableGroop = () => {
   const [groopData, setGroopData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGroop, setSelectedGroop] = useState(null); // Track the group to delete
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,36 +27,68 @@ const TableGroop = () => {
     try {
       await axios.delete(`http://localhost:5000/api/groop/${id}`);
       setGroopData(groopData.filter(groop => groop._id !== id));
-
+      setIsModalOpen(false); // Close modal after deletion
       sucess_toast("Le groop a été supprimé avec succès");
-
     } catch (error) {
       console.error('Error deleting groop:', error);
       error_toast("Impossible de supprimer le groop");
     }
   };
 
-  // const handleUpdate
-    
+  const openDeleteModal = (id) => {
+    setSelectedGroop(id); // Set the group to delete
+    setIsModalOpen(true);  // Open the modal
+  };
+
+  const closeDeleteModal = () => {
+    setIsModalOpen(false);
+    setSelectedGroop(null); // Clear selection on close
+  };
+
+  const AreYouSure = () => {
+    return (
+      <div className="z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 fixed flex justify-center items-center">
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 my-4 flex flex-col justify-between min-w-96">
+          <h2 className="text-2xl font-semibold mb-4 text-center text-textSecLightColor">Are you sure?</h2>
+          <div className="flex justify-between">
+            <button
+              onClick={closeDeleteModal}
+              className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+            >
+              No
+            </button>
+            <button
+              onClick={() => handleDelete(selectedGroop)}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="py-28">
+    <div className="pt-7">
       <h1 className="text-center text-3xl my-7 text-primary font-medium">Groop Cards</h1>
       <div className="flex flex-wrap gap-14 mx-11  lg:justify-around  justify-center">
-        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-6 my-4 text-center flex justify-center items-center min-w-96 ">
-          <Link to="/dashboard/groop/create" > 
-          <CiCirclePlus className="text-6xl text-primary"/>
-
+        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-6 my-4 text-center flex justify-center items-center min-w-96">
+          <Link to="/dashboard/groop/create">
+            <CiCirclePlus className="text-6xl text-primary" />
           </Link>
         </div>
         {groopData.map((groop) => (
-          <GroopCard key={groop._id} groop={groop} onDelete={handleDelete} />
+          <GroopCard key={groop._id} groop={groop} onDelete={openDeleteModal} />
         ))}
       </div>
+      {isModalOpen && <AreYouSure />} {/* Render modal if open */}
     </div>
   );
 };
 
 export default TableGroop;
+
 
 
 {/* <DataGrid

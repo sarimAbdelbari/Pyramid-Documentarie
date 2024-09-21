@@ -10,7 +10,7 @@ import { ImTree } from "react-icons/im";
 import { IoIosCreate } from "react-icons/io";
 import { MdStars } from "react-icons/md";
 export default function SideBar() {
-    const { visible, setVisible } = useStateContext();
+    const { visible, setVisible , userInfo } = useStateContext();
     const [ dropdowns, setDropdowns ] = useState({
         favorites: false,
         users: false,
@@ -39,8 +39,8 @@ export default function SideBar() {
     return (
         <div className={`fixed inset-0 z-40 shadow-2xl dark:shadow-lg dark:shadow-white transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'}`}>
         <div className="flex relative flex-row-reverse ">
-        <div className={`w-full bg-[#0e0e0e4d] transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'} `} onClick={() => setVisible(false)}></div>
-        <div className="w-3/5 lg:w-1/3 py-4 px-4  flex flex-col text-textlightColor dark:text-textDarkColor bg-mainLightBg  dark:bg-mainDarkBg h-screen   shadow-2xl dark:shadow-lg dark:shadow-white"> {/* Change min-h-screen to h-full and add overflow-y-auto */}
+        <div className={`fixed inset-0 z-0 w-full bg-[#0e0e0e4d] transition-transform duration-700 ease-in-out  ${visible ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'} `} onClick={() => setVisible(false)}></div>
+        <div className="w-3/5 lg:w-1/3 py-4 z-50 absolute inset-y-0 left-0 px-4 flex flex-col text-textlightColor dark:text-textDarkColor bg-mainLightBg  dark:bg-mainDarkBg h-screen   shadow-2xl dark:shadow-lg dark:shadow-white"> {/* Change min-h-screen to h-full and add overflow-y-auto */}
             <div className="flex items-center justify-between ">
                         <Link to="/dashboard" className="flex items-center gap-2">
                             <img src={LogoPngChiali} className='w-16' alt='LogoPngChiali' />
@@ -53,7 +53,7 @@ export default function SideBar() {
                     <div className="overflow-y-scroll  flex-1">
                         <ul className="p-3 space-y-2">
                             <li>
-                               
+    
                                 <ul className={`space-y-2 `}>
                                    
                                     <li>
@@ -201,8 +201,8 @@ export default function SideBar() {
                     <div className="p-3">
                         <hr className="border-gray-700 mb-3" />
                         <div className="flex items-center p-3 gap-4 rounded cursor-pointer hover:bg-gray-300 hover:dark:bg-gray-700">
-                            <img src="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" className="w-12 h-12 rounded-full" alt="Amy Elsner" />
-                            <span className="font-bold">Amy Elsner</span>
+                            <img src={`${import.meta.env.VITE_PUBLIC_URL1}/profileImage.avif`} className="w-12 h-12 rounded-full" alt="Amy Elsner" />
+                            <span className="font-bold">{userInfo.userName}</span>
                         </div>
                     </div>
                 </div>

@@ -114,7 +114,7 @@ const UpdateGroop = () => {
     };
 
     return (
-        <div className='pt-24 min-h-screen'>
+        <div className='pt-7 min-h-screen'>
             <div className='bg-white dark:bg-mainDarkBg dark:shadow-white flex justify-center flex-col gap-9 items-center py-4 px-8 shadow-xl m-8 rounded-xl'>
                 <p className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold">Update Groop</p>
                 <div className="w-full flex flex-col gap-5 justify-center items-center">

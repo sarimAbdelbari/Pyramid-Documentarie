@@ -10,7 +10,7 @@ const PdfReader = ({route}) => {
 
   return (
     <div className="min-h-screen">
-      <div className="py-32">
+      <div className="pt-12">
         <div className='bg-white dark:bg-mainDarkBg dark:shadow-white flex justify-end items-center py-4 px-8 shadow-lg my-8'>
           <div className="">
            <Button Text="Télécharger"/>

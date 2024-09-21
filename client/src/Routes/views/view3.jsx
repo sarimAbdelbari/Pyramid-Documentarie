@@ -54,12 +54,12 @@ const View3 = ({route}) => {
 
   return (
     <>
-      <div className="py-28">
+      <div className="pt-12">
         <div className="text-center my-11 flex justify-center flex-col gap-7 items-center">
           <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             {route?.title}
           </h1>
-          <p className="text-sm lg:text-xl text-textLightColor dark:text-textDarkColor font-normal w-3/5 leading-relaxed">
+          <p className="text-md lg:text-xl text-textSecLightColor dark:text-textDarkColor font-normal w-3/5 leading-relaxed">
             {route?.details}
           </p>
         </div>
@@ -92,7 +92,7 @@ const View3 = ({route}) => {
                   )}
                 </div>
                 {item.details && (
-                  <p className="text-center text-lg font-normal">{item.details}</p>
+                  <p className="text-center text-textSecLightColor text-lg font-normal">{item.details}</p>
                 )}
               </Link>
             ))}

@@ -6,9 +6,9 @@ const validator = require("validator");
 // * Create A new User
 const createUser = async (req, res) => {
   try {
-    const { userName, email, password, groop } = req.body;
+    const { userName, email, password, groop , active , admin } = req.body;
 
-    if (!email || !password || !userName) {
+    if (!email || !password || !userName || !groop) {
       throw Error("All fields must be filled");
     }
 
@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
 
     // ? add a user to the groop
 
-    const newUser = new User({ userName, email, password: hash, groop });
+    const newUser = new User({ userName, email, password: hash, groop , active , admin});
 
     const groopOfUser = await Groop.find({ _id: { $in: groop } });
 
@@ -99,7 +99,9 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { userName, email, password, groop } = req.body;
+  const { userName, email, password, groop , active ,admin } = req.body;
+
+
 
   try {
     const user = await User.findById(id);
@@ -112,15 +114,31 @@ const updateUser = async (req, res) => {
     const oldGroops = user.groop.map(g => g.toString());  // Convert ObjectIds to strings
 
     // Update user details
-    if (userName) user.userName = userName;
-    if (email) user.email = email;
-    if (password) {
+
+    if (userName && userName !== user.userName) user.userName = userName;
+    if (email && email !== user.email) user.email = email;
+
+    // Check if the password is different before hashing it
+    if (password && password !== user.password &&  !(await bcrypt.compare(password, user.password))) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
     }
-    if (groop) {
+
+    if (groop && groop !== user.groop) {
       user.groop = groop;
     }
+
+// Check if active is different from user.active
+if (active !== user.active) {
+
+  // Update user.active
+  user.active = active;
+}
+if (admin !== user.admin) {
+
+  // Update user.admin
+  user.admin = admin;
+}
 
     // Find the new groups for the user
     const newGroops = await Groop.find({ _id: { $in: groop } });
@@ -131,7 +149,9 @@ const updateUser = async (req, res) => {
 
     // Update groups
     // 1. Remove user from old groups not in the new groop list
+
     const groupsToRemove = oldGroops.filter(g => !groop.includes(g));
+    
     if (groupsToRemove.length > 0) {
       await Groop.updateMany(
         { _id: { $in: groupsToRemove } },
@@ -141,7 +161,6 @@ const updateUser = async (req, res) => {
 
     // 2. Add user to new groups not already in old groops
     const groupsToAdd = groop.filter(g => !oldGroops.includes(g));
-    
     if (groupsToAdd.length > 0) {
       await Groop.updateMany(
         { _id: { $in: groupsToAdd } },
@@ -158,6 +177,7 @@ const updateUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
   // * delete A User

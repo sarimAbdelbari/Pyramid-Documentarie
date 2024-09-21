@@ -305,7 +305,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 //   });
 //   }
   const ContextMenu = ({ position, onDelete, nodeData }) => (
-    <div className="context-menu fixed bg-mainLightBg shadow-2xl rounded-3xl p-7" style={{ top: position.y, left: position.x }}>
+    <div className="context-menu fixed bg-mainLightBg shadow-2xl rounded-3xl p-7 " style={{ top: position.y, left: position.x }}>
       <div className='absolute top-2 right-2 hover:opacity-70 '>
       <AiOutlineCloseCircle  className='text-xl cursor-pointer' onClick={() => setContextMenu({ ...contextMenu, visible: false })}/>
 
@@ -322,7 +322,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
         <div className="bg-white p-6 rounded-md shadow-md">
           <h2 className="mb-4 text-xl">Es-tu sûr?</h2>
           <div className="flex justify-end">
@@ -340,15 +340,18 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
       {loading ? (
         <LoadingScreen />
       ) : (
-        <div className='py-24 bg-mainLightBg dark:bg-mainDarkBg'>
+        <div className='pt-7 bg-mainLightBg dark:bg-mainDarkBg'>
           <div className="flex flex-row justify-center items-center">
             <h3 className="text-3xl pt-3 font-bold text-primary dark:text-textDarkColor">Routes</h3>
           </div>
           <div className="">
-            <div className="flex justify-start p-4 " onClick={() => AddRoute()}>
+            <div className="flex justify-start p-4 ">
+
+            <div  onClick={() => AddRoute()}>
               <Button Text="Ajouter un Route" />
             </div>
-            <div className="w-full h-screen" ref={containerRef}>
+            </div>
+            <div className="w-full h-screen " ref={containerRef}>
               <Tree
                 data={data}
                 translate={translate}

@@ -28,6 +28,9 @@ const getAllGroops = async (req, res) => {
     const groops = await Groop.find()
       .populate('groopUsers')
       .populate('groopRoutes.route');
+
+
+
     res.status(200).json(groops);
   } catch (err) {
     res.status(400).json({ error: err.message });

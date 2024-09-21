@@ -131,11 +131,9 @@ const Routes = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow h-screen">
-      <Navbar />
+    <div className="flex flex-col flex-grow min-h-screen">
       <div className="flex flex-grow overflow-hidden">
-        <SideBar />
-        <div className="flex-grow p-6 overflow-auto  pt-36 mx-0 lg:mx-16">
+        <div className="flex-grow p-6  pt-12 mx-0 lg:mx-16">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-3xl font-semibold text-primary">
               Gestion des Routes

@@ -51,13 +51,13 @@ const View5 = ({route}) => {
 
   return (
 <>
-      <div className="py-28 h-full">
+      <div className="pt-12 h-full">
         <div className="text-center my-11 flex justify-center flex-col gap-14 items-center">
           <h1 className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
             {/* ISO Surface-Mount Technology <br /> (SMT) Standards */}
              {route.title}
           </h1>
-          <p className="text-xl text-textLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
+          <p className="text-xl text-textSecLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
              {route.details}
             {/* ISO standards for SMT ensure quality and consistency in electronics
             manufacturing, covering design, assembly, and testing. They help

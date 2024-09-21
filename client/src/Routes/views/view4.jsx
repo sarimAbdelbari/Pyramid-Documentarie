@@ -57,7 +57,7 @@ const View4 = ( {route }) => {
   return (
 <>
       {data ? (
-        <div className='py-28'>
+        <div className='pt-12'>
         <div className="grid grid-flow-row grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-12 place-content-center">
           {Object.values(data).map((data, index) => (
           {/* ? Here You Put Data Instad {Object.values(data).map((data, index) => ( */},
@@ -73,7 +73,7 @@ const View4 = ( {route }) => {
                     </p>
                   )}
                   {data.details && (
-                    <p className='text-center text-lg text-textLightColor dark:text-textDarkColor font-medium'>
+                    <p className='text-center text-lg text-textSecLightColor dark:text-textDarkColor font-medium'>
                       {data.details}
                     </p>
                   )}

@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import Navbar from '@/components/navbar';
-import SideBar from '@/components/sidebar';
+import { useEffect, useState  } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useStateContext } from '@/contexts/ContextProvider';
 import axios from 'axios';
@@ -14,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from "react-router-dom";
 import { sucess_toast, error_toast } from '@/utils/toastNotification';
 import Select from 'react-select';
 
@@ -23,26 +22,18 @@ const Users = () => {
   const [usersData, setUsersData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState('');
-  const [selectedUser, setSelectedUser] = useState({ userName: '', email: '', password: '', groop: '' });
+  const [selectedUser, setSelectedUser] = useState({ userName: '', email: '', password: '', groop: '' , active : true , admin: false });
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
- const [groopList,setGroopList] = useState([]);
-
-
-  // const groopOptions = [
-  //   { value: 'Administrator', label: 'Admin' },
-  //   { value: 'User', label: 'User' },
-  //   { value: 'editor', label: 'Editor' },
-  //   { value: 'viewer', label: 'Viewer' },
-  //   { value: 'Devaloper', label: 'Devaloper' },
-  // ];
+  const [groopList,setGroopList] = useState([]);
 
   const groopOptions = groopList.map((groop) => ({
     value: groop._id,
     label: groop.groopName,
   }));
   
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsers();
@@ -62,8 +53,11 @@ const Users = () => {
       setGroopList(groopData); // Populate group list
   
       // Update users with unique ID
-      const dataWithId = usersData.map((user, index) => ({ ...user, id: index + 1 }));
+      const dataWithId = usersData?.map((user, index) => ({ ...user, id: index + 1 }));
+  
+
       setUsersData(dataWithId);
+
     } catch (error) {
       error_toast('Impossible de récupérer les utilisateurs');
       console.error(error);
@@ -74,23 +68,34 @@ const Users = () => {
     try {
       const { data } = await axios.post(`http://localhost:5000/api/users`, selectedUser);
       sucess_toast('Utilisateur créé avec succès');
-      // setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
+      setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
       handleCloseDialog();
     } catch (error) {
       error_toast("Échec de la création de l'utilisateur");
       console.error(error);
     }
   };
-
+  
   const handleUpdateUser = async () => {
     try {
       
-      // console.log("selectedUser" ,selectedUser)
-
+      
       const { data } = await axios.patch(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
-      sucess_toast("Mise à jour de l'utilisateur réussie");
+      
+      
+      
+      
+      // refraching the table data with the updated user
       setUsersData(prevState => prevState.map(user => (user._id === data._id ? { ...data, id: user.id } : user)));
+
+ 
+  
+      navigate("/dashboard/Users");
+
+      sucess_toast("Mise à jour de l'utilisateur réussie");
       handleCloseDialog();
+      
+
     } catch (error) {
       error_toast("Échec de la mise à jour de l'utilisateur");
       console.error(error);
@@ -125,10 +130,23 @@ const Users = () => {
           <span key={index} className='bg-primary p-2 mx-2 text-white rounded-xl'>{groopLabels ? groopLabels: 'No Group'}</span>
         ))
       }
-    }
-    
-    ,
-    
+    },
+    {
+      field:'active',
+      headerName: 'Actif',
+      flex: 1,
+      renderCell: (params) => {
+        return params.row.active ? 'Oui' : 'Non';
+      }
+    },
+    {
+      field:'admin',
+      headerName: 'Admin',
+      flex: 1,
+      renderCell: (params) => {
+        return params.row.admin ? 'Oui' : 'Non';
+      }
+    },
     { field: 'createdAt', headerName: 'Créé à', flex: 1 },
     { field: 'updatedAt', headerName: 'Mis à jour à', flex: 1 },
     {
@@ -151,7 +169,7 @@ const Users = () => {
     }
   ];
 
-  const handleOpenDialog = (type, user = { userName: '', email: '', password: '', groop: '' }) => {
+  const handleOpenDialog = (type, user = { userName: '', email: '', password: '', groop: '' , active : true , admin: false }) => {
     setDialogType(type);
     setSelectedUser(user);
     setOpenDialog(true);
@@ -159,7 +177,7 @@ const Users = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setSelectedUser({ userName: '', email: '', password: '', groop: '' });
+    setSelectedUser({ userName: '', email: '', password: '', groop: '' , active: false , admin: false });
   };
 
   const handleOpenConfirmDialog = (user) => {
@@ -176,16 +194,14 @@ const Users = () => {
     localStorage.setItem('columnVisibilityModelUsers', JSON.stringify(newModel));
   };
   
-  const onSelectGroop =(selectedOptions) => {
+  const onSelectGroop = (selectedOptions) => {
     const selectedGroopIds = selectedOptions ? selectedOptions.map(option => option.value) : [];
     setSelectedUser({ ...selectedUser, groop: selectedGroopIds });
   }
 
   return  (
-    <div className='min-h-screen bg-mainLightBg dark:bg-mainDarkBg text-textLightColor '>
-      <Navbar />
-      <SideBar />
-      <div className='pt-32 flex flex-col items-center gap-7'>
+  <>
+      <div className='pt-7   flex flex-col items-center gap-7'>
         <h3 className='text-3xl font-semibold text-textLightColor  dark:text-textDarkColor leading-relaxed'>Utilisateurs</h3>
         <Button 
           variant="contained" 
@@ -242,7 +258,7 @@ const Users = () => {
             margin="normal"
             className="text-primary"
           />
-          <TextField
+          <TextField 
             label="Email"
             value={selectedUser.email}
             onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
@@ -257,6 +273,26 @@ const Users = () => {
             fullWidth
             margin="normal"
           />
+          <div className='my-4 flex justify-start items-center gap-4'>
+           <label htmlFor="active" className=' text-center'>Actif</label>
+           <input 
+  id="active" 
+  checked={selectedUser.active} 
+  type='checkbox' 
+  onChange={(e) => setSelectedUser({ ...selectedUser, active: e.target.checked })} 
+/>
+
+          </div>
+          <div className='my-4 flex justify-start items-center gap-4'>
+           <label htmlFor="admin" className=' text-center'>Admin</label>
+           <input 
+  id="admin" 
+  checked={selectedUser.admin} 
+  type='checkbox' 
+  onChange={(e) => setSelectedUser({ ...selectedUser, admin: e.target.checked })} 
+/>
+
+          </div>
           {/* <TextField
             label="group"
             value={selectedUser.groop}
@@ -299,7 +335,8 @@ const Users = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+  </>
+    
   );
 };
 
