@@ -28,6 +28,7 @@ import CreateGroop from "./pages/dashboard/Groop/CreateGroop";
 import TableGroop from "./pages/dashboard/Groop/TableGroop";
 import UpdateGroop from "./pages/dashboard/Groop/UpdateGroop";
 import RDPage from "./pages/Other/RDPage";
+import View6 from "./Routes/views/View6";
 
 
 const App = () => {
@@ -61,7 +62,15 @@ const App = () => {
                 {userInfo?.admin ? (
                   <>
               <Routes>
-
+                    <Route 
+                    path="/View6"
+                    element={
+                      <ProtectedRoute>
+                        <View6 />
+                      </ProtectedRoute>
+                    }
+                    />
+ 
                     <Route
                       path="/dashboard/Users"
                       element={
@@ -155,10 +164,14 @@ const App = () => {
             </>
           ) : (
             // Redirect inactive users to RDPage
+            <>
+              <Navbar />
+
             <Routes>
               <Route path="/*" element={<RDPage />} />
             </Routes>
             
+            </>
           )}
         </>
       ) : (
