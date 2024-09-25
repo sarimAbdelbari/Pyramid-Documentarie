@@ -38,7 +38,7 @@ const App = () => {
   const routeData = useRouteAuth();
 
   return (
-    <div className="min-h-screen bg-[#fafeff] dark:bg-secDarkBg relative">
+    <div className="min-h-screen bg-[#f2f4f8] dark:bg-secDarkBg relative">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -57,11 +57,13 @@ const App = () => {
           {userInfo?.active ? (
             <>
               <Navbar />
-              <SideBar />
+              
                 {/* Admin Routes */}
                 {userInfo?.admin ? (
-                  <>
-              <Routes>
+                  <div className="flex">
+                  <SideBar />
+                  <div  className="flex-1">
+                  <Routes>
                     <Route 
                     path="/View6"
                     element={
@@ -72,7 +74,7 @@ const App = () => {
                     />
  
                     <Route
-                      path="/dashboard/Users"
+                      path="/dashboard/users/table"
                       element={
                         <ProtectedRoute>
                           <Users />
@@ -129,7 +131,9 @@ const App = () => {
                     />
               </Routes>
 
-                  </>
+                  </div>
+             
+                  </div>
                 ) : (
                   // Normal User Routes
                   <>

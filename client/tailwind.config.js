@@ -20,7 +20,9 @@ export default {
         textDarkColor: '#e0e0e0', // Lighter almost white text
         textSecDarkColor: '#a8a8a8', // Slightly darker light gray text
         darkPrimary: '#002060', // Darker blue
-        primary: '#0056b3', // Darker bright blue
+        primary: '#423cf3', // Darker bright blue
+        secPrimary: '#9292d4', // Darker bright blue
+        blueish:'#423cf3',
         accent: '#ff5c5c', // Darker coral
         darkAccent: '#c62839', // Darker deep pink
       },

@@ -1,12 +1,14 @@
 import { useContext, useState } from 'react';
 import { BsMoonStarsFill } from 'react-icons/bs';
-import { MdOutlineLightMode } from 'react-icons/md';
-import { IoMdMore } from 'react-icons/io';
+import { MdOutlineLightMode, MdOutlineAddComment } from 'react-icons/md';
+import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
+import { RiArrowDropDownLine } from 'react-icons/ri';
 import { ThemeContext } from './themeProvider';
 import { useStateContext } from '@/contexts/ContextProvider';
 import LogoPngChiali from '../../public/assets/images/LogoPngChiali.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { IoIosLogOut } from "react-icons/io";
 
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -17,7 +19,7 @@ const Navbar = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  const Logout = async () => {
+  const handleLogout = async () => {
     try {
       await axios.post('http://localhost:5000/api/auth/logout', {}, { withCredentials: true });
       window.location.href = '/login';
@@ -27,67 +29,98 @@ const Navbar = () => {
   };
 
   return (
-    <div className="relative mx-8 sticky top-5 z-30 rounded-2xl shadow-lg dark:shadow-md dark:shadow-white py-2 dark:bg-mainDarkBg bg-white">
-      <div className="p-3 mx-7 flex justify-between items-center gap-7">
+    <nav className=" sticky top-5 z-30 py-2 bg-white dark:bg-mainDarkBg shadow-md rounded-full mx-4 lg:mx-8 transition-colors duration-300">
+      <div className="flex justify-between items-center px-4 lg:px-7">
         {/* Logo Section */}
-        {userInfo && !userInfo?.active && (
-          <Link to="/main">
-            <img
-              src={LogoPngChiali}
-              className="w-14 hover:scale-105 transition-transform duration-300 ease-in-out"
-              alt="LogoPngChiali"
-              onClick={() => setVisible(true)}
-            />
-          </Link>
-        )}
-        {userInfo && userInfo?.active && (
-          <IoMdMore
-            className="text-4xl   hover:scale-105 font-extrabold hover:text-primary hover:dark:text-primary transition-colors duration-400 ease-in-out text-textlightColor dark:text-textDarkColor cursor-pointer"
-            onClick={() => setVisible(true)}
+        <Link to="/main" className="flex items-center gap-4" onClick={() => setVisible(true)}>
+          <img
+            src={LogoPngChiali}
+            className="w-12 md:w-16 hover:scale-105 transition-transform"
+            alt="LogoPngChiali"
           />
-        )}
+          <h1 className="text-lg hidden sm:flex   md:text-xl font-semibold text-black dark:text-textDarkColor uppercase">
+            Pyramide<span className="text-blueish pl-2 font-medium">doc</span>
+          </h1>
+        </Link>
 
-        {/* Right Section: Theme Toggle & Profile */}
-        <div className="flex items-center gap-8 relative">
-          {/* Theme Toggle */}
-          <button onClick={toggleTheme} className="transition-transform duration-300 ease-in-out hover:scale-110">
-            {theme === 'light' ? (
-              <BsMoonStarsFill className="text-3xl text-textlightColor hover:text-primary dark:text-textDarkColor transition-colors duration-400 ease-in-out" />
-            ) : (
-              <MdOutlineLightMode className="text-4xl font-bold text-textlightColor hover:dark:text-primary dark:text-textDarkColor hover:text-primary transition-colors duration-400 ease-in-out" />
-            )}
-          </button>
+        {/* Search, Email, Notification */}
+        <div className="items-center hidden lg:flex  gap-4 flex-1 mx-4 lg:mx-8">
+          <div className="flex-1 flex items-center bg-gray-100 dark:bg-gray-700 py-2 px-4 rounded-full">
+            <IoIosSearch className="text-xl text-gray-500  " />
+            <input
+              className="w-full bg-transparent focus:outline-none ml-2"
+              type="text"
+              placeholder="Search"
+            />
+          </div>
+          <MdOutlineAddComment className="text-4xl text-gray-500 dark:text-gray-300 p-2 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" />
+          <IoMdNotificationsOutline className="text-4xl text-gray-500 dark:text-gray-300 p-2 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" />
+        </div>
 
-          {/* Profile Image */}
-          <div className="relative">
+        {/* Profile & Theme Toggle */}
+        <div className="relative flex items-center gap-4">
+          {/* Profile */}
+          <div
+            className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
             <img
               src={`${import.meta.env.VITE_PUBLIC_URL1}/profileImage.avif`}
-              className="w-14 rounded-full cursor-pointer hover:scale-105 transition-transform duration-300 ease-in-out"
-              alt="ProfileImage"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="w-10 md:w-12 rounded-full"
+              alt="Profile"
             />
-            {/* Dropdown Menu */}
-            
-              <div
-                className={`absolute flex flex-col justify-center gap-5 w-64 py-11 px-4 -right-10 top-16 bg-white dark:bg-mainDarkBg shadow-xl rounded-xl rounded-tr-none transform transition-all duration-500 ease-in-out ${
-                  isMenuOpen ? 'opacity-100  translate-y-0 visible ' : 'invisible  opacity-0 -translate-y-10'
-                }`}
-              >
-                <p className="text-textlightColor dark:text-textDarkColor font-bold text-primary text-2xl">{userInfo?.userName}</p>
-                <p className="text-textSecLightColor  dark:text-textDarkColor font-medium ">{userInfo?.email}</p>
-                <p className="text-textLightColor  dark:text-textDarkColor font-medium ">Version 1.0</p>
-                <button
-                  onClick={Logout}
-                  className="text-textlightColor dark:text-textDarkColor font-bold mt-3 bg-primary text-white px-4 py-2 rounded-lg hover:text-primary dark:hover:text-primary hover:bg-white dark:hover:bg-white transition-colors duration-300 ease-in-out"
-                >
-                  Logout
-                </button>
+            <div className="hidden md:flex flex-col text-left">
+              <p className="text-sm font-bold text-gray-800 dark:text-white">
+                {userInfo?.userName}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {userInfo?.admin ? 'Admin' : 'User'}
+              </p>
+            </div>
+            <RiArrowDropDownLine className="text-2xl md:text-3xl text-gray-500 dark:text-gray-300" />
+          </div>
+
+          {/* Dropdown Menu */}
+          <div
+            className={`absolute top-16 right-0 mt-2 w-56 bg-white dark:bg-mainDarkBg rounded-xl shadow-lg transform transition-all duration-300 ease-in-out ${
+              isMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
+            }`}
+          >
+            <div className="p-4">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {userInfo?.email}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Version 1.0</p>
+              <div className='mt-4 w-full text-center px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"'>
+
+              <MdOutlineAddComment className="text-xl text-gray-600 dark:text-gray-200" />
               </div>
-           
+              <div className='mt-4 w-full text-center px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"'>
+              <IoMdNotificationsOutline className="text-xl text-gray-600 dark:text-gray-200" />
+              </div>
+              <button
+                onClick={toggleTheme}
+                className="mt-4 w-full text-center px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                {theme === 'light' ? (
+                  <BsMoonStarsFill className="text-xl text-gray-600 dark:text-gray-200" />
+                ) : (
+                  <MdOutlineLightMode className="text-2xl text-gray-600 dark:text-gray-200" />
+                )}
+              </button>
+              <button
+                onClick={handleLogout}
+                className="mt-4 w-full px-4 py-4 text-sm font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 text-center flex items-center gap-3"
+              >
+                <IoIosLogOut className="text-xl text-white" />
+
+                Déconnexion
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

@@ -12,10 +12,10 @@ const RDPage = () => {
             color="blue-gray"
             className="mt-10 !text-3xl !leading-relaxed  md:!text-4xl"
           >
-            Error 404 <br /> Il semble que quelque chose s'est mal passé.
+            Error 404 <br /> Il semble que quelque chose s&apos;est mal passé.
           </Typography>
           <Typography className="mt-8 mb-14 text-[18px] font-normal text-gray-500 mx-auto md:max-w-sm">
-          Ne vous inquiétez pas, notre équipe est déjà sur le coup. Essayez d'actualiser
+          Ne vous inquiétez pas, notre équipe est déjà sur le coup. Essayez d&apos;actualiser
           la page ou revenez plus tard.
           </Typography>
           <Button color="gray" className="w-full px-4 md:w-[8rem]">
