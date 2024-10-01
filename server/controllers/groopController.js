@@ -1,16 +1,69 @@
 const Groop = require('../models/GroopModel');
 const User = require('../models/UserModel');
+const Route=require('../models/RouteModel');
+
+// Get All the Parrent
+const getParents = async (routeId) => {
+  const route = await Route.findOne({ _id: routeId });
+  if (!route) {
+    return [];
+  }
+  let parents = [];
+  let currentRoute = route;
+  while (currentRoute.parrentPath!="") {
+    const parentRoute = await Route.findOne({ _id: currentRoute.parrentPath });
+    if (!parentRoute) {
+      break; 
+    }
+    parents.push(parentRoute);
+    currentRoute = parentRoute;
+  }
+  return parents;
+};
+
+// Get all The Children
+const getAllRouteChildren = async (routeId) => {
+  let routes = await Route.find({ parrentPath: routeId });
+
+  for (const route of routes) {
+    const children = await getAllRouteChildren(route._id); // Recursive call to get children of each child route
+    routes.push(...children); // Add all children recursively to the array
+  }
+
+  return routes.map(route => route._id); // Return an array of route IDs
+
+};
 
 // Create a new Groop
 const createGroop = async (req, res) => {
   try {
+
     const { groopName, groopUsers, groopRoutes } = req.body;
 
     // Create and save the new group
-    const newGroop = new Groop({ groopName, groopUsers, groopRoutes });
-    const savedGroop = await newGroop.save();
+    const parents = await Promise.all(
+      groopRoutes.map(async (route) => {
+        const routes = await getParents(route.route);
+        return routes;
+      })
+    );
+   
+    const uniqueParents = Array.from(
+      new Map(parents.flat().map(parent => [parent._id.toString(), parent])).values()
+    );
 
-    // Add the group to the users' groop arrays without duplication
+    let newRoutes = uniqueParents.map((route)=>{
+      return {
+        "route":route._id.toString(),
+        "permission":"NoDownload",
+      }
+    });
+
+    newRoutes.push(groopRoutes);
+
+   const finalRoutes=newRoutes.flat();
+    const newGroop = new Groop({ groopName, groopUsers, groopRoutes:finalRoutes });
+    const savedGroop = await newGroop.save();
     await User.updateMany(
       { _id: { $in: groopUsers } },
       { $addToSet: { groop: savedGroop._id } }  // $addToSet prevents duplicate group entries
@@ -92,21 +145,39 @@ const updateGroop = async (req, res) => {
     // Get the previous list of users in the group
     const previousUsers = existingGroop.groopUsers.map(user => user.toString()); // Convert to string for easy comparison
 
-  
-    // Update the group details (name, routes, users)
+    // Handle updating routes with parent routes
+    const parents = await Promise.all(
+      groopRoutes.map(async (route) => {
+        const routes = await getParents(route.route);
+        return routes;
+      })
+    );
+
+    const uniqueParents = Array.from(
+      new Map(parents.flat().map(parent => [parent._id.toString(), parent])).values()
+    );
+
+    let updatedRoutes = uniqueParents.map((route) => {
+      return {
+        "route": route._id.toString(),
+        "permission": "NoDownload",  // Set default permission for parents
+      };
+    });
+
+    // Add provided routes with permissions
+    updatedRoutes.push(groopRoutes);
+    const finalRoutes = updatedRoutes.flat();
+
+    // Update group details (name, routes, users)
     existingGroop.groopName = groopName || existingGroop.groopName;
-    existingGroop.groopRoutes = groopRoutes || existingGroop.groopRoutes;
+    existingGroop.groopRoutes = finalRoutes || existingGroop.groopRoutes;
     existingGroop.groopUsers = groopUsers || existingGroop.groopUsers;
 
     // Save the updated group
     const updatedGroop = await existingGroop.save();
 
     // Handle user additions and removals
-
-    // Users to be added (new users that are not in previous group)
     const usersToAdd = groopUsers.filter(user => !previousUsers.includes(user));
-
-    // Users to be removed (old users that are no longer in the updated group)
     const usersToRemove = previousUsers.filter(user => !groopUsers.includes(user));
 
     // Add group to new users
@@ -126,6 +197,7 @@ const updateGroop = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 
 // Delete a Groop by ID

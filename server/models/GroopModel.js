@@ -5,7 +5,7 @@ const groopRouteSchema = new mongoose.Schema({
   permission: { 
     type: String, 
     required: true, 
-    enum: ['Show', 'noShow'], // Restrict permission to 'Show' or 'noShow'
+    enum: ['Download', 'NoDownload'], // Restrict permission to 'Show' or 'noShow'
   },
 });
 

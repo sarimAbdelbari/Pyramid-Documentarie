@@ -16,8 +16,8 @@ const normalizeObjectIds = (ids) => {
   });
 };
 
-// Create a new route
 
+// Create a new route
 const createRoute = async (req, res) => {
   try {
     const {parrentPath ,title, path, view, image ,file, expiredate ,details ,data } = req.body;
@@ -189,7 +189,35 @@ const deleteRouteById = async (req, res) => {
   }
 };
 
+// ? Get all feuilles with view = "PdfReader" or "ExcelReader"
+const getFeuilles = async (req,res)=>{
+  const views = ["PdfReader","ExcelReader"];
 
+  try {
+    const feuilles = await  Route.find({view:{$in:views}});
+    if(!feuilles || feuilles.length ==0){
+      res.status(404).json('no feuilles found')
+    }
+   res.status(200).json(feuilles);
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
+
+// ? Get All Feuilles that Does Not contain view = "PdfReader" or "ExcelReader"
+const getFeuillesNot = async (req,res)=>{
+  const views = ["PdfReader","ExcelReader"];
+
+  try {
+    const feuilles = await  Route.find({view:{$nin:views}});
+    if(!feuilles || feuilles.length ==0){
+      res.status(404).json('no feuilles found')
+    }
+   res.status(200).json(feuilles);
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
 
 
 module.exports = {
@@ -199,6 +227,8 @@ module.exports = {
   getRouteByManyId,
   getRouteByParrentId,
   updateRouteById,
+  getFeuilles,
+  getFeuillesNot,
   deleteRouteById
 };
 

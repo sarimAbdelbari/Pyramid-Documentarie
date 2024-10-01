@@ -9,6 +9,7 @@ import LogoPngChiali from '../../public/assets/images/LogoPngChiali.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { IoIosLogOut } from "react-icons/io";
+import Button from "@/components/button";
 
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -29,18 +30,19 @@ const Navbar = () => {
   };
 
   return (
-    <nav className=" sticky top-5 z-30 py-2 bg-white dark:bg-mainDarkBg shadow-md rounded-full mx-4 lg:mx-8 transition-colors duration-300">
+    <>
+      <div onClick={() => setIsMenuOpen(!isMenuOpen)} className={`${isMenuOpen ? 'fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-40' : 'hidden'} `}></div>
+
+    <nav className=" sticky top-5 z-40 py-2 bg-white dark:bg-mainDarkBg shadow-md rounded-full mx-4 lg:mx-8 transition-colors duration-300">
+      
       <div className="flex justify-between items-center px-4 lg:px-7">
         {/* Logo Section */}
-        <Link to="/main" className="flex items-center gap-4" onClick={() => setVisible(true)}>
+        <Link to="/main" className="flex items-center gap-4 flex-1" onClick={() => setVisible(true)}>
           <img
             src={LogoPngChiali}
             className="w-12 md:w-16 hover:scale-105 transition-transform"
             alt="LogoPngChiali"
           />
-          <h1 className="text-lg hidden sm:flex   md:text-xl font-semibold text-black dark:text-textDarkColor uppercase">
-            Pyramide<span className="text-blueish pl-2 font-medium">doc</span>
-          </h1>
         </Link>
 
         {/* Search, Email, Notification */}
@@ -50,7 +52,7 @@ const Navbar = () => {
             <input
               className="w-full bg-transparent focus:outline-none ml-2"
               type="text"
-              placeholder="Search"
+              placeholder="Recherche"
             />
           </div>
           <MdOutlineAddComment className="text-4xl text-gray-500 dark:text-gray-300 p-2 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" />
@@ -108,19 +110,17 @@ const Navbar = () => {
                   <MdOutlineLightMode className="text-2xl text-gray-600 dark:text-gray-200" />
                 )}
               </button>
-              <button
-                onClick={handleLogout}
-                className="mt-4 w-full px-4 py-4 text-sm font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 text-center flex items-center gap-3"
-              >
-                <IoIosLogOut className="text-xl text-white" />
+              <div onClick={handleLogout}  className='mt-4 w-full  '>
+              <Button Text="Déconnexion" Icon={<IoIosLogOut className="text-xl text-textDarkColor hover:text-textLightColor  dark:text-gray-200 hover:dark:text-textLightColor" />} />
 
-                Déconnexion
-              </button>
+              </div>
+             
             </div>
           </div>
         </div>
       </div>
     </nav>
+    </>
   );
 };
 

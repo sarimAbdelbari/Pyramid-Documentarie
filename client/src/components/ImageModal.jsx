@@ -1,24 +1,18 @@
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
-const ImageModal = ({ open, onClose, imgSrc }) => {
+const ImageModal = ({ onClose, imgSrc }) => {
  
-  console.log("hello it me ",imgSrc)
   return (
     <>
-<div className="fixed  inset-0 bg-black bg-opacity-50 z-50">
-  <div className="bg-[#0000003f] h-full w-full flex justify-center items-center">
-<IconButton
-          edge="start"
-          color="inherit"
-          onClick={onClose}
-          aria-label="close"
-          style={{ position: "absolute", top: 10, right: 10 ,zIndex:60}}
-          >
-          <CloseIcon />
-        </IconButton>
+    <></>
+<div className="fixed  inset-0 bg-gray-600 bg-opacity-50 z-50">
+  
+  <div className="h-full w-full flex justify-center items-center relative">
+
+          <IoCloseCircleOutline  onClick={onClose}
+          className="font-bold text-3xl text-white z-50 top-5 right-5 absolute cursor-pointer hover:text-primary"/>
+
+   
 <img
           src={imgSrc}
           alt="Enlarged"
@@ -28,34 +22,11 @@ const ImageModal = ({ open, onClose, imgSrc }) => {
 
   </div>
 </div>
-    <Dialog open={open} onClose={onClose} fullScreen >
-      <DialogContent >
-        
-        
-      </DialogContent>
-    </Dialog>
-
+    
           </>
   );
 };
 
 export default ImageModal;
 
-{/* <Dialog open={open} onClose={onClose} fullScreen >
-      <DialogContent className="bg-[#0000003f] flex justify-center items-center">
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={onClose}
-          aria-label="close"
-          style={{ position: "absolute", top: 10, right: 10 }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <img
-          src={imgSrc}
-          alt="Enlarged"
-          style={{ width: "90%", height: "auto" }}
-        />
-      </DialogContent>
-    </Dialog> */}
+

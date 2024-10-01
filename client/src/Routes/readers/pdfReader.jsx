@@ -7,6 +7,7 @@ const PdfReader = ({route}) => {
   // const pdfUrl =   `VITE_PUBLIC_URLFILE route.route.file`; 
   const pdfUrl =   `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`; 
 
+  console.log("first pdfUrl",route)
 
   return (
     <div className="min-h-screen">

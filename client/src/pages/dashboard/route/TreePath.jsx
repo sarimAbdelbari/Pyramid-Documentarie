@@ -71,6 +71,7 @@ const viewOptions = [
   { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
   { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
   { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png` ,titre:"Lecteur PDF"},
+  { name: "ExcelReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/ExcelReader.png` ,titre:"Lecteur Excel"},
 ];
 
 
@@ -90,6 +91,8 @@ const getNodeColor = (viewType) => {
       return "#0056B3"; // Slate Blue for TableView
     case 'PdfReader':
       return "#C70100"; // Blue Violet for PDF Reader
+    case 'ExcelReader':
+      return "#007B23"; 
       default:
         return "#0400B3"; // Default colors
   }

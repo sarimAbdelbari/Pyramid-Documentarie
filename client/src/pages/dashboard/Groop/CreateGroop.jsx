@@ -1,195 +1,223 @@
-import { useEffect, useState } from "react";
-import Select from "react-select";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { error_toast, sucess_toast } from "@/utils/toastNotification";
-import { useNavigate } from "react-router-dom";
-const CreateGroop = () => {
-    const navigate = useNavigate(); // For redirection
-    
-    const [groopName, setGroopName] = useState('');
-    const [routes, setRoutes] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [selectedRoutes, setSelectedRoutes] = useState([]);
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    const [routePermissionPair, setRoutePermissionPair] = useState({ route: null, permission: null });
+import Select from "react-select";
+import Button from "@/components/button";
+import { sucess_toast, error_toast } from "@/utils/toastNotification";
 
-    const fetchData = async () => {
-        try {
-            const responseRoutes = await axios.get('http://localhost:5000/api/route');
-            const responseUsers  = await axios.get('http://localhost:5000/api/users');
+const CreateGroop = ({onClose}) => {
+  const [groopName, setGroopName] = useState("");
+  const [routes, setRoutes] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedRoutes, setSelectedRoutes] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [routePermissionPair, setRoutePermissionPair] = useState({
+    route: null,
+    permission: null,
+  });
 
-            setRoutes(responseRoutes.data);
-            setUsers(responseUsers.data);
-        } catch (error) {
-            console.error(error);
-        }
+  const fetchData = async () => {
+    try {
+      const responseRoutes = await axios.get("http://localhost:5000/api/route/pages");
+      const responseUsers = await axios.get("http://localhost:5000/api/users");
+      setRoutes(responseRoutes.data);
+      setUsers(responseUsers.data);
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    useEffect(() => {
-        fetchData();
-    }, [])
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const optionsRoutes = routes
-    .filter(route => !selectedRoutes.some(pair => pair.route === route._id)) // Filter out selected routes
+  const optionsRoutes = routes
+    .filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
     .map((route) => ({
-        value: route._id,
-        label: route.path,
+      value: route._id,
+      label: route.title,
     }));
 
+  const optionsUsers = users.map((user) => ({
+    value: user._id,
+    label: user.userName,
+  }));
 
-    const optionsUsers = users.map((user) => ({
-        value: user._id,
-        label: user.userName,
-    }));
+  const optionsPermissions = [
+    { value: "Download", label: "Télécharger" },
+    { value: "NoDownload", label: "pas de téléchargement" },
+  ];
 
-    const optionsPermmissions = [
-        { value: 'Show', label: 'Show' },
-        { value: 'noShow', label: 'noShow' },
-    ]
+  const onChangeRoute = (selectedOption) => {
+    setRoutePermissionPair({
+      ...routePermissionPair,
+      route: selectedOption.value,
+    });
+  };
 
-    const onChangeRoute = (selectedOption) => {
-        setRoutePermissionPair({ ...routePermissionPair, route: selectedOption.value });
-    };
+  const onChangeUser = (selectedOption) => {
+    setSelectedUsers(selectedOption);
+  };
 
-    const onChangeUser = (selectedOption) => {
-        setSelectedUsers(selectedOption);
-    };
+  const onChangePermission = (selectedOption) => {
+    setRoutePermissionPair({
+      ...routePermissionPair,
+      permission: selectedOption.value,
+    });
+  };
 
-    const onChangePermmission = (selectedOption) => {
-        setRoutePermissionPair({ ...routePermissionPair, permission: selectedOption.value });
-    };
+  const addRoutePermission = () => {
+    if (routePermissionPair.route && routePermissionPair.permission) {
+      const isDuplicate = selectedRoutes.some(
+        (pair) =>
+          pair.route === routePermissionPair.route &&
+          pair.permission === routePermissionPair.permission
+      );
 
-    const addRoutePermission = () => {
-        if (routePermissionPair.route && routePermissionPair.permission) {
-            // Check if the route-permission pair is already in the selectedRoutes
-            const isDuplicate = selectedRoutes.some(
-                (pair) => pair.route === routePermissionPair.route && pair.permission === routePermissionPair.permission
-            );
-    
-            if (!isDuplicate) {
-                setSelectedRoutes([...selectedRoutes, routePermissionPair]);
-                setRoutePermissionPair({ route: null, permission: null }); // Reset after adding
-            } else {
-                error_toast("Cette paire route-autorisation a déjà été ajoutée.");
-            }
-        }
-    };
-    
-    
-    const removeRoutePermission = (index) => {
-        const updatedRoutes = [...selectedRoutes];
-        updatedRoutes.splice(index, 1);
-        setSelectedRoutes(updatedRoutes);
-    };
+      if (!isDuplicate) {
+        setSelectedRoutes([...selectedRoutes, routePermissionPair]);
+        setRoutePermissionPair({ route: null, permission: null });
+      } else {
+        error_toast("Cette paire route-autorisation a déjà été ajoutée.");
+      }
+    }
+  };
 
-    const handleSubmit = async () => {
-        try {
+  const removeRoutePermission = (index) => {
+    const updatedRoutes = [...selectedRoutes];
+    updatedRoutes.splice(index, 1);
+    setSelectedRoutes(updatedRoutes);
+  };
 
-            if (!groopName) {
-                error_toast("Nom du groupe doit être renseigné")
-                return;
-            }
+  const handleSubmit = async () => {
+    try {
+      if (!groopName) {
+        error_toast("Nom du groupe doit être renseigné");
+        return;
+      }
 
-            if (selectedRoutes.length === 0) {
-                error_toast("Veuillez ajouter au moins une route")
-                return;
-            }
+      if (selectedRoutes.length === 0) {
+        error_toast("Veuillez ajouter au moins une route");
+        return;
+      }
 
-            if(selectedUsers.length === 0) {
-                error_toast("Veuillez ajouter au moins un utilisateur")
-                return;
-            }
+      if (selectedUsers.length === 0) {
+        error_toast("Veuillez ajouter au moins un utilisateur");
+        return;
+      }
 
-            await axios.post('http://localhost:5000/api/groop', {
-                groopName,
-                groopUsers: selectedUsers.map(user => user.value),
-                groopRoutes: selectedRoutes,
-            });
+      await axios.post("http://localhost:5000/api/groop", {
+        groopName,
+        groopUsers: selectedUsers.map((user) => user.value),
+        groopRoutes: selectedRoutes,
+      });
 
+      setGroopName("");
+      setSelectedRoutes([]);
+      setSelectedUsers([]);
+      onClose();
+      sucess_toast("Groop created successfully");
+    } catch (error) {
+      error_toast("Erreur lors de la création du groupe :");
+      console.error("Error:", error.response?.data);
+    }
+  };
 
+  return (
+   
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl">
+        <h2 className="text-xl font-semibold dark:text-white mb-4">
+          Créer un Groop
+        </h2>
+        <div className="mb-4">
+          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Nom du groupe
+          </label>
+          <input
+            type="text"
+            value={groopName}
+            onChange={(e) => setGroopName(e.target.value)}
+            className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Utilisateurs
+          </label>
+          <Select
+            value={selectedUsers}
+            onChange={onChangeUser}
+            options={optionsUsers}
+            isSearchable
+            isMulti
+            placeholder="Sélectionner des utilisateurs"
+            className="w-full rounded-md focus:outline-none focus:border-primary z-30"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Route et Autorisation
+          </label>
+          <div className="flex gap-4 w-full bg-mainLightBg dark:bg-mainDarkBg rounded-lg px-4 py-6">
+            <Select
+              value={
+                optionsPermissions.find((option) => option.value === routePermissionPair.permission) || null
+              }
+              options={optionsPermissions}
+              onChange={onChangePermission}
+              isSearchable
+              placeholder="Sélectionner une autorisation"
+              className="w-full rounded-md focus:outline-none focus:border-primary z-20"
+            />
+            <Select
+              value={
+                optionsRoutes.find((option) => option.value === routePermissionPair.route) || null
+              }
+              onChange={onChangeRoute}
+              options={optionsRoutes}
+              isSearchable
+              placeholder="Sélectionner une route"
+              className="w-full rounded-md focus:outline-none focus:border-primary z-20"
+            />
+            <button
+              onClick={addRoutePermission}
+              className="text-primary hover:text-primary font-medium"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+        <div className="mb-4 w-full">
+          {selectedRoutes.map((pair, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center bg-gray-200 p-2 rounded-lg mb-2"
+            >
+              <span>
+                {routes.find((route) => route._id === pair.route)?.title} - {pair.permission}
+              </span>
+              <button
+                onClick={() => removeRoutePermission(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                Supprimer
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 flex justify-end space-x-4">
+            <div onClick={onClose}>
 
-            setGroopName("");
-            setSelectedRoutes([]);
-            setSelectedUsers([]);
-            
-            sucess_toast("Groop created successfully");
-            
-            navigate("/dashboard/groop/table")
+          <Button Text="Annuler"  />
+            </div>
+            <div onClick={handleSubmit} >
 
-        } catch (error) {
-            error_toast("Erreur lors de la création du groupe   :")
-           
-                console.error('Error:', error.response?.data); // Log the detailed error response
-            
-            
-        }
-    };
-
-
-
-    return (
-        <div className='pt-7 min-h-screen'>
-            <div className='bg-white dark:bg-mainDarkBg dark:shadow-white flex justify-center flex-col gap-9 items-center py-4 px-8 shadow-xl m-8 rounded-xl'>
-                <p className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold">Create Groop</p>
-                <div className="w-full flex flex-col gap-5 justify-center items-center">
-                    <input
-                        type="text"
-                        placeholder="Groop Name"
-                        className="w-full border border-gray-300 rounded-lg p-2 mt-4"
-                        value={groopName}
-                        onChange={(e) => setGroopName(e.target.value)}
-                    />
-                    <div className="my-4 flex flex-col justify-center items-center gap-7 w-full">
-                        <p className="mb-2 text-2xl font-normal">Users</p>
-                        <Select
-                            value={selectedUsers}
-                            onChange={onChangeUser}
-                            options={optionsUsers}
-                            isSearchable
-                            isMulti={true}
-                            placeholder="Select Users"
-                            className="w-full rounded-md focus:outline-none focus:border-primary"
-                        />
-                        <p className="mb-2 text-2xl font-normal">Route</p>
-                        <div className="flex gap-4 w-full bg-mainLightBg dark:bg-mainDarkBg rounded-lg px-4 py-6">
-                        <Select
-    value={optionsPermmissions.find(option => option.value === routePermissionPair.permission) || null} // Reset to null
-    options={optionsPermmissions}
-    onChange={onChangePermmission}
-    isSearchable
-    placeholder="Select Permission"
-    className="w-full rounded-md focus:outline-none focus:border-primary"
-/>
-<Select
-    value={optionsRoutes.find(option => option.value === routePermissionPair.route) || null} // Reset to null
-    onChange={onChangeRoute}
-    options={optionsRoutes}
-    isSearchable
-    placeholder="Select Route"
-    className="w-full rounded-md focus:outline-none focus:border-primary"
-/>
-
-                            <button onClick={addRoutePermission} className="text-primary hover:text-primary">Add</button>
-                        </div>
-                        <div className="w-full">
-                            {selectedRoutes.map((pair, index) => (
-                                <div key={index} className="flex justify-between items-center bg-gray-200 p-2 rounded-lg mb-2">
-                                    <span>{routes.find(route => route._id === pair.route)?.path} - {pair.permission}</span>
-                                    <button
-                                        onClick={() => removeRoutePermission(index)}
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                        <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-lg">Create Groop</button>
-                    </div>
-                </div>
+          <Button Text="Créer Groop" />
             </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 export default CreateGroop;

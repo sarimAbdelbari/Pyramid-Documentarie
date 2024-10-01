@@ -97,6 +97,9 @@ const Login = () => {
               </div>
             </div>
 
+            {/* <p className="mt-10 text-center text-xl text-white cursor-pointer ">
+              Reset Pasword 
+            </p> */}
             <p className="mt-10 text-center text-sm text-gray-800">
               Conditions générales {'Link To It'}
             </p>

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import GroopCard from "@/components/GroopCard";
-import { Link } from "react-router-dom";
 import { CiCirclePlus } from "react-icons/ci";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
+import CreateGroop from "./CreateGroop";
 
 const TableGroop = () => {
   const [groopData, setGroopData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
   const [selectedGroop, setSelectedGroop] = useState(null); // Track the group to delete
 
   useEffect(() => {
@@ -47,42 +48,56 @@ const TableGroop = () => {
 
   const AreYouSure = () => {
     return (
-      <div className="z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 fixed flex justify-center items-center">
-        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 my-4 flex flex-col justify-between min-w-96">
-          <h2 className="text-2xl font-semibold mb-4 text-center text-textSecLightColor">Are you sure?</h2>
-          <div className="flex justify-between">
+      <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg w-96 transition-all transform">
+          <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-6">
+            Êtes-vous sûr ?
+          </h2>
+          <div className="flex justify-between gap-4">
             <button
               onClick={closeDeleteModal}
-              className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 px-4 py-2 rounded-md transition-all"
             >
-              No
+              Annuler
             </button>
             <button
               onClick={() => handleDelete(selectedGroop)}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-all"
             >
-              Yes
+              Confirmer
             </button>
           </div>
         </div>
       </div>
     );
   };
-
+  const handleCloseCreateUserModal = () => {
+    setIsModalCreateOpen(false);
+  };
+  const handleOpenCreateUserModal = () => {
+    setIsModalCreateOpen(true);
+  };
+  
   return (
-    <div className="pt-7">
-      <h1 className="text-center text-3xl my-7 text-primary font-medium">Groop Cards</h1>
-      <div className="flex flex-wrap gap-14 mx-11  lg:justify-around  justify-center">
-        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-6 my-4 text-center flex justify-center items-center min-w-96">
-          <Link to="/dashboard/groop/create">
-            <CiCirclePlus className="text-6xl text-primary" />
-          </Link>
+    <div className="pt-10 px-4 lg:px-12">
+      <h1 className="text-center text-4xl font-semibold text-primary mb-10">
+        Gestion des Groops
+      </h1>
+      <div className="flex flex-wrap gap-10 justify-center">
+        <div className="bg-white dark:bg-gray-800 min-h-80  shadow-lg rounded-lg p-6 my-4 flex flex-col justify-center items-center min-w-[320px] w-full md:w-[360px] lg:w-[400px]  duration-300 hover:scale-105 hover:shadow-2xl">
+          <div onClick={handleOpenCreateUserModal} className="flex flex-col items-center justify-center cursor-pointer">
+            <CiCirclePlus className="text-6xl text-primary hover:bg-primary hover:text-white p-2 rounded-full duration-300 ease-in-out" />
+          </div>
         </div>
+
         {groopData.map((groop) => (
           <GroopCard key={groop._id} groop={groop} onDelete={openDeleteModal} />
         ))}
       </div>
-      {isModalOpen && <AreYouSure />} {/* Render modal if open */}
+
+      {isModalOpen && <AreYouSure />}
+
+      {isModalCreateOpen && <CreateGroop onClose={handleCloseCreateUserModal}  />}
     </div>
   );
 };

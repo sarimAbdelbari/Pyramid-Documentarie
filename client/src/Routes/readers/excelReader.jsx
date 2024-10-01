@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 const ExcelReader = ({ route }) => {
     const [data, setData] = useState([]);
 
+    // const ExcelUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/file_example_XLS_100.xls`;
     const ExcelUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
     const fetchAndParseExcel = async () => {
@@ -25,30 +26,36 @@ const ExcelReader = ({ route }) => {
     }, [ExcelUrl]);
 
     return (
-        <div className="min-h-screen p-5">
-            <h2 className="text-2xl font-bold mb-4">Excel File Reader</h2>
+        <div className="min-h-screen p-4 sm:p-11">
+            <h2 className="text-xl sm:text-2xl font-bold my-4 sm:my-7">Excel File Reader</h2>
 
             {data?.length > 0 ? (
-                <table className="min-w-full table-auto border-collapse">
-                    <thead>
-                        <tr>
-                            {Object.keys(data[0]).map((key, index) => (
-                                <th key={index} className="border px-4 py-2">{key}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data?.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {Object.values(row).map((value, colIndex) => (
-                                    <td key={colIndex} className="border px-4 py-2">{value}</td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full table-auto border-collapse">
+                        <thead>
+                            <tr>
+                                {Object.keys(data[0]).map((key, index) => (
+                                    <th key={index} className="border px-1 sm:px-2 py-1 text-xs sm:text-sm">
+                                        {key}
+                                    </th>
                                 ))}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {data?.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {Object.values(row).map((value, colIndex) => (
+                                        <td key={colIndex} className="border px-1 sm:px-2 py-1 text-xs sm:text-sm">
+                                            {value}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
-                <p>No data available. Fetching the Excel file...</p>
+                <p className="text-sm sm:text-base">No data available. Fetching the Excel file...</p>
             )}
         </div>
     );

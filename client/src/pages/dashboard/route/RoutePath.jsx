@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import Navbar from "@/components/navbar";
-import SideBar from "@/components/sidebar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useStateContext } from "@/contexts/ContextProvider";
 import axios from "axios";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,9 +9,10 @@ import AddIcon from "@mui/icons-material/Add";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CreateRoute from "./CreateRoute";
+import Button from "@/components/button";
 
 const Routes = () => {
-  const { isLoading , showNew , setShowNew ,reloadfetch ,setReloadfetch } = useStateContext();
+  const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState("");
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -22,17 +20,14 @@ const Routes = () => {
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
 
   useEffect(() => {
-    
     fetchRoutes();
-
     setReloadfetch(false);
 
     const savedVisibilityModel = localStorage.getItem('columnVisibilityModelRoute');
-
     if (savedVisibilityModel) {
       setColumnVisibilityModel(JSON.parse(savedVisibilityModel));
     }
-    }, [reloadfetch ,setReloadfetch]);
+  }, [reloadfetch, setReloadfetch]);
 
   const fetchRoutes = async () => {
     try {
@@ -43,34 +38,19 @@ const Routes = () => {
       }));
       setRoutesData(dataWithId);
     } catch (error) {
-      error_toast(
-        `Échec de la création de route: ${
-          error.response ? error.response.data.message : error.message
-        }`
-      );
+      error_toast(`Échec de la récupération des routes: ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
     }
   };
 
-  
-
   const handleDeleteRoute = async () => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/route/${routeToDelete}`
-      );      
-      sucess_toast("Route a supprimé avec succès");
-      setRoutesData((prevState) =>
-        prevState.filter((route) => route._id !== routeToDelete)
-      );
+      await axios.delete(`${import.meta.env.VITE_API_URL}/route/${routeToDelete}`);
+      sucess_toast("Route supprimée avec succès");
+      setRoutesData(prevState => prevState.filter(route => route._id !== routeToDelete));
       handleCloseConfirmDialog();
-      fetchRoutes();
     } catch (error) {
-      error_toast(
-        `Échec de la création de route: ${
-          error.response ? error.response.data.message : error.message
-        }`
-      );
+      error_toast(`Échec de la suppression de la route: ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
     }
   };
@@ -79,6 +59,7 @@ const Routes = () => {
     setRouteToDelete(route);
     setOpenConfirmDialog(true);
   };
+  
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
     setRouteToDelete(null);
@@ -99,17 +80,10 @@ const Routes = () => {
       flex: 2,
       renderCell: (params) => (
         <>
-          <IconButton
-            onClick={() => handleOpenDialog(params.row._id)}
-            className="text-primary hover:text-darkPrimary transition-colors duration-300"
-          >
+          <IconButton onClick={() => handleOpenDialog(params.row._id)} className="text-primary hover:text-darkPrimary transition-colors duration-300">
             <EditIcon />
           </IconButton>
-          <IconButton
-           
-            onClick={() => handleOpenConfirmDialog(params.row._id)}
-            className="text-accent hover:text-darkAccent transition-colors duration-300"
-          >
+          <IconButton onClick={() => handleOpenConfirmDialog(params.row._id)} className="text-accent hover:text-darkAccent transition-colors duration-300">
             <DeleteIcon />
           </IconButton>
         </>
@@ -121,53 +95,71 @@ const Routes = () => {
     setSelectedRoute(id);
     setShowNew(true);
   };
-  const OpenDialog = () =>{
+
+  const openNewDialog = () => {
     setSelectedRoute("");
     setShowNew(true);
-  }
+  };
+
   const handleColumnVisibilityChange = (newModel) => {
     setColumnVisibilityModel(newModel);
     localStorage.setItem('columnVisibilityModelRoute', JSON.stringify(newModel));
   };
 
   return (
-    <div className="flex flex-col flex-grow min-h-screen">
-      <div className="flex flex-grow overflow-hidden">
-        <div className="flex-grow p-6  pt-12 mx-0 lg:mx-16">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-3xl font-semibold text-primary">
-              Gestion des Routes
-            </h3>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() =>  OpenDialog()}
-              className="bg-primary hover:bg-darkPrimary transition-colors duration-300"
-            >
-              Ajouter Route
-            </Button>
-          </div>
-          <div className=" flex justify-center items-center ">
+    <div className="pt-11 flex flex-col items-center gap-7">
+            <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
+            Gestion des Routes
+        </h3>
+            <div onClick={openNewDialog}>
+              <Button Text="Ajouter" Icon={<AddIcon />} className="bg-primary hover:bg-darkPrimary transition-colors duration-300"/>
+            </div>
+            
+          
+          <div className=" mx-7  shadow-2xl dark:shadow-white rounded-lg bg-white dark:bg-mainDarkBg" style={{ height: "600px" ,width:"90%" }} >
             <DataGrid
               rows={routesData}
               columns={columns}
               pageSize={10}
-              autoHeight
               loading={isLoading}
               disableSelectionOnClick
               columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={handleColumnVisibilityChange}
+              onColumnVisibilityModelChange={handleColumnVisibilityChange}
+              className="text-textLightColor dark:text-gray-100"
+              sx={{
+                "& .MuiDataGrid-root": {
+                  backgroundColor: "#FFFFFF",
+                },
+                "& .MuiDataGrid-row": {
+                  backgroundColor: "#FFFFFF",
+                  "&:nth-of-type(even)": {
+                    backgroundColor: "#F3F4F6",
+                  },
+                  "&:hover": {
+                    backgroundColor: "#E5E7EB",
+                  },
+                },
+                "& .MuiDataGrid-cell": {
+                  color: "#1F2937",
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  backgroundColor: "#F9FAFB",
+                  color: "#1F2937",
+                },
+                "& .MuiDataGrid-footerContainer": {
+                  backgroundColor: "#F9FAFB",
+                  color: "#1F2937",
+                },
+              }}
             />
           </div>
 
           {/* Create Route Dialog */}
-           {showNew && 
-            <CreateRoute
-              routeId={selectedRoute}
-            />
+          {showNew && 
+            <CreateRoute routeId={selectedRoute} />
           } 
-        </div>
-      </div>
+     
+ 
       
       {/* Confirmation Dialog */}
       <ConfirmDialog
@@ -175,8 +167,9 @@ const Routes = () => {
         handleClose={handleCloseConfirmDialog}
         handleConfirm={handleDeleteRoute}
         title="Confirmer la suppression"
-        message="Etes-vous sûr de vouloir supprimer cet route ? Cette action ne peut pas être annulée."
+        message="Êtes-vous sûr de vouloir supprimer cette route ? Cette action ne peut pas être annulée."
       />
+
     </div>
   );
 };

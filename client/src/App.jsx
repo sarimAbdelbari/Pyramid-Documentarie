@@ -28,14 +28,17 @@ import CreateGroop from "./pages/dashboard/Groop/CreateGroop";
 import TableGroop from "./pages/dashboard/Groop/TableGroop";
 import UpdateGroop from "./pages/dashboard/Groop/UpdateGroop";
 import RDPage from "./pages/Other/RDPage";
-import View6 from "./Routes/views/View6";
-
+import View6 from "./Routes/views/view6";
+import CreateUser from "./pages/dashboard/Users/CreateUser";
+import ExcelReader from "./Routes/readers/excelReader"; 
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
   const isAuthenticated = useAuth();
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
+
+   console.log(routeData ,"routeData")
 
   return (
     <div className="min-h-screen bg-[#f2f4f8] dark:bg-secDarkBg relative">
@@ -64,20 +67,20 @@ const App = () => {
                   <SideBar />
                   <div  className="flex-1">
                   <Routes>
-                    <Route 
-                    path="/View6"
-                    element={
-                      <ProtectedRoute>
-                        <View6 />
-                      </ProtectedRoute>
-                    }
-                    />
  
                     <Route
                       path="/dashboard/users/table"
                       element={
                         <ProtectedRoute>
                           <Users />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/users/create"
+                      element={
+                        <ProtectedRoute>
+                          <CreateUser />
                         </ProtectedRoute>
                       }
                     />
@@ -105,14 +108,14 @@ const App = () => {
                         </ProtectedRoute>
                       }
                     />
-                    <Route
+                    {/* <Route
                       path="/dashboard/groop/create"
                       element={
                         <ProtectedRoute>
                           <CreateGroop />
                         </ProtectedRoute>
                       }
-                    />
+                    /> */}
                     <Route
                       path="/dashboard/groop/update/:id"
                       element={
@@ -154,6 +157,7 @@ const App = () => {
                                 {route?.view === "View5" && <View5 route={route} />}
                                 {route?.view === "TableView" && <TableView route={route} />}
                                 {route?.view === "PdfReader" && <PdfReader route={route} />}
+                                {route?.view === "ExcelReader" && <ExcelReader route={route} />}
                               </ProtectedRoute>
                             }
                           />
