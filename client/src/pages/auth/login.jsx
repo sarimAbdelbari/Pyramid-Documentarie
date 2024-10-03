@@ -26,7 +26,7 @@ const Login = () => {
       sucess_toast("Connexion réussie");
     
       setTimeout(() => {
-        window.location.href = "/main";
+        window.location.href = "/principal";
       }, 1000);
 
     } catch (err) {

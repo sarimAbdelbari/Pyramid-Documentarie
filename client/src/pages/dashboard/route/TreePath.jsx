@@ -11,8 +11,8 @@ import { RxUpdate } from "react-icons/rx";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ThemeContext } from '@/components/themeProvider';
-
-
+import { AiOutlineSisternode } from "react-icons/ai";
+import { viewOptions } from '../../../data/DataForm';
 
 export default function TreePath() {
 
@@ -63,38 +63,19 @@ export default function TreePath() {
   };
   
   
-const viewOptions = [
-  { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
-  { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` , titre:"Voir 2"}, 
-  { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` , titre:"Voir 3"}, 
-  { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir 4" },
-  { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
-  { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
-  { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png` ,titre:"Lecteur PDF"},
-  { name: "ExcelReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/ExcelReader.png` ,titre:"Lecteur Excel"},
-];
+
 
 
 const getNodeColor = (viewType) => {
   switch (viewType) {
-    // case "View1":
-    //   return "#FFD700"; // Gold for view type 1
-    // case "View2":
-    //   return "#FF8C00"; // Dark Orange for view type 2
-    // case "View3":
-    //   return "#FF4500"; // Orange Red for view type 3
-    // case "View4":
-    //   return "#32CD32"; // Lime Green for view type 4
-    // case "View5":
-    //   return "#1E90FF"; // Dodger Blue for view type 5
     case 'TableView':
-      return "#0056B3"; // Slate Blue for TableView
+      return "#0056B3"; 
     case 'PdfReader':
-      return "#C70100"; // Blue Violet for PDF Reader
+      return "#980100"; 
     case 'ExcelReader':
-      return "#007B23"; 
+      return "#005217"; 
       default:
-        return "#0400B3"; // Default colors
+        return "#000020"; 
   }
 };
 
@@ -104,8 +85,6 @@ const getNodeColor = (viewType) => {
 const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip, showContextMenu, selectNode }) => {
   const y = -35;
   const x = 5;
-
-
   const tooltipData = nodeDatum.attributes || {};
 
   const nodeColor = getNodeColor(tooltipData.view);
@@ -130,7 +109,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
       onClick={() => selectNode(nodeDatum)}
     >
       <circle
-        r="20"
+        r="22"
         fill={nodeColor}
         onClick={toggleNode}
         style={{
@@ -138,6 +117,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
           transform: 'scale(0.1)', // Start with a small scale
           opacity: 0, // Start with opacity 0
           animation: `nodeAppear 0.5s forwards ease-in-out`,
+          border:'2px solid white',
         }}
       />
       <text fill={theme == "light" ? "black" : "white"} stroke="none" fontSize="18px" fontWeight={600}  x={x} y={y} >
@@ -192,7 +172,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 
     const routeMap = {};
     const roots = [];
-  
+
     routeData.forEach(route => {
       route.children = [];
       routeMap[route._id] = route;
@@ -209,60 +189,15 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
       }
     });
     const addAttributes = (node) => {
-      node.attributes = { ...node };  // Copy the node properties to attributes
-      node.children.forEach(addAttributes);  // Recursively add attributes to children
+      node.attributes = { ...node };  
+      node.children.forEach(addAttributes); 
     };
   
-    roots.forEach(addAttributes);  // Apply attributes to all root nodes
-  
+    roots.forEach(addAttributes);  
+
     return roots;
-    
-    // const addNode = (pathParts, route, currentNode, routeId) => {
-    //     pathParts.forEach((part, index) => {
-    //         let childNode = currentNode.children.find(child => child.name === part);
 
-    //         if (!childNode) {
-    //             childNode = {
-    //                 name: part,
-    //                 attributes: { routeId }, // Assign routeId
-    //                 children: [],
-    //                 tooltip: `Nœud: ${part}`,
-    //             };
-    //             currentNode.children.push(childNode);
-    //         }
 
-    //         // If at the last part of the path, add the route details as attributes
-    //         if (index === pathParts.length - 1) {
-    //             childNode.attributes = {
-    //                 ...route, // Use the entire route object for attributes
-    //                 routeId
-    //             };
-    //             childNode.tooltip = `Titre: ${route.title}`;
-    //         }
-
-    //         currentNode = childNode;
-    //     });
-    // };
-
-    // routeData.forEach(route => {
-    //     const { path, _id: routeId } = route;
-
-    //     if (path === '/main') {
-    //         // Initialize the tree with the first route that has path "/"
-    //         tree = {
-    //             name: route.title || 'Racine',
-    //             attributes: { ...route, routeId },
-    //             children: [],
-    //             tooltip: `Titre: ${route.title || 'Racine Nœud'}`,
-    //         };
-    //     } else if (tree) {
-    //         const pathParts = path.split('/').filter(part => part);
-    //         addNode(pathParts, route, tree, routeId);
-    //     }
-    // });
-
-    // // Return the tree object if it was created, otherwise return null or an empty tree structure
-    // return tree || { name: 'Aucune racine trouvée', children: [], tooltip: 'Pas de nœud racine' };
 };
 
 
@@ -279,9 +214,15 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
         
         setConfirmModal({ visible: false, nodeData: null });
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
+
+       
+
         const transformedData = transformData(response.data);
+
         setData(transformedData);
+
         sucess_toast('Nœud supprimé avec succès');
+
       } catch (error) {
         console.error('Erreur lors de la suppression du nœud:', error);
         error_toast('Erreur lors de la suppression du nœud');
@@ -325,12 +266,15 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-md shadow-md">
-          <h2 className="mb-4 text-xl">Es-tu sûr?</h2>
-          <div className="flex justify-end">
-            <button onClick={onConfirm} className="bg-red-500 text-white py-1 px-4 rounded mr-2">Oui</button>
-            <button onClick={onClose} className="bg-gray-500 text-white py-1 px-4 rounded">Non</button>
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white">
+          <h2 className="mb-4 text-xl">Êtes-vous sûr de vouloir supprimer {" "}
+              <span className="font-semibold text-primary dark:text-darkPrimary">
+                {/* {userToDelete?.userName} */}
+              </span>{" "}</h2>
+          <div className="mt-6 flex justify-end space-x-4">
+            <button onClick={onClose} className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600">Annuler</button>
+            <button onClick={onConfirm} className="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded hover:bg-red-700 dark:hover:bg-red-400">Supprimer</button>
           </div>
         </div>
       </div>
@@ -351,7 +295,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
             <div className="flex justify-start p-4 ">
 
             <div  onClick={() => AddRoute()}>
-              <Button Text="Ajouter un Route" />
+              <Button Text="Ajouter un Route" Icon={<AiOutlineSisternode />} />
             </div>
             </div>
             <div className="w-full h-screen " ref={containerRef}>

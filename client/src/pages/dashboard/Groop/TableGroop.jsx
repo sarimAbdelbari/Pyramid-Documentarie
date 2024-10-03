@@ -84,7 +84,7 @@ const TableGroop = () => {
         Gestion des Groops
       </h1>
       <div className="flex flex-wrap gap-10 justify-center">
-        <div className="bg-white dark:bg-gray-800 min-h-80  shadow-lg rounded-lg p-6 my-4 flex flex-col justify-center items-center min-w-[320px] w-full md:w-[360px] lg:w-[400px]  duration-300 hover:scale-105 hover:shadow-2xl">
+        <div className="bg-white dark:bg-gray-800 min-h-80  shadow-lg rounded-3xl p-6 my-4 flex flex-col justify-center items-center min-w-[620px] w-full md:w-[560px] lg:w-[600px]  duration-300 hover:scale-105 hover:shadow-2xl">
           <div onClick={handleOpenCreateUserModal} className="flex flex-col items-center justify-center cursor-pointer">
             <CiCirclePlus className="text-6xl text-primary hover:bg-primary hover:text-white p-2 rounded-full duration-300 ease-in-out" />
           </div>

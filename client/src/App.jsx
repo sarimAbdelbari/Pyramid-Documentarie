@@ -24,21 +24,20 @@ import { useStateContext } from "./contexts/ContextProvider";
 import SideBar from "./components/sidebar";
 import { useContext } from 'react';
 import { ThemeContext } from '@/components/themeProvider';
-import CreateGroop from "./pages/dashboard/Groop/CreateGroop";
+// import CreateGroop from "./pages/dashboard/Groop/CreateGroop";
 import TableGroop from "./pages/dashboard/Groop/TableGroop";
 import UpdateGroop from "./pages/dashboard/Groop/UpdateGroop";
 import RDPage from "./pages/Other/RDPage";
-import View6 from "./Routes/views/view6";
+// import View6 from "./Routes/views/view6";
 import CreateUser from "./pages/dashboard/Users/CreateUser";
 import ExcelReader from "./Routes/readers/excelReader"; 
+// import Test from "./Routes/readers/Test";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
   const isAuthenticated = useAuth();
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
-
-   console.log(routeData ,"routeData")
 
   return (
     <div className="min-h-screen bg-[#f2f4f8] dark:bg-secDarkBg relative">
@@ -109,10 +108,10 @@ const App = () => {
                       }
                     />
                     {/* <Route
-                      path="/dashboard/groop/create"
+                      path="/test"
                       element={
                         <ProtectedRoute>
-                          <CreateGroop />
+                          <Test />
                         </ProtectedRoute>
                       }
                     /> */}

@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from "@/components/button";
 import Select from "react-select";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
+import CheckButton from "../../../components/checkButton";
 
 const CreateUser = ({ onClose, user }) => {
   const [selectedUser, setSelectedUser] = useState(user || {
@@ -100,52 +101,16 @@ const CreateUser = ({ onClose, user }) => {
             className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
           />
         </div>
-       
 
-        <div className="mb-4 flex gap-4">
-        <div className="inline-flex items-center ">
-  <label className="flex items-center cursor-pointer relative" htmlFor="check-2">
-    <input type="checkbox"
-      checked={selectedUser.admin}
-      className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800"
-      id="check-2" 
-      onChange={(e) => setSelectedUser({ ...selectedUser, admin: e.target.checked })}
-      />
-    <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transhtmlF -translate-x-1/2 -translate-y-1/2">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"
-        stroke="currentColor" strokeWidth="1">
-        <path fillRule="evenodd"
-        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-        clipRule="evenodd"></path>
-      </svg>
-    </span>
-  </label>
-  <label className="cursor-pointer ml-2 text-slate-600 text-sm" htmlFor="check-2">
-  Admin
-  </label>
-</div>
-        <div className="inline-flex items-center">
-  <label className="flex items-center cursor-pointer relative" htmlFor="check-3">
-    <input type="checkbox"
-      checked={selectedUser.active}
-      className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800"
-      id="check-3" 
-      onChange={(e) => setSelectedUser({ ...selectedUser, active: e.target.checked })}
-      />
-    <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transhtmlF -translate-x-1/2 -translate-y-1/2">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"
-        stroke="currentColor" strokeWidth="1">
-        <path fillRule="evenodd"
-        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-        clipRule="evenodd"></path>
-      </svg>
-    </span>
-  </label>
-  <label className="cursor-pointer ml-2 text-slate-600 text-sm" htmlFor="check-3">
-  Actif
-  </label>
-</div>
+        <div>
+
+       <CheckButton Text="Actif" Checked={selectedUser.active} onChange={(e) => setSelectedUser({ ...selectedUser, active: e.target.checked })}/>
         </div>
+        <div>
+
+       <CheckButton Text="Admin" Checked={selectedUser.admin} onChange={(e) => setSelectedUser({ ...selectedUser, admin: e.target.checked })}/>
+        </div>
+      
        
         <Select
           isMulti

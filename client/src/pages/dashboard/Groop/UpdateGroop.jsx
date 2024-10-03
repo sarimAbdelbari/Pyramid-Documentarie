@@ -22,11 +22,12 @@ const UpdateGroop = () => {
 
     
 
+   
     const optionsPermmissions = [
-        { value: 'Show', label: 'Show' },
-        { value: 'noShow', label: 'noShow' },
-    ];
-
+        { value: "Download", label: "Télécharger" },
+        { value: "NoDownload", label: "pas de téléchargement" },
+      ];
+      
         const optionsRoutes = routes
         .filter((route) => !selectedRoutes.some(pair => pair.route === route._id)) // Filter out selected routes
         .map((route) => ({

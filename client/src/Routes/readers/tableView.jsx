@@ -57,7 +57,7 @@ const TableView = ({ route }) => {
           
           const status = diffInHours > 24 ? 'expired' : 'new';
       
-          return <div className='flex justify-center items-center py-2'>{status === 'expired' ? <img src={`${import.meta.env.VITE_PUBLIC_URL1}/expired.webp`} alt="expired" className='w-14'/> : <img src={`${import.meta.env.VITE_PUBLIC_URL1}/new.jpg`} alt="new" className='w-14'/>}</div>;
+          return params.value && <div className='flex justify-center items-center py-2'>{status === 'expired' ? <img src={`${import.meta.env.VITE_PUBLIC_URL1}/expired.webp`} alt="expired" className='w-14'/> : <img src={`${import.meta.env.VITE_PUBLIC_URL1}/new.jpg`} alt="new" className='w-14'/>}</div>;
         },
       });
       

@@ -14,6 +14,10 @@ const useRouteAuth = () => {
       return;
     }
 
+    if(userInfo.groop.length === 0){
+
+      return;
+    }
     const getData = async () => {
       
       try {

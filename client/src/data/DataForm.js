@@ -97,6 +97,48 @@ const View4Data = {
     },
 };
 
+const viewOptions = [
+    {
+      name: "View1",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png`,
+      titre: "Voir 1",
+    },
+    {
+      name: "View2",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png`,
+      titre: "Voir 2",
+    },
+    {
+      name: "View3",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png`,
+      titre: "Voir 3",
+    },
+    {
+      name: "View4",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png`,
+      titre: "Voir 4",
+    },
+    {
+      name: "View5",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png`,
+      titre: "Voir 5",
+    },
+    {
+      name: "TableView",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png`,
+      titre: "Vue de table",
+    },
+    {
+      name: "PdfReader",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png`,
+      titre: "Lecteur PDF",
+    },
+    {
+      name: "ExcelReader",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/ExcelReader.png`,
+      titre: "Lecteur Excel",
+    },
+  ];
 
 
-export  {mainPageImages , View4Data};
+export  {mainPageImages , View4Data ,viewOptions};

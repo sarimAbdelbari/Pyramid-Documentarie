@@ -3,23 +3,28 @@ import axios from "axios";
 import Select from "react-select";
 import Button from "@/components/button";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
+import CheckButton from "../../../components/checkButton";
 
 const CreateGroop = ({onClose}) => {
   const [groopName, setGroopName] = useState("");
   const [routes, setRoutes] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedRoutes, setSelectedRoutes] = useState([]);
+  const [files, setFiles] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [routePermissionPair, setRoutePermissionPair] = useState({
     route: null,
     permission: null,
   });
-
+  const [showPages ,setShowPages] = useState(false);
+  
   const fetchData = async () => {
     try {
-      const responseRoutes = await axios.get("http://localhost:5000/api/route/pages");
+      const responseFiles = await axios.get("http://localhost:5000/api/route/files");
+      const responsePages = await axios.get("http://localhost:5000/api/route/pages");
       const responseUsers = await axios.get("http://localhost:5000/api/users");
-      setRoutes(responseRoutes.data);
+      setRoutes(responseFiles.data);
+      setFiles(responsePages.data);
       setUsers(responseUsers.data);
     } catch (error) {
       console.error(error);
@@ -30,7 +35,14 @@ const CreateGroop = ({onClose}) => {
     fetchData();
   }, []);
 
-  const optionsRoutes = routes
+  const optionsPages = routes
+    .filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
+    .map((route) => ({
+      value: route._id,
+      label: route.title,
+    }));
+
+  const optionsfiles = files
     .filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
     .map((route) => ({
       value: route._id,
@@ -46,6 +58,7 @@ const CreateGroop = ({onClose}) => {
     { value: "Download", label: "Télécharger" },
     { value: "NoDownload", label: "pas de téléchargement" },
   ];
+
 
   const onChangeRoute = (selectedOption) => {
     setRoutePermissionPair({
@@ -130,7 +143,7 @@ const CreateGroop = ({onClose}) => {
           Créer un Groop
         </h2>
         <div className="mb-4">
-          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300 ">
             Nom du groupe
           </label>
           <input
@@ -158,6 +171,7 @@ const CreateGroop = ({onClose}) => {
           <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Route et Autorisation
           </label>
+          <CheckButton Text="ShowPages" Checked={showPages} onChange={() => setShowPages(!showPages)}/>
           <div className="flex gap-4 w-full bg-mainLightBg dark:bg-mainDarkBg rounded-lg px-4 py-6">
             <Select
               value={
@@ -170,15 +184,16 @@ const CreateGroop = ({onClose}) => {
               className="w-full rounded-md focus:outline-none focus:border-primary z-20"
             />
             <Select
-              value={
-                optionsRoutes.find((option) => option.value === routePermissionPair.route) || null
+              value={showPages ? optionsfiles.find((option) => option.value === routePermissionPair.route) || null :
+                optionsPages.find((option) => option.value === routePermissionPair.route) || null
               }
               onChange={onChangeRoute}
-              options={optionsRoutes}
+              options={showPages ? optionsfiles : optionsPages}
               isSearchable
               placeholder="Sélectionner une route"
               className="w-full rounded-md focus:outline-none focus:border-primary z-20"
             />
+
             <button
               onClick={addRoutePermission}
               className="text-primary hover:text-primary font-medium"

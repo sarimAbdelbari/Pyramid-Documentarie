@@ -40,6 +40,8 @@ const createGroop = async (req, res) => {
 
     const { groopName, groopUsers, groopRoutes } = req.body;
 
+ console.log("groopRoutes",groopRoutes);
+
     // Create and save the new group
     const parents = await Promise.all(
       groopRoutes.map(async (route) => {
