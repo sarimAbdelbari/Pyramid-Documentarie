@@ -77,7 +77,7 @@ const View3 = ({route}) => {
               <Link
                 key={index}
                 to={item.path}
-                className="border max-w-96 flex flex-col gap-5 dark:shadow-md dark:shadow-white text-textLightColor dark:text-textDarkColor p-4 rounded-xl shadow-xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg duration-300 ease-in-out"
+                className="border w-full max-w-md h-full flex flex-col gap-5 dark:shadow-md dark:shadow-white text-textLightColor dark:text-textDarkColor p-4 rounded-xl shadow-xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg duration-300 ease-in-out"
               >
                 <div className="text-center mb-2">
                   {item.title && <h2 className="text-lg font-semibold">{item.title}</h2>}

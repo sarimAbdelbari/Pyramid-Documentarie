@@ -68,9 +68,19 @@ const Routes = () => {
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
     { field: "path", headerName: "Chemin", flex: 2 },
-    { field: "view", headerName: "View", flex: 2 },
     { field: "title", headerName: "Titre", flex: 2 },
-    { field: "image", headerName: "Image", flex: 2 },
+    { field: "view", headerName: "View", flex: 2 , renderCell: (params) => (
+      params.row.view && 
+      <div className="flex items-center">
+        <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.view}.png`} alt="image" className="w-12 h-12 object-cover rounded-full" />
+      </div>
+    )},
+    { field: "image", headerName: "Image", flex: 2 , renderCell: (params) => (
+      params.row.image &&
+      <div className="flex items-center">
+          <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.image}`} alt="image" className="w-12 h-12 object-cover rounded-full" />
+      </div> 
+      )},
     { field: "details", headerName: "Détails", flex: 2 },
     { field: "createdAt", headerName: "Créé à", flex: 2 },
     { field: "updatedAt", headerName: "Mis à jour à", flex: 2 },

@@ -51,8 +51,7 @@ const View2 = ( {route} ) => {
  }, [route]);
  
 
- // console.log("data" , data)
-
+ 
  const getImageSrc = (src) => {
    if (src.startsWith('http')) {
      return src;
@@ -67,7 +66,7 @@ const View2 = ( {route} ) => {
           {Object.values(data).map((item, index) => (
             <div
               key={index}
-              className='w-full px-5 lg:w-7/12 dark:shadow-md dark:shadow-white flex justify-center items-center flex-col my-4 shadow-2xl py-12 rounded-3xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
+              className='w-full min-w-64 px-5 lg:w-7/12 dark:shadow-md dark:shadow-white flex justify-center items-center flex-col my-4 shadow-2xl py-12 rounded-3xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
             >
               <Link
                 to={item.path}

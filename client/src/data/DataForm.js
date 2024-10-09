@@ -125,12 +125,12 @@ const viewOptions = [
     },
     {
       name: "TableView",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/TableView.png`,
       titre: "Vue de table",
     },
     {
       name: "PdfReader",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.png`,
       titre: "Lecteur PDF",
     },
     {
