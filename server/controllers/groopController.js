@@ -1,6 +1,7 @@
 const Groop = require('../models/GroopModel');
 const User = require('../models/UserModel');
 const Route=require('../models/RouteModel');
+const mongoose = require('mongoose');
 
 // Get All the Parrent
 const getParents = async (routeId) => {
@@ -34,37 +35,78 @@ const getAllRouteChildren = async (routeId) => {
 
 };
 
+
+// Helper function to normalize ObjectIds or strings
+const normalizeObjectIds = (ids) => {
+  return ids.map(id => {
+    try {
+      // If the id is an ObjectId, convert it to a string
+      if (id instanceof mongoose.Types.ObjectId) {
+        return id.toString();
+      }
+
+      // If the id is a string, return it as it is
+      return id;
+
+    } catch (error) {
+      console.error(`Invalid ID format: ${id}`);
+      return id; // Return the ID as is if it cannot be converted (for further debugging)
+    }
+  });
+};
+
 // Create a new Groop
 const createGroop = async (req, res) => {
   try {
-
     const { groopName, groopUsers, groopRoutes } = req.body;
 
- console.log("groopRoutes",groopRoutes);
 
-    // Create and save the new group
+    // Filter the groopRoutes where route type is 'page'
+    const filteredRoutes = groopRoutes.filter(route => route.type === 'page').map(route => route.route);
+
+    // Fetch children of the filtered routes
+    const children = await getAllRouteChildren(filteredRoutes);
+
+    const populatedChildren = await Route.find({ _id: { $in: children } });
+
+    // Filter the children where view is 'PdfReader' or 'ExcelReader'
+    const filteredChildren = populatedChildren.filter(route => route.view === 'PdfReader' || route.view === 'ExcelReader').map(route => route._id);
+
+    // Normalize the children to ensure all are strings
+    const normalizedChildren = await normalizeObjectIds(filteredChildren);
+    
+ 
+    // Combine filtered routes and normalized children into a single array
+    const allChildren = [...groopRoutes.filter(route => route.type === 'file').map(route => route.route), ...normalizedChildren];
+
+
+
+    // Continue processing parents and saving group
     const parents = await Promise.all(
-      groopRoutes.map(async (route) => {
-        const routes = await getParents(route.route);
+      allChildren.map(async (route) => {
+        const routes = await getParents(route);
         return routes;
       })
     );
+
    
-    const uniqueParents = Array.from(
-      new Map(parents.flat().map(parent => [parent._id.toString(), parent])).values()
+   const uniqueParents = Array.from(
+     new Map(parents.flat().map(parent => [parent._id.toString(), parent])).values()
     );
 
-    let newRoutes = uniqueParents.map((route)=>{
+    let newRoutes = [...allChildren.map((route) => ({ "route": route.toString(), "permission": "NoDownload" })),...uniqueParents.map((route) => {
       return {
-        "route":route._id.toString(),
-        "permission":"NoDownload",
-      }
-    });
+        "route": route._id.toString(),
+        "permission": "NoDownload",
+      };
+    })]
+ 
+  
 
-    newRoutes.push(groopRoutes);
+    const finalRoutes = newRoutes.flat();
 
-   const finalRoutes=newRoutes.flat();
-    const newGroop = new Groop({ groopName, groopUsers, groopRoutes:finalRoutes });
+    // Uncomment to save the new group
+    const newGroop = new Groop({ groopName, groopUsers, groopRoutes: finalRoutes });
     const savedGroop = await newGroop.save();
     await User.updateMany(
       { _id: { $in: groopUsers } },
@@ -72,6 +114,7 @@ const createGroop = async (req, res) => {
     );
 
     res.status(201).json({ message: 'Group created and users updated successfully', savedGroop });
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -140,6 +183,9 @@ const updateGroop = async (req, res) => {
   try {
     const { groopName, groopUsers, groopRoutes } = req.body;
 
+
+   console.log("groopRoutes" ,groopRoutes);
+
     // Find the existing group
     const existingGroop = await Groop.findById(req.params.id);
     if (!existingGroop) return res.status(404).json({ error: 'Group not found' });
@@ -147,28 +193,54 @@ const updateGroop = async (req, res) => {
     // Get the previous list of users in the group
     const previousUsers = existingGroop.groopUsers.map(user => user.toString()); // Convert to string for easy comparison
 
-    // Handle updating routes with parent routes
-    const parents = await Promise.all(
-      groopRoutes.map(async (route) => {
-        const routes = await getParents(route.route);
-        return routes;
-      })
-    );
 
-    const uniqueParents = Array.from(
-      new Map(parents.flat().map(parent => [parent._id.toString(), parent])).values()
-    );
+   // Filter the groopRoutes where route type is 'page'
+   const filteredRoutes = groopRoutes.filter(route => route.type === 'page').map(route => route.route);
 
-    let updatedRoutes = uniqueParents.map((route) => {
-      return {
-        "route": route._id.toString(),
-        "permission": "NoDownload",  // Set default permission for parents
-      };
-    });
+   // Fetch children of the filtered routes
+   const children = await getAllRouteChildren(filteredRoutes);
 
-    // Add provided routes with permissions
-    updatedRoutes.push(groopRoutes);
-    const finalRoutes = updatedRoutes.flat();
+   const populatedChildren = await Route.find({ _id: { $in: children } });
+
+   // Filter the children where view is 'PdfReader' or 'ExcelReader'
+   const filteredChildren = populatedChildren.filter(route => route.view === 'PdfReader' || route.view === 'ExcelReader').map(route => route._id);
+
+   // Normalize the children to ensure all are strings
+   const normalizedChildren = await normalizeObjectIds(filteredChildren);
+   
+
+   // Combine filtered routes and normalized children into a single array
+   const allChildren = [...groopRoutes.filter(route => route.type === 'file').map(route => route.route), ...normalizedChildren];
+
+
+
+   // Continue processing parents and saving group
+   const parents = await Promise.all(
+     allChildren.map(async (route) => {
+       const routes = await getParents(route);
+       return routes;
+     })
+   );
+
+  const uniqueParents = Array.from(
+    new Map(parents.flat().map(parent => [parent._id.toString(), parent])).values()
+   );
+
+   let newRoutes = [...allChildren.map((route) => ({ "route": route.toString(), "permission": "NoDownload" })),...uniqueParents.map((route) => {
+    return {
+      "route": route._id.toString(),
+      "permission": "NoDownload",
+    };
+  })]
+
+
+
+  const finalRoutes = newRoutes.flat();
+
+
+
+
+
 
     // Update group details (name, routes, users)
     existingGroop.groopName = groopName || existingGroop.groopName;

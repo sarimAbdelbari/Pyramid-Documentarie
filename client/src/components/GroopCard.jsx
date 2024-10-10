@@ -116,22 +116,22 @@ const GroopCard = ({ groop, onDelete }) => {
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-3xl p-6 my-4 flex flex-col justify-between min-w-[620px] w-full md:w-[560px] lg:w-[600px] duration-300 hover:scale-105 hover:shadow-2xl">
-      <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">
+    <div className="bg-white dark:bg-gray-800 min-h-96 shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-between min-w-[600px] w-full md:w-[540px] lg:w-[580px] duration-300 hover:scale-105 hover:shadow-2xl">
+      <h2 className="text-2xl font-semibold my-4 text-center text-gray-800 dark:text-gray-200">
         {groop.groopName}
       </h2>
 
       <div className="mb-4 bg-gray-50 bg-opacity-50 dark:bg-gray-700 rounded-lg p-4 shadow-md">
         <div className="mb-4  overflow-y-auto px-4">
           <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 py-1">
-            Routes & Permissions:
+            Routes & Autorisations:
           </h3>
           {renderRoutes(organizedRoutes)}
         </div>
 
         <div className="mb-4 bg-gray-50 bg-opacity-50 dark:bg-gray-700 rounded-lg p-4 shadow-md">
   <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 py-2 border-b border-gray-200 dark:border-gray-600 mb-2">
-    Users:
+  Utilisateurs:
   </h3>
   <ul className="list-none space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
     {groop.groopUsers.map((user, index) => (
@@ -157,13 +157,13 @@ const GroopCard = ({ groop, onDelete }) => {
           to={`/dashboard/groop/update/${groop._id}`} 
           className="bg-gray-100 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-xl flex items-center gap-2 transition-colors"
         >
-          <Button Text="Update" Icon={<FaEdit />} />
+          <Button Text="Mise à jour" Icon={<FaEdit />} />
         </Link>
         <button
           onClick={() => onDelete(groop._id)}
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-2xl transition-colors"
         >
-          Delete
+          Supprimer
         </button>
       </div>
     </div>

@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import Button from "@/components/button";
 import axios from "axios";
 import Slider from "react-slick";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
@@ -17,6 +13,9 @@ import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
+import { CiImageOn } from "react-icons/ci";
+import { FaRegFilePdf } from "react-icons/fa6";
+import { FaRegFileExcel } from "react-icons/fa";
 
 
 const CreateRoute = ({ routeId }) => {
@@ -46,7 +45,6 @@ const CreateRoute = ({ routeId }) => {
     label: route.path,
   }));
 
-  
 
     const viewOptions = [
     { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
@@ -55,12 +53,12 @@ const CreateRoute = ({ routeId }) => {
     { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir 4" },
     { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
     { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
-    { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/pfdReader.png` ,titre:"Lecteur PDF"},
+    { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.png` ,titre:"Lecteur PDF"},
     { name: "ExcelReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/excelReader.png` , titre:"Excel Reader"},
   ];
 
   const handleViewSelection = (viewName) => {
-    setSelectedRoute({ ...selectedRoute, view: viewName });
+    setSelectedRoute({ ...selectedRoute, view: viewName , data: { tableCol: {}}});
   };
 
   const handleImageClick = (imgSrc) => {
@@ -113,7 +111,6 @@ const CreateRoute = ({ routeId }) => {
 
         const dataWithParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${dataWithId.data.parrentPath}`);
 
-        // !!!!!!!!!!!!!!!!!!!!
         setSelectedParrent({
           value: dataWithParrent?.data?._id,
           label: dataWithParrent?.data?.path,
@@ -292,40 +289,7 @@ const handleFieldRowChange = (index, event, key) => {
   };
  
 
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: '#d0d0d0',
-      borderColor: !state.isFocused ? '#1c1c1c' : '#0056b3',
-      '&:hover': {
-        borderColor: '#0056b3',
-      },
-    }),
-    placeholder: (provided) => ({
-      ...provided,
-      color: '#1c1c1c',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: '#1c1c1c',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: '#d0d0d0',
-      zIndex: '99',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? '#0056b3' : '#d0d0d0',
-      color: !state.isSelected ? '#1c1c1c' : 'white',
-      margin: '5px 0',
-      '&:hover': {
-        backgroundColor: '#0056b3',
-        color: "white",
-        transition: '0.5s',
-      },
-    }),
-  };
+  
 
   const parrentSData = async (id) =>{
     // console.log("id",id)
@@ -375,196 +339,224 @@ const handleFieldRowChange = (index, event, key) => {
     open={showNew}
     onClose={closeDialog}
     maxWidth="lg"
+    borderRadius='25px'
+    PaperProps={{
+      sx: {
+        height: "100%",
+        overflowX: "hidden",
+        borderRadius: "15px",
+        padding: "10px",
+      },
+    }}
     sx={{ "& .MuiDialog-paper": { height: "100%", overflowX: "hidden" } }}
   >
-    <DialogTitle className="bg-secLightBg text-textLightColor font-bold text-xl">
+    <h3 className="text-xl font-semibold dark:text-white p-4">
       {routeId ? "Mettre à jour Route" : "Créer un Route"}
-    </DialogTitle>
-    <DialogContent className="bg-secLightBg overflow-y-auto">
+    </h3>
+    <div className="bg-white dark:bg-gray-800 mx-3">
       <div className="my-4">
-        <p className="mb-2 text-lg">Parent Route</p>
+        <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Parent Route :</label>
         <Select
           value={selectedParrent}
           onChange={onChangeParrentPath}
           options={optionsRoutes}
           isSearchable
           placeholder="Rechercher un parent Route"
-          styles={customStyles}
-          className="w-full rounded-md focus:outline-none focus:border-[#54ad34]"
+          className="px-3 z-30 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
         />
       </div>
 
       <div className="my-4">
-        <TextField
-          margin="dense"
+        <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Chemin :</label>
+        <input
           label="/Chemin"
           type="text"
-          fullWidth
           value={selectedRoute.path || ""}
           onChange={(e) =>
             setSelectedRoute({ ...selectedRoute, path: e.target.value })
           }
-          className="bg-secLightBg text-textLightColor"
-          InputLabelProps={{ style: { color: "inherit" } }}
-          InputProps={{ style: { color: "inherit" } }}
+          className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
         />
       </div>
 
       <div className="m-4">
-        <Slider {...settings}>
-          {viewOptions.map((option) => (
-            <div
-              key={option.name}
-              onClick={() => handleViewSelection(option.name)}
-              className={`cursor-pointer p-2 rounded-lg border-2 ${selectedRoute.view === option.name
-                ? "border-primary shadow-xl"
-                : "border-transparent"
-                }`}
-            >
-              <img
-                src={option.imgSrc}
-                alt={option.name}
-                className="w-full h-32 object-contain rounded-lg"
-                onClick={() => handleImageClick(option.imgSrc)}
-              />
-              <p className="text-center mt-2 font-medium">{option.titre}</p>
-            </div>
-          ))}
-        </Slider>
+  <Slider {...settings}>
+    {viewOptions.map((option) => (
+      <div
+        key={option.name}
+        onClick={() => handleViewSelection(option.name)}
+        className={`cursor-pointer p-4 rounded-lg border-2 mx-3 transition-all duration-300 hover:border-textDarkColor
+          ${selectedRoute.view === option.name ? "border-textSecLightColor shadow-xl" : "border-transparent"}`}
+      >
+        <img
+          src={option.imgSrc}
+          alt={option.name}
+          className="w-full h-32 object-contain rounded-md"
+          onClick={() => handleImageClick(option.imgSrc)}
+        />
+        <p className="text-center mt-2 text-md font-medium text-gray-700 dark:text-gray-300">
+          {option.titre}
+        </p>
       </div>
+    ))}
+  </Slider>
+</div>
+
 
       {modalOpen && (
         <ImageModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           imgSrc={selectedImage}
-        />
-      )}
+          />
+        )}
 
       <div className="my-4">
-        <TextField
-          margin="dense"
+        <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Titre :</label>
+        <input
           label="Titre"
           type="text"
-          fullWidth
           value={selectedRoute.title || ""}
           onChange={(e) =>
             setSelectedRoute({ ...selectedRoute, title: e.target.value })
           }
-          className="bg-secLightBg text-textLightColor"
-          InputLabelProps={{ style: { color: "inherit" } }}
-          InputProps={{ style: { color: "inherit" } }}
+          className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
         />
       </div>
 
       <div className="my-4">
-        <Button variant="contained" component="label" color="primary" className="bg-secLightBg text-textLightColor w-1/4">
-          Image
-          <input
-            accept="image/*"
-            id="contained-button-file"
-            type="file"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-        </Button>
-      </div>
+  <label
+    htmlFor="contained-button-file"
+    className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
+  >
+    <CiImageOn className="text-xl mr-2" />
+    Upload Image
+  </label>
 
-      {selectedRoute.view === "PdfReader" && (
-        <div className="my-4">
-          <Button variant="contained" component="label" color="primary" className="bg-secLightBg text-textLightColor w-1/4">
-            Télécharger le fichier Pdf
-            <input
-              type="file" accept="application/pdf"
-              id="contained-button-file"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-          </Button>
-          <p className="my-4 text-primary font-semibold text-xl">{selectedRoute?.file}</p>
-        </div>
-      )}
-      {selectedRoute.view === "ExcelReader" && (
-        <div className="my-4">
-          <Button variant="contained" component="label" color="primary" className="bg-secLightBg text-textLightColor w-1/4">
-            Télécharger le fichier Excel
-            <input
-              type="file" accept="application/vnd.ms-excel"
-              id="contained-button-file"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-          </Button>
-          <p className="my-4 text-primary font-semibold text-xl">{selectedRoute?.file}</p>
-        </div>
-      )}
-      <div className="my-4">
-        {/* Display the image preview */}
-        {selectedRoute.image && (
-          <div className="mb-4">
-            <p className="text-textLightColor">Aperçu de L&apos;image sélectionnée:</p>
-            <img
-              src={getImageSrc(selectedRoute.image)}
-              alt="Image Preview"
-              className="h-32 object-cover rounded-lg mt-2"
-            />
-          </div>
-        )}
-      </div>
+  <input
+    accept="image/*"
+    id="contained-button-file"
+    type="file"
+    onChange={handleImageUpload}
+    className="hidden"
+  />
+</div>
+
+
+
+
+{selectedRoute.view === "PdfReader" && (
+  <div className="my-4">
+    <label
+      htmlFor="pdf-upload"
+      className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
+    >
+      <FaRegFilePdf   className="text-xl mr-2" />
+      Télécharger le fichier Pdf
+    </label>
+    
+    <input
+      type="file"
+      accept="application/pdf"
+      id="pdf-upload"
+      onChange={handleFileUpload}
+      className="hidden"
+    />
+    <p className="my-4 text-textSecLightColor font-semibold text-xl">{selectedRoute?.file}</p>
+  </div>
+)}
+
+{selectedRoute.view === "ExcelReader" && (
+  <div className="my-4">
+    <label
+      htmlFor="excel-upload"
+      className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
+    >
+      <FaRegFileExcel  className="text-xl mr-2" />
+      Télécharger le fichier Excel
+    </label>
+    
+    <input
+      type="file"
+      accept="application/vnd.ms-excel"
+      id="excel-upload"
+      onChange={handleFileUpload}
+      className="hidden"
+    />
+    <p className="my-4 text-textSecLightColor font-semibold text-xl">{selectedRoute?.file}</p>
+  </div>
+)}
+
+<div className="my-4">
+  {/* Display the image preview */}
+  {selectedRoute.image && (
+    <div className="mb-4">
+      <p className="text-textLightColor">Aperçu de L&apos;image sélectionnée:</p>
+      <img
+        src={getImageSrc(selectedRoute.image)}
+        alt="Image Preview"
+        className="h-32 object-cover rounded-lg mt-2"
+      />
+    </div>
+  )}
+</div>
+
 
       <div className="my-4">
-        <TextField
-          margin="dense"
+      <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Détails :</label>
+
+        <input
           label="Détails"
           type="text"
-          fullWidth
           value={selectedRoute.details || ""}
           onChange={(e) =>
             setSelectedRoute({ ...selectedRoute, details: e.target.value })
           }
-          className="bg-secLightBg text-textLightColor"
-          InputLabelProps={{ style: { color: "inherit" } }}
-          InputProps={{ style: { color: "inherit" } }}
+          className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
         />
       </div>
       
       <div className="my-4">
-        {selectedRoute.createdAt && (
-          <p className="text-textLightColor">Date de création: <br />{selectedRoute.createdAt}</p>
-        )}
-      </div>
+  {selectedRoute.createdAt && (
+    <p className="py-3  text-md font-medium text-gray-700 dark:text-gray-300 ">
+      Date de création: {new Date(selectedRoute.createdAt).toLocaleDateString("fr-FR")}
+    </p>
+  )}
+</div>
 
-      {selectedRoute.view === "PdfReader" && (
-        <div className="my-4 flex items-center gap-4 ">
-          <label>Expire date du fichier : </label>
-          <DatePicker
-            selected={selectedRoute?.expiredate || ""}
-            onChange={handleDateChange}
-            dateFormat="dd/MM/yyyy" // Set the date format
-            placeholderText="Sélectionner une date"
-            className="p-2 border border-primary rounded-lg"
-            locale={fr} // Set locale to French
-            isClearable
-          />
-        </div>
-      )}
+
+
+{selectedRoute.view === "PdfReader" && (
+  <div className="my-4 flex items-center gap-4">
+    <label className="font-medium text-md text-gray-700 dark:text-gray-300">
+      Expire date du fichier:
+    </label>
+    <DatePicker
+      selected={selectedRoute?.expiredate || null}
+      onChange={handleDateChange}
+      dateFormat="dd/MM/yyyy" 
+      placeholderText="Sélectionner une date"
+      className="p-2 border border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
+      locale={fr} 
+    />
+  </div>
+)}
+
 
       <div className="my-4">
         {parrentData?.data && (
           <>
-            <h3 className="text-textLightColor">Table Rows</h3>
+            <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Lignes du tableau :</label>
+
             {parrentData?.data && Object.keys(parrentData?.data.tableCol).map((key, index) => (
-              <TextField
-                key={index}
-                margin="dense"
+              <input
+              key={index}
                 label={`${key}`}
+                placeholder={key}
                 type="text"
-                fullWidth
                 value={selectedRoute?.data?.tableRow[index]?.[key] || ""}
                 onChange={(event) => handleFieldRowChange(index, event, key)}
-                className="bg-secLightBg text-textLightColor"
-                InputLabelProps={{ style: { color: "inherit" } }}
-                InputProps={{ style: { color: "inherit" } }}
+                className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
               />
             ))}
           </>
@@ -573,53 +565,42 @@ const handleFieldRowChange = (index, event, key) => {
 
       {selectedRoute.view === "TableView" && (
         <div className="my-4">
-          <h3 className="text-textLightColor">Table Columns</h3>
+          <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Colonnes du tableau :</label>
           {dataFields.map((field, index) => (
-            <div key={index} className="flex items-center space-x-4">
-              <TextField
-                margin="dense"
+            <div key={index} className="flex items-center space-x-4 my-3">
+              <input
                 label={`Colonne ${index + 1}`}
                 type="text"
-                fullWidth
                 value={field.tableCol}
                 onChange={(event) => handleFieldTableChange(index, event, "tableCol")}
-                className="bg-secLightBg text-textLightColor"
-                InputLabelProps={{ style: { color: "inherit" } }}
-                InputProps={{ style: { color: "inherit" } }}
+                className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
               />
-              <Button
-                onClick={() => handleRemoveField(index)}
-                color="secondary"
-                className="bg-[#0056b3] hover:bg-[#004494] text-white rounded"
-              >
-                Retirer
-              </Button>
+              <div className="flex items-center space-x-4" onClick={() => handleRemoveField(index)}>
+                <Button Text="Retirer"  />
+              </div>
+              
             </div>
           ))}
-          <Button
-            onClick={handleAddField}
-            className="mt-4 bg-primary hover:bg-darkPrimary text-white rounded"
-          >
-            Ajouter un champ
-          </Button>
+          <div  onClick={handleAddField} className="mt-4 w-fit text-white rounded">
+            <Button Text="Ajouter une colonne"/>
+          </div>
+          
         </div>
       )}
-    </DialogContent>
-    
-    <DialogActions className="bg-secLightBg">
-      <Button
-        onClick={closeDialog}
-        className="bg-[#ff5c5c] hover:bg-[#e0471b] text-white rounded"
-      >
-        Annuler
-      </Button>
-      <Button
-        onClick={routeId ? handleUpdateRoute : handleCreateRoute}
-        className="bg-primary hover:bg-darkPrimary text-white rounded"
-      >
-        {routeId ? "Mise à jour" : "Créer"}
-      </Button>
-    </DialogActions>
+    </div>
+    <div className="mt-6 mx-5 flex justify-end space-x-4">
+          <div onClick={closeDialog}>
+
+          <Button  Text="Annuler"/>
+          </div>
+          <div onClick={routeId ? handleUpdateRoute : handleCreateRoute}>
+
+            <Button
+              Text={routeId ? "Mise à jour" : "Créer"}
+            />
+          </div>
+            
+        </div>
   </Dialog>
 </>
 

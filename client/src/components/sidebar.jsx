@@ -45,7 +45,7 @@ export default function SideBar() {
   };
 
   return (
-    <div className='ml-8 h-[750px] flex flex-col gap-3 justify-between overflow-auto mt-12  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
+    <div className=' ml-8 h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-10  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
       <div className='flex flex-col gap-3'>
         <p className='text-md font-medium text-gray-600 dark:text-gray-200 uppercase'>Menu</p>
         <div className='pl-2 flex flex-col gap-1'>

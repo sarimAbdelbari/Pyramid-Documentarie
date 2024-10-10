@@ -71,6 +71,7 @@ const TableGroop = () => {
       </div>
     );
   };
+  
   const handleCloseCreateUserModal = () => {
     setIsModalCreateOpen(false);
   };
@@ -79,17 +80,16 @@ const TableGroop = () => {
   };
   
   return (
-    <div className="pt-10 px-4 lg:px-12">
-      <h1 className="text-center text-4xl font-semibold text-primary mb-10">
+    <div className="py-10 px-4 lg:px-12  overflow-auto">
+      <h3 className="text-center text-4xl font-medium text-black dark:text-textSecDarkColor my-4">
         Gestion des Groops
-      </h1>
-      <div className="flex flex-wrap gap-10 justify-center">
-        <div className="bg-white dark:bg-gray-800 min-h-80  shadow-lg rounded-3xl p-6 my-4 flex flex-col justify-center items-center min-w-[620px] w-full md:w-[560px] lg:w-[600px]  duration-300 hover:scale-105 hover:shadow-2xl">
+      </h3>
+      <div className="flex flex-wrap gap-10 justify-center ">
+        <div className="bg-white dark:bg-gray-800 min-h-96   shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-center items-center min-w-[600px] w-full md:w-[540px] lg:w-[580px]  duration-300 hover:scale-105 hover:shadow-2xl">
           <div onClick={handleOpenCreateUserModal} className="flex flex-col items-center justify-center cursor-pointer">
-            <CiCirclePlus className="text-6xl text-primary hover:bg-primary hover:text-white p-2 rounded-full duration-300 ease-in-out" />
+            <CiCirclePlus className="text-6xl text-textSecLightColor hover:bg-textSecLightColor hover:text-white p-2 rounded-full duration-300 ease-in-out" />
           </div>
         </div>
-
         {groopData.map((groop) => (
           <GroopCard key={groop._id} groop={groop} onDelete={openDeleteModal} />
         ))}

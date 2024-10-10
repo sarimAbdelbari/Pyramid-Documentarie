@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
 import Button from "@/components/button";
-import { sucess_toast, error_toast } from "@/utils/toastNotification";
+import { sucess_toast, error_toast ,info_toast} from "@/utils/toastNotification";
 import CheckButton from "../../../components/checkButton";
 
 const CreateGroop = ({onClose}) => {
@@ -14,7 +14,8 @@ const CreateGroop = ({onClose}) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [routePermissionPair, setRoutePermissionPair] = useState({
     route: null,
-    permission: null,
+    permission: 'NoDownload',
+    type: 'file',
   });
   const [showPages ,setShowPages] = useState(false);
   
@@ -79,7 +80,7 @@ const CreateGroop = ({onClose}) => {
   };
 
   const addRoutePermission = () => {
-    if (routePermissionPair.route && routePermissionPair.permission) {
+    if (routePermissionPair.route) {
       const isDuplicate = selectedRoutes.some(
         (pair) =>
           pair.route === routePermissionPair.route &&
@@ -87,10 +88,10 @@ const CreateGroop = ({onClose}) => {
       );
 
       if (!isDuplicate) {
-        setSelectedRoutes([...selectedRoutes, routePermissionPair]);
-        setRoutePermissionPair({ route: null, permission: null });
+        setSelectedRoutes([...selectedRoutes,  { route: routePermissionPair.route , permission: routePermissionPair.permission , type: routePermissionPair.type}]);
+        setRoutePermissionPair({ route: null, permission: 'NoDownload', type: routePermissionPair.type });
       } else {
-        error_toast("Cette paire route-autorisation a déjà été ajoutée.");
+        info_toast("Cette paire route-autorisation a déjà été ajoutée.");
       }
     }
   };
@@ -104,19 +105,20 @@ const CreateGroop = ({onClose}) => {
   const handleSubmit = async () => {
     try {
       if (!groopName) {
-        error_toast("Nom du groupe doit être renseigné");
+        info_toast("Nom du groupe doit être renseigné");
         return;
       }
 
       if (selectedRoutes.length === 0) {
-        error_toast("Veuillez ajouter au moins une route");
+        info_toast("Veuillez ajouter au moins une route");
         return;
       }
 
       if (selectedUsers.length === 0) {
-        error_toast("Veuillez ajouter au moins un utilisateur");
+        info_toast("Veuillez ajouter au moins un utilisateur");
         return;
       }
+
 
       await axios.post("http://localhost:5000/api/groop", {
         groopName,
@@ -124,16 +126,23 @@ const CreateGroop = ({onClose}) => {
         groopRoutes: selectedRoutes,
       });
 
-      setGroopName("");
-      setSelectedRoutes([]);
-      setSelectedUsers([]);
-      onClose();
+      
+      // setGroopName("");
+      // setSelectedRoutes([]);
+      // setSelectedUsers([]);
+      
+      // onClose();
+
       sucess_toast("Groop created successfully");
     } catch (error) {
       error_toast("Erreur lors de la création du groupe :");
       console.error("Error:", error.response?.data);
     }
   };
+  const changeType = (showPages) => {
+    setRoutePermissionPair({ route: null, permission: 'NoDownload', type: showPages ? 'file' : 'page' });
+    setShowPages(!showPages)
+  }
 
   return (
    
@@ -164,16 +173,19 @@ const CreateGroop = ({onClose}) => {
             isSearchable
             isMulti
             placeholder="Sélectionner des utilisateurs"
-            className="w-full rounded-md focus:outline-none focus:border-primary z-30"
+            className="w-full rounded-md focus:outline-none focus:border-primary z-30 max-h-20"
           />
         </div>
         <div className="mb-4">
           <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
             Route et Autorisation
           </label>
-          <CheckButton Text="ShowPages" Checked={showPages} onChange={() => setShowPages(!showPages)}/>
+          <div onClick={() => changeType(showPages)} className="w-fit">
+          <CheckButton Text="ShowPages" Checked={showPages} />
+
+          </div>
           <div className="flex gap-4 w-full bg-mainLightBg dark:bg-mainDarkBg rounded-lg px-4 py-6">
-            <Select
+            {showPages ? null : <Select
               value={
                 optionsPermissions.find((option) => option.value === routePermissionPair.permission) || null
               }
@@ -182,7 +194,8 @@ const CreateGroop = ({onClose}) => {
               isSearchable
               placeholder="Sélectionner une autorisation"
               className="w-full rounded-md focus:outline-none focus:border-primary z-20"
-            />
+            />}
+            
             <Select
               value={showPages ? optionsfiles.find((option) => option.value === routePermissionPair.route) || null :
                 optionsPages.find((option) => option.value === routePermissionPair.route) || null
@@ -190,26 +203,26 @@ const CreateGroop = ({onClose}) => {
               onChange={onChangeRoute}
               options={showPages ? optionsfiles : optionsPages}
               isSearchable
-              placeholder="Sélectionner une route"
+              placeholder={showPages ? "Sélectionner une page" : "Sélectionner un fichier"}
               className="w-full rounded-md focus:outline-none focus:border-primary z-20"
             />
 
             <button
               onClick={addRoutePermission}
-              className="text-primary hover:text-primary font-medium"
+              className="text-textSecLightColor hover:text-textLightColor font-medium"
             >
               Ajouter
             </button>
           </div>
         </div>
-        <div className="mb-4 w-full">
+        <div className="p-4  grid grid-flow-row gap-4 max-h-64 overflow-y-auto">
           {selectedRoutes.map((pair, index) => (
             <div
               key={index}
-              className="flex justify-between items-center bg-gray-200 p-2 rounded-lg mb-2"
+              className="flex justify-between items-center px-3 py-3 border-gray-300 shadow-md dark:bg-gray-700 dark:text-white p-2 rounded-lg"
             >
               <span>
-                {routes.find((route) => route._id === pair.route)?.title} - {pair.permission}
+                {routes.find((route) => route._id === pair.route)?.title || files.find((route) => route._id === pair.route)?.title} - {pair.permission == "Download" ? "Télécharger" : "pas de téléchargement"}
               </span>
               <button
                 onClick={() => removeRoutePermission(index)}
