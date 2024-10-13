@@ -1,29 +1,34 @@
-
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import Button from "@/components/button";
-const PdfReader = ({route}) => {
-  // const pdfUrl = 'https://pdfobject.com/pdf/sample.pdf'; // Replace with your PDF file path
-  // const pdfUrl =   `VITE_PUBLIC_URLFILE route.route.file`; 
-  const pdfUrl =   `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`; 
+import { FaFileDownload } from "react-icons/fa";
 
-  console.log("first pdfUrl",route)
+const PdfReader = ({ route }) => {
+  const pdfUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
   return (
-    <div className="min-h-screen">
-      <div className="pt-12">
-        <div className='bg-white dark:bg-mainDarkBg dark:shadow-white flex justify-end items-center py-4 px-8 shadow-lg my-8'>
-          <div className="">
-           <Button Text="Télécharger"/>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-12">
+      <div className="container mx-auto">
+        <div className="text-center mb-8  dark:bg-gray-800 p-4 rounded-lg">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-200">
+            {route.title}
+          </h1>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex justify-between items-center mx-4 w-full">
+          <p className="text-gray-700 dark:text-gray-300 text-lg">
+            Téléchargez le fichier PDF
+          </p>
+          <div onClick={() => window.open(pdfUrl, '_blank')} className="cursor-pointer">
+            <Button Text="Télécharger" Icon={<FaFileDownload />} />
           </div>
         </div>
-        <div className="relative px-5  max-w-7xl  py-12 bg-white mx-auto  rounded-lg shadow-lg" >
-            
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js" >
-          <div className='h-full w-full absolute top-0 left-0 bg-[#ffffff00] z-30'>
-          </div>
+
+        <div className="mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg mx-4 w-full p-4 relative">
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
             <Viewer fileUrl={pdfUrl} defaultScale={1.5} />
           </Worker>
+          <div className="absolute inset-0 bg-transparent z-10"></div>
         </div>
       </div>
     </div>

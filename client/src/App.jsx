@@ -28,16 +28,19 @@ import { ThemeContext } from '@/components/themeProvider';
 import TableGroop from "./pages/dashboard/Groop/TableGroop";
 import UpdateGroop from "./pages/dashboard/Groop/UpdateGroop";
 import RDPage from "./pages/Other/RDPage";
-// import View6 from "./Routes/views/view6";
+import View6 from "./Routes/views/View6";
 import CreateUser from "./pages/dashboard/Users/CreateUser";
 import ExcelReader from "./Routes/readers/excelReader"; 
 // import Test from "./Routes/readers/Test";
+import Dashboard from "./pages/dashboard/dashboard";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
   const isAuthenticated = useAuth();
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
+
+  console.log("first" ,routeData)
 
   return (
     <div className="min-h-screen bg-[#f2f4f8] dark:bg-secDarkBg relative">
@@ -67,6 +70,14 @@ const App = () => {
                   <div  className="flex-1">
                   <Routes>
  
+                    <Route
+                      path="/dashboard/TableauDeBord"
+                      element={
+                        <ProtectedRoute>
+                          <Dashboard />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route
                       path="/dashboard/users/table"
                       element={
@@ -107,6 +118,7 @@ const App = () => {
                         </ProtectedRoute>
                       }
                     />
+
                     {/* <Route
                       path="/test"
                       element={
@@ -115,6 +127,8 @@ const App = () => {
                         </ProtectedRoute>
                       }
                     /> */}
+                      
+
                     <Route
                       path="/dashboard/groop/update/:id"
                       element={
@@ -161,6 +175,7 @@ const App = () => {
                             }
                           />
                         ))}
+                          <Route path="/View6" element={<View6 />} />
                        </Routes>
                       </>
                     ) : (

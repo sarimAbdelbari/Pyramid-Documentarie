@@ -12,7 +12,8 @@ export default {
     extend: {
       colors: {
         mainLightBg: '#f2f2f2', // Slightly darker off-white background
-        secLightBg: '#d0d0d0', // Medium light gray background
+        secLightBg: '#f2f4f8', // Medium light gray background
+        lightCyen:'#f2f4f8',
         secDarkBg: '#001428', // Deeper navy blue background
         mainDarkBg: '#002040', // Darker blue background
         textLightColor: '#1c1c1c', // Darker gray text

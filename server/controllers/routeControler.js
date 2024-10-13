@@ -5,7 +5,6 @@ const Groop = require('../models/GroopModel');
 
 // Helper function to convert string IDs to ObjectId
 const normalizeObjectIds = (ids) => {
-  console.log("Original IDs: ", ids);
   return ids.map(id => {
     try {
       return (typeof id === 'string' ? mongoose.Types.ObjectId(id) : id);
@@ -154,12 +153,10 @@ const deleteRouteById = async (req, res) => {
     let allRouteIds = await getAllRouteChildren(id);
     allRouteIds.push(id); // Include the parent route itself
 
-    console.log("All Route IDs before normalization: ", allRouteIds);
 
     // Ensure all route IDs are ObjectId instances
     let allRoutesIds = normalizeObjectIds(allRouteIds);
 
-    console.log("Normalized Route IDs: ", allRoutesIds);
     
     // Remove these routes from all groups
     await Groop.updateMany(
@@ -167,7 +164,6 @@ const deleteRouteById = async (req, res) => {
       { $pull: { groopRoutes: { route: { $in: allRoutesIds } } } } // Use the normalized array here
     );
 
-    console.log("Routes successfully removed from groups.");
 
     // Recursive function to delete a route and its children
     const deleteRouteAndChildren = async (routeId) => {

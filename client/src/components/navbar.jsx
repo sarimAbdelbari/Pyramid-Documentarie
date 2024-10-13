@@ -37,7 +37,7 @@ const Navbar = () => {
       
       <div className="flex justify-between items-center px-4 lg:px-7">
         {/* Logo Section */}
-        <Link to="/main" className="flex items-center gap-4 flex-1" onClick={() => setVisible(true)}>
+        <Link to="/principal" className="flex items-center gap-4 flex-1" onClick={() => setVisible(true)}>
           <img
             src={LogoPngChiali}
             className="w-12 md:w-16 hover:scale-105 transition-transform"

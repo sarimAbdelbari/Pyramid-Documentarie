@@ -8,28 +8,28 @@ const createUser = async (req, res) => {
   try {
     const { userName, email, password, groop , active , admin } = req.body;
 
-    if (!email || !password || !userName || !groop) {
-      throw Error("All fields must be filled");
+    if (!email || !password || !userName ) {
+      throw Error("Tous les champs doivent être remplis");
     }
 
     if (!validator.isEmail(email)) {
-      throw Error("Email is not valid");
+      throw Error("L'email n'est pas valide");
     }
 
     if (!validator.isStrongPassword(password)) {
-      throw Error("Password not strong enough");
+      throw Error("Password not strong enoughLe mot de passe n'est pas assez fort");
     }
 
     const existUserName = await User.findOne({ userName });
 
     if (existUserName) {
-      throw Error("UserName already in use");
+      throw Error("Nom d'utilisateur déjà utilisé");
     }
 
     const existEmail = await User.findOne({ email });
 
     if (existEmail) {
-      throw Error("Email already in use");
+      throw Error("Email déjà utilisé");
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -43,7 +43,7 @@ const createUser = async (req, res) => {
     const groopOfUser = await Groop.find({ _id: { $in: groop } });
 
     if (!groopOfUser || groopOfUser.length === 0) {
-      throw Error("Groop not found");
+      throw Error("Groupe non trouvé");
     }
 
     // Add the new user to each group's `groopUsers`
@@ -107,7 +107,7 @@ const updateUser = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
     // Store the old group memberships
@@ -189,7 +189,7 @@ if (admin !== user.admin) {
       // Find the user to be deleted
       const user = await User.findById(id);
       if (user == null) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
       }
   
       // Remove the user from all groops they belong to
@@ -201,7 +201,7 @@ if (admin !== user.admin) {
       // Delete the user
       await User.findByIdAndDelete(id);
   
-      res.status(200).json({ message: "User deleted and removed from all groops" });
+      res.status(200).json({ message: "Utilisateur supprimé et retiré de tous les groupes" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: error.message });
@@ -231,7 +231,7 @@ if (admin !== user.admin) {
             // };
             // ;
             
-            module.exports = {
+module.exports = {
   createUser,
   getUsers,
   deleteUser,

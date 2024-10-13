@@ -127,12 +127,12 @@ const CreateGroop = ({onClose}) => {
       });
 
       
-      // setGroopName("");
-      // setSelectedRoutes([]);
-      // setSelectedUsers([]);
+      setGroopName("");
+      setSelectedRoutes([]);
+      setSelectedUsers([]);
       
-      // onClose();
-
+      onClose();
+     
       sucess_toast("Groop created successfully");
     } catch (error) {
       error_toast("Erreur lors de la création du groupe :");

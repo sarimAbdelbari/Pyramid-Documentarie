@@ -10,7 +10,9 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CreateRoute from "./CreateRoute";
 import Button from "@/components/button";
-
+import { FaUncharted } from "react-icons/fa6";
+import { LuUserCheck2 } from "react-icons/lu";
+import { LuUserX2 } from "react-icons/lu";
 const Routes = () => {
   const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
@@ -69,10 +71,10 @@ const Routes = () => {
     { field: "id", headerName: "ID", flex: 1 },
     { field: "path", headerName: "Chemin", flex: 2 },
     { field: "title", headerName: "Titre", flex: 2 },
-    { field: "view", headerName: "View", flex: 2 , renderCell: (params) => (
+    { field: "view", headerName: "Voir", flex: 2 , renderCell: (params) => (
       params.row.view && 
       <div className="flex items-center">
-        <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.view}.png`} alt="image" className="w-12 h-12 object-cover rounded-full" />
+        <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.view}.png`} alt="image" className="w-12 h-12 object-cover rounded-xl" />
       </div>
     )},
     { field: "image", headerName: "Image", flex: 2 , renderCell: (params) => (
@@ -97,6 +99,7 @@ const Routes = () => {
             <DeleteIcon />
           </IconButton>
         </>
+        
       ),
     },
   ];
@@ -117,16 +120,78 @@ const Routes = () => {
   };
 
   return (
-    <div className="pt-11 flex flex-col items-center gap-7">
+    <div className="pt-11 flex flex-col items-center gap-3">
             <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
             Gestion des Routes
         </h3>
             <div onClick={openNewDialog}>
               <Button Text="Ajouter" Icon={<AddIcon />} className="bg-primary hover:bg-darkPrimary transition-colors duration-300"/>
             </div>
-            
-          
-          <div className=" mx-7  shadow-2xl dark:shadow-white rounded-lg bg-white dark:bg-mainDarkBg" style={{ height: "600px" ,width:"90%" }} >
+            <div className="w-full">
+
+<div  className="mx-5  shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg flex justify-around items-center gap-4 py-5 px-4">
+ <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
+   
+   <div className="flex justify-between items-center">
+     <p>Nombre de Routes</p>
+     <FaUncharted />
+   </div>
+   <div className="flex items-center gap-4">
+   <LuUserCheck2  className="text-2xl" />
+
+   <p>25</p>
+   </div>
+ <div>
+ </div>
+ </div>
+ <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
+   
+   <div className="flex justify-between items-center">
+     <p>Nombre de Pdf</p>
+     <FaUncharted />
+   </div>
+   <div className="flex items-center gap-4">
+   <LuUserX2  className="text-2xl" />
+
+   <p>7</p>
+   </div>
+ <div>
+ </div>
+ </div>
+ <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
+   
+   <div className="flex justify-between items-center">
+     <p>Nombre de Excel</p>
+     <FaUncharted />
+   </div>
+   <div className="flex items-center gap-4">
+   <LuUserCheck2  className="text-2xl" />
+
+   <p>4</p>
+   </div>
+ <div>
+ </div>
+ </div>
+ <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
+   
+   <div className="flex justify-between items-center">
+     <p>Voir Commun</p>
+     <FaUncharted />
+   </div>
+   <div className="flex items-center gap-4">
+   <LuUserCheck2  className="text-2xl" />
+
+   <p>Lecture Pdf</p>
+   </div>
+ <div>
+ </div>
+ </div>
+
+</div>
+</div>
+          <div className="w-full">
+
+          <div className=" mx-5 shadow2-xl bg-lightCyen   dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px" }} >
             <DataGrid
               rows={routesData}
               columns={columns}
@@ -135,7 +200,7 @@ const Routes = () => {
               disableSelectionOnClick
               columnVisibilityModel={columnVisibilityModel}
               onColumnVisibilityModelChange={handleColumnVisibilityChange}
-              className="text-textLightColor dark:text-gray-100"
+              className="m-4 border-none text-textLightColor dark:text-gray-100"
               sx={{
                 "& .MuiDataGrid-root": {
                   backgroundColor: "#FFFFFF",
@@ -162,6 +227,7 @@ const Routes = () => {
                 },
               }}
             />
+          </div>
           </div>
 
           {/* Create Route Dialog */}

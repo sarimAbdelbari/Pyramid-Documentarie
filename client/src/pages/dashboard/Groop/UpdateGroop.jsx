@@ -9,6 +9,7 @@ import {
 } from "@/utils/toastNotification";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import CheckButton from "../../../components/checkButton";
+import Button from "@/components/button";
 
 const UpdateGroop = () => {
   const { id } = useParams(); // Get the group ID from the URL
@@ -38,21 +39,28 @@ const UpdateGroop = () => {
   ];
 
   const optionsPages = routes
-    .filter((route) => !selectedRoutes.some((pair) => pair.route._id === route._id))
+    ?.filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
     .map((route) => ({
       value: route._id,
       label: route.title,
     }));
 
   const optionsfiles = files
-    .filter((route) => !selectedRoutes.some((pair) => pair.route._id === route._id))
+    ?.filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
     .map((route) => ({
       value: route._id,
       label: route.title,
     }));
 
+    console.log("optionsfiles ::::::::::" ,optionsfiles);
+    console.log("files :::::::" ,files);
+    console.log("selectedRoutes ::::::::::" ,selectedRoutes);
+
+
   const addRoutePermission = () => {
+
     if (routePermissionPair.route) {
+
       const isDuplicate = selectedRoutes.some(
         (pair) =>
           pair.route === routePermissionPair.route &&
@@ -60,6 +68,7 @@ const UpdateGroop = () => {
       );
 
       if (!isDuplicate) {
+
         setSelectedRoutes([
           ...selectedRoutes,
           {
@@ -68,11 +77,13 @@ const UpdateGroop = () => {
             type: routePermissionPair.type,
           },
         ]);
+
         setRoutePermissionPair({
           route: null,
-          permission: 'NoDownload',
+          permission: routePermissionPair.permission || "NoDownload",
           type: routePermissionPair.type,
         });
+
       } else {
         info_toast("Cette paire route-autorisation a déjà été ajoutée.");
       }
@@ -86,7 +97,9 @@ const UpdateGroop = () => {
   };
 
   const fetchData = async () => {
+
     try {
+
       const responseFiles = await axios.get(
         "http://localhost:5000/api/route/files"
       );
@@ -95,11 +108,8 @@ const UpdateGroop = () => {
       );
       const responseUsers = await axios.get("http://localhost:5000/api/users");
 
-
-
-
-      setRoutes(responseFiles.data);
-      setFiles(responsePages.data);
+      setFiles(responseFiles.data);
+      setRoutes(responsePages.data);
       setUsers(responseUsers.data);
 
       if (id) {
@@ -120,9 +130,7 @@ const UpdateGroop = () => {
             route.route.view.includes("PdfReader") ||
             route.route.view.includes("ExcelReader")
         );
-
-
-         
+ 
         const filteredRoutes = routes.map((route) => ({
           route: route.route._id,
           permission: route.permission,
@@ -130,6 +138,7 @@ const UpdateGroop = () => {
         })) 
 
         setSelectedRoutes(...selectedRoutes, filteredRoutes);
+
       }
     } catch (error) {
       console.error(error);
@@ -244,10 +253,10 @@ const UpdateGroop = () => {
               <Select
                 value={
                   showPages
-                    ? optionsfiles.find(
+                    ? optionsPages.find(
                         (option) => option.value === routePermissionPair.route
                       ) || null
-                    : optionsPages.find(
+                    :  optionsfiles.find(
                         (option) => option.value === routePermissionPair.route
                       ) || null
                 }
@@ -257,7 +266,7 @@ const UpdateGroop = () => {
                     route: selected.value,
                   }))
                 }
-                options={showPages ? optionsfiles : optionsPages}
+                options={showPages ? optionsPages :  optionsfiles }
                 isSearchable
                 placeholder={
                   showPages
@@ -278,7 +287,7 @@ const UpdateGroop = () => {
                 {selectedRoutes.map((pair, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center bg-gray-200 p-2 rounded-lg mb-2"
+                    className="flex justify-between items-center bg-secLightBg p-2 rounded-lg mb-2"
                   >
                     <span>
                       {routes.find((route) => route._id === pair.route)?.title || files.find((route) => route._id === pair.route)?.title}{" "}-{" "}
@@ -296,12 +305,10 @@ const UpdateGroop = () => {
                 ))}
               </div>
             </div>
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Update Groop
-            </button>
+            <div onClick={() => handleSubmit()}> 
+
+            <Button Text="Mis A Jour" />
+            </div>
           </div>
         </div>
       </div>

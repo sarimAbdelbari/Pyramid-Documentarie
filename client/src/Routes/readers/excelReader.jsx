@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
+import Button from "@/components/button";
+import { FaFileDownload } from "react-icons/fa";
 
 const ExcelReader = ({ route }) => {
     const [data, setData] = useState([]);
 
-    // const ExcelUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/file_example_XLS_100.xls`;
     const ExcelUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
     const fetchAndParseExcel = async () => {
@@ -26,16 +27,28 @@ const ExcelReader = ({ route }) => {
     }, [ExcelUrl]);
 
     return (
-        <div className="min-h-screen p-4 sm:p-11">
-            <h2 className="text-xl sm:text-2xl font-bold my-4 sm:my-7">Excel File Reader</h2>
-
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 sm:p-12">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
+                {route.title}
+            </h2>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex justify-between items-center my-4 w-full">
+          <p className="text-gray-700 dark:text-gray-300 text-lg">
+            Téléchargez le fichier Excel
+          </p>
+          <div onClick={() => window.open(ExcelUrl, '_blank')} className="cursor-pointer">
+            <Button Text="Télécharger" Icon={<FaFileDownload />} />
+          </div>
+        </div>
             {data?.length > 0 ? (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full table-auto border-collapse">
-                        <thead>
+                <div className="overflow-x-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <table className="min-w-full border-collapse">
+                        <thead className="bg-gray-200 dark:bg-gray-700">
                             <tr>
                                 {Object.keys(data[0]).map((key, index) => (
-                                    <th key={index} className="border px-1 sm:px-2 py-1 text-xs sm:text-sm">
+                                    <th
+                                        key={index}
+                                        className="border px-2 sm:px-4 py-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 font-medium"
+                                    >
                                         {key}
                                     </th>
                                 ))}
@@ -43,9 +56,12 @@ const ExcelReader = ({ route }) => {
                         </thead>
                         <tbody>
                             {data?.map((row, rowIndex) => (
-                                <tr key={rowIndex}>
+                                <tr key={rowIndex} className="odd:bg-gray-50 dark:odd:bg-gray-700">
                                     {Object.values(row).map((value, colIndex) => (
-                                        <td key={colIndex} className="border px-1 sm:px-2 py-1 text-xs sm:text-sm">
+                                        <td
+                                            key={colIndex}
+                                            className="border px-2 sm:px-4 py-2 text-sm sm:text-base text-gray-600 dark:text-gray-300"
+                                        >
                                             {value}
                                         </td>
                                     ))}
@@ -55,7 +71,7 @@ const ExcelReader = ({ route }) => {
                     </table>
                 </div>
             ) : (
-                <p className="text-sm sm:text-base">No data available. Fetching the Excel file...</p>
+                <p className="text-gray-700 dark:text-gray-300">Aucune donnée disponible. Récupération du fichier Excel...</p>
             )}
         </div>
     );

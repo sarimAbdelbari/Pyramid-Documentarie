@@ -13,6 +13,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ThemeContext } from '@/components/themeProvider';
 import { AiOutlineSisternode } from "react-icons/ai";
 import { viewOptions } from '../../../data/DataForm';
+import { BsNodePlus } from "react-icons/bs";
 
 export default function TreePath() {
 
@@ -36,7 +37,7 @@ export default function TreePath() {
     nodeData: null
   });
   const [selectedNode, setSelectedNode] =  useState(null);
-
+  const [parrentId, setParrentId] = useState("");
 
   // Tooltip component
   const CustomTooltip = ({ visible, position, data }) => {
@@ -255,12 +256,17 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 
       </div>
       <ul className='flex flex-col gap-3'>
-        {/* <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddChildRoute(nodeData)}><RxUpdate className='text-2xl' />Ajouter un Route enfant</li> */}
+      {nodeData.view == "PdfReader" || nodeData.view == "ExcelReader" ? null : (
+        <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3 ' onClick={() => AddChildRoute(nodeData)}><BsNodePlus  className='text-2xl' />Ajouter un nœud enfant</li>
+
+      ) }
         <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddRoute(nodeData)}><RxUpdate className='text-2xl' /> Mise à jour</li>
         <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
       </ul>
     </div>
   );
+
+
 
   const ConfirmModal = ({ isOpen, onClose, onConfirm }) => {
     if (!isOpen) return null;
@@ -281,15 +287,25 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
     );
   };
 
+  const AddChildRoute = (nodeData) => {
+    setParrentId(nodeData._id );
+
+    setParrentId({
+      value: nodeData._id,
+      label: nodeData.path,
+    } || "");
+    setShowNew(true);
+  }
+
   return (
     <>
-      {showNew && <CreateRoute routeId={selectedNode} parrentId={selectedNode} />}
+      {showNew && <CreateRoute routeId={selectedNode} parrentId={parrentId}  />}
       {loading ? (
         <LoadingScreen />
       ) : (
         <div className='pt-7 bg-mainLightBg dark:bg-mainDarkBg'>
           <div className="flex flex-row justify-center items-center">
-            <h3 className="text-3xl pt-3 font-bold text-primary dark:text-textDarkColor">Routes</h3>
+            <h3 className="text-3xl pt-3 font-semibold text-textLightColor dark:text-textDarkColor">Routes</h3>
           </div>
           <div className="">
             <div className="flex justify-start p-4 ">

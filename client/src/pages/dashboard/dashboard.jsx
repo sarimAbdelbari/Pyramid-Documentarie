@@ -1,12 +1,8 @@
-import SideBar from "@/components/sidebar";
 
 const Dashboard = () => {
-
-    return (
-        <>
-        <SideBar/>
-        </>
-    )
+  return (
+    <div className="h-full flex justify-center items-center">Dashboard</div>
+  )
 }
 
-export default Dashboard;
+export default Dashboard

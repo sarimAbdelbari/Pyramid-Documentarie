@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { RxDashboard } from 'react-icons/rx';
-import { PiUsersThin, PiTreeViewThin, PiCards } from 'react-icons/pi';
+import { PiUsersThin,  PiTreeViewThin, PiCards } from 'react-icons/pi';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoCreateOutline } from "react-icons/io5";
 import { CiViewTable } from 'react-icons/ci';
@@ -45,12 +45,12 @@ export default function SideBar() {
   };
 
   return (
-    <div className=' ml-8 h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-10  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
+    <div className=' sticky top-0 ml-8 h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-10  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
       <div className='flex flex-col gap-3'>
         <p className='text-md font-medium text-gray-600 dark:text-gray-200 uppercase'>Menu</p>
         <div className='pl-2 flex flex-col gap-1'>
           {/* Dashboard */}
-          <Link to='/dashboard' className='flex items-center gap-4 text-textSecLightColor dark:text-textDarkColor hover:bg-[#ececfe] dark:hover:text-textLightColor hover:text-primary p-4 rounded-xl transition-colors duration-300'>
+          <Link to='/dashboard/TableauDeBord' className='flex items-center gap-4 text-textSecLightColor dark:text-textDarkColor hover:bg-[#ececfe] dark:hover:text-textLightColor hover:text-primary p-4 rounded-xl transition-colors duration-300'>
             <RxDashboard />
             Tableau de bord
           </Link>
@@ -72,7 +72,7 @@ export default function SideBar() {
                 dropdowns.users ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <Link to='/dashboard/users/create' className='w-full flex items-center gap-3 dark:hover:text-textLightColor hover:bg-[#ececfe] hover:text-primary dark:text-textDarkColor p-4 rounded-xl transition-colors duration-300'>
+              <Link className='w-full flex items-center gap-3 dark:hover:text-textLightColor hover:bg-[#ececfe] hover:text-primary dark:text-textDarkColor p-4 rounded-xl transition-colors duration-300'>
                 <IoCreateOutline />
                 Créer
               </Link>
@@ -100,7 +100,7 @@ export default function SideBar() {
                 dropdowns.routes ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <Link to='/dashboard/route/create' className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
+              <Link  className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
                 <IoCreateOutline />
                 Créer
               </Link>

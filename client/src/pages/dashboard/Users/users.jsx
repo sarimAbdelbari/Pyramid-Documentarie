@@ -5,10 +5,15 @@ import axios from "axios";
 import Button from "@/components/button";
 import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import { ThemeContext } from '@/components/themeProvider';
 import CreateUser from "./CreateUser"; // Import CreateUser component
+import { FaUncharted } from "react-icons/fa6";
+import { LuUserCheck2 } from "react-icons/lu";
+import { LuUserX2 } from "react-icons/lu";
+import { TbUsersGroup } from "react-icons/tb";
+import { RiAdminFill } from "react-icons/ri";
+import { CiCircleCheck } from "react-icons/ci";
 
 const Users = () => {
   const { isLoading } = useStateContext();
@@ -92,13 +97,13 @@ const Users = () => {
       field: "active",
       headerName: "Actif",
       flex: 1,
-      renderCell: (params) => (params.row.active ? "Oui" : "Non"),
+      renderCell: (params) => (params.row.active ? <CiCircleCheck className="text-2xl my-auto h-full text-green-800 font-bold" /> : null),
     },
     {
       field: "admin",
       headerName: "Admin",
       flex: 1,
-      renderCell: (params) => (params.row.admin ? "Oui" : "Non"),
+      renderCell: (params) => (params.row.admin ? <CiCircleCheck className="text-2xl my-auto h-full text-green-800 font-bold" /> : null),
     },
     { field: "createdAt", headerName: "Créé à", flex: 1 },
     { field: "updatedAt", headerName: "Mis à jour à", flex: 1 },
@@ -146,20 +151,80 @@ const Users = () => {
     localStorage.setItem("columnVisibilityModelUsers", JSON.stringify(newModel));
   };
 
+
   return (
     <>
-      <div className="pt-10 flex flex-col items-center gap-6">
+      <div className="pt-10 flex flex-col items-center gap-3">
         <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
           Utilisateurs
         </h3>
-
         <div onClick={() => setShowCreateUserModal(true)}>
           <Button Text="Crée un utilisateur" />
         </div>
-      
-   
+     <div className="w-full">
 
-        <div className=" mx-7  shadow-2xl dark:shadow-white rounded-lg bg-white dark:bg-mainDarkBg" style={{ height: "600px" ,width:"90%" }}>
+       <div  className="mx-5  shadow-2xl bg-lightCyen  dark:shadow-white rounded-lg  dark:bg-mainDarkBg flex justify-around items-center gap-4 py-5 px-4">
+        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
+          <div className="flex justify-between items-center">
+            <p>Utilisateurs actifs</p>
+            <FaUncharted />
+          </div>
+          <div className="flex items-center gap-4 text-xl font-medium ">
+          <LuUserCheck2   />
+
+          <p >7</p>
+          </div>
+        <div>
+        </div>
+        </div>
+        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
+          
+          <div className="flex justify-between items-center">
+            <p>Utilisateurs Désactivent</p>
+            <FaUncharted />
+          </div>
+          <div className="flex items-center gap-4  text-xl font-medium">
+          <LuUserX2   />
+
+          <p>2</p>
+          </div>
+        <div>
+        </div>
+        </div>
+        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
+          
+          <div className="flex justify-between items-center">
+            <p>Groupe commun</p>
+            <FaUncharted />
+          </div>
+          <div className="flex items-center gap-4 text-xl font-medium">
+            <TbUsersGroup   />
+
+          <p>Fantôme</p>
+          </div>
+        <div>
+        </div>
+        </div>
+        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
+          
+          <div className="flex justify-between items-center">
+            <p>Comptes administrateur</p>
+            <FaUncharted />
+          </div>
+          <div className="flex items-center gap-4 text-xl font-medium">
+          <RiAdminFill    />
+
+          <p>1</p>
+          </div>
+        <div>
+        </div>
+        </div>
+       
+       </div>
+     </div>
+   
+      <div className="w-full">
+      <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px"  }}>
           <DataGrid
             rows={usersData}
             columns={columns}
@@ -198,6 +263,8 @@ const Users = () => {
             }}
           />
         </div>
+      </div>
+        
       </div>
 
       {showConfirmDialog && (

@@ -3,7 +3,7 @@ import Dialog from "@mui/material/Dialog";
 import Button from "@/components/button";
 import axios from "axios";
 import Slider from "react-slick";
-import { error_toast, sucess_toast } from "@/utils/toastNotification";
+import { error_toast, sucess_toast ,info_toast } from "@/utils/toastNotification";
 import ImageModal from "@/components/ImageModal";
 import { useStateContext } from "@/contexts/ContextProvider";
 import LoadingScreen from "@/utils/loadingScreen";
@@ -18,7 +18,7 @@ import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileExcel } from "react-icons/fa";
 
 
-const CreateRoute = ({ routeId }) => {
+const CreateRoute = ({ routeId ,parrentId}) => {
   const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch ,reloadfetch } = useStateContext();
   const [routes, setRoutes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -26,7 +26,7 @@ const CreateRoute = ({ routeId }) => {
   const [dataFields, setDataFields] = useState([{ tableCol: "", value: "" }]);
   const [dataRowFields, setDataRowFields] = useState([{}]);
   const [selectedRoute, setSelectedRoute] = useState({
-    parrentPath: "",
+    parrentPath: parrentId.value ||"",
     title: "",
     path: "",
     view: "",
@@ -36,7 +36,7 @@ const CreateRoute = ({ routeId }) => {
     details: "",
     data: { tableCol: {} , tableRow: {}},
   });
-  const [selectedParrent, setSelectedParrent] = useState();
+  const [selectedParrent, setSelectedParrent] = useState(parrentId || "");
 
   const [parrentData, setParrentData] = useState({});
 
@@ -58,7 +58,7 @@ const CreateRoute = ({ routeId }) => {
   ];
 
   const handleViewSelection = (viewName) => {
-    setSelectedRoute({ ...selectedRoute, view: viewName , data: { tableCol: {}}});
+    setSelectedRoute({ ...selectedRoute, view: viewName });
   };
 
   const handleImageClick = (imgSrc) => {
@@ -138,7 +138,7 @@ const CreateRoute = ({ routeId }) => {
     fetchRoutes();
   }, []);
   
-
+  
 
   const handleFieldTableChange = (index, event, field) => {
     const { value } = event.target;
@@ -213,25 +213,31 @@ const handleFieldRowChange = (index, event, key) => {
 
   const handleCreateRoute = async () => {
     try {
-
+      
       if(!selectedRoute.path.includes("/")){
-        error_toast("Le chemin de la route doit contenir un '/'.");
-        return;
+       info_toast("Le chemin de la route doit contenir un '/'.");
+       return;
       }
+
+
+      if(selectedRoute.view == "ExcelReader" || selectedRoute.view == "PdfReader"){
+        if(selectedRoute.file === ""){
+          info_toast("Veuiller selectionner un fichier.");
+          return;
+        }
+      }
+
 
       
       // const dataParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${selectedRoute.parrentPath}`);
-      const dataRoute = { ...selectedRoute, path: `${selectedRoute.path}` };
 
-      
-      console.log("dataRoute",dataRoute);
+      const dataRoute = { ...selectedRoute, path: `${selectedRoute.path}` };
 
       await axios.post(`${import.meta.env.VITE_API_URL}/route`, dataRoute);
  
 
 
       sucess_toast("Route créé avec succès");
-      
       setSelectedRoute({});
       setShowNew(false);
       setReloadfetch(!reloadfetch);
@@ -306,7 +312,7 @@ const handleFieldRowChange = (index, event, key) => {
     // const pathArray =  selectedRoute.path.split("/"); 
     
     // const path = pathArray[pathArray.length - 1]
-
+     console.log("selectedOption" ,selectedOption.value)
  
     setSelectedRoute({
       ...selectedRoute,
@@ -330,8 +336,8 @@ const handleFieldRowChange = (index, event, key) => {
     setSelectedRoute({ ...selectedRoute, expiredate : date });
   };
   
-  
-
+ 
+ 
   return (
     <>
   {isLoading && <LoadingScreen />}
@@ -430,7 +436,7 @@ const handleFieldRowChange = (index, event, key) => {
     className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
   >
     <CiImageOn className="text-xl mr-2" />
-    Upload Image
+    Télécharger l'image
   </label>
 
   <input
@@ -556,7 +562,7 @@ const handleFieldRowChange = (index, event, key) => {
                 type="text"
                 value={selectedRoute?.data?.tableRow[index]?.[key] || ""}
                 onChange={(event) => handleFieldRowChange(index, event, key)}
-                className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
+                className="px-3 py-3 my-4 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
               />
             ))}
           </>
@@ -567,7 +573,7 @@ const handleFieldRowChange = (index, event, key) => {
         <div className="my-4">
           <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Colonnes du tableau :</label>
           {dataFields.map((field, index) => (
-            <div key={index} className="flex items-center space-x-4 my-3">
+            <div key={index} className="flex items-center space-x-4">
               <input
                 label={`Colonne ${index + 1}`}
                 type="text"
