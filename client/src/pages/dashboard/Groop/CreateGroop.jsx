@@ -3,7 +3,7 @@ import axios from "axios";
 import Select from "react-select";
 import Button from "@/components/button";
 import { sucess_toast, error_toast ,info_toast} from "@/utils/toastNotification";
-import CheckButton from "../../../components/checkButton";
+import CheckButton from "@/components/checkButton";
 
 const CreateGroop = ({onClose}) => {
   const [groopName, setGroopName] = useState("");

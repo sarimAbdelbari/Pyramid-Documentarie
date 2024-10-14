@@ -33,6 +33,7 @@ import CreateUser from "./pages/dashboard/Users/CreateUser";
 import ExcelReader from "./Routes/readers/excelReader"; 
 // import Test from "./Routes/readers/Test";
 import Dashboard from "./pages/dashboard/dashboard";
+import DuplicateGroop from "./pages/dashboard/Groop/DuplicateGroop";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -134,6 +135,14 @@ const App = () => {
                       element={
                         <ProtectedRoute>
                           <UpdateGroop />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard/groop/duplicate/:id"
+                      element={
+                        <ProtectedRoute>
+                          <DuplicateGroop />
                         </ProtectedRoute>
                       }
                     />

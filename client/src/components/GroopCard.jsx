@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import Button from "@/components/button";
 import { useEffect, useState } from "react";
 import { HiMiniPlusSmall ,HiMiniMinusSmall} from "react-icons/hi2";
+import { GoDuplicate } from "react-icons/go";
 
 const GroopCard = ({ groop, onDelete }) => {
   const [openRoutes, setOpenRoutes] = useState({}); // Track open/close state of each route
   const [organizedRoutes, setOrganizedRoutes] = useState([]);
-
+  const [isModalDuplicateOpen,setIsModalDuplicateOpen] = useState(false);
   // Toggle function for opening/closing accordions based on a unique key
   const toggleAccordion = (key) => {
     setOpenRoutes((prevState) => ({
@@ -116,11 +117,13 @@ const GroopCard = ({ groop, onDelete }) => {
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 min-h-96 shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-between min-w-[600px] w-full md:w-[540px] lg:w-[580px] duration-300 hover:scale-105 hover:shadow-2xl">
+    <div className="relative bg-white dark:bg-gray-800 min-h-96 shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-between min-w-[600px] w-full md:w-[540px] lg:w-[580px] duration-300 hover:scale-105 hover:shadow-2xl">
       <h2 className="text-2xl font-semibold my-4 text-center text-gray-800 dark:text-gray-200">
         {groop.groopName}
       </h2>
-
+      <Link to={`/dashboard/groop/duplicate/${groop._id}`} className="absolute top-9 right-9" onClick={() => setIsModalDuplicateOpen(!isModalDuplicateOpen)}><GoDuplicate  className="text-2xl hover:scale-125 text-textSecLightColor hover:text-textLightColor cursor-pointer ease-in-out duration-300"/>
+      </Link>
+     <div className="absolute top-0 right-0"></div>
       <div className="mb-4 bg-gray-50 bg-opacity-50 dark:bg-gray-700 rounded-lg p-4 shadow-md">
         <div className="mb-4  overflow-y-auto px-4">
           <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 py-1">
