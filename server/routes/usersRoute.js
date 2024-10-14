@@ -1,7 +1,7 @@
 // routes/users.js
 const express = require('express');
 const router = express.Router();
-const { createUser , updateUser , deleteUser , getUser , getUsers ,updateManyUsers } = require("../controllers/userControllers")
+const { createUser , updateUser , deleteUser , getUser , getUsers  } = require("../controllers/userControllers")
 
 
 
@@ -10,7 +10,6 @@ router.post('/', createUser );
 
 // Get all users
 router.get('/', getUsers);
-
 
 // router.patch('/updateMany', updateManyUsers);
 

@@ -101,7 +101,9 @@ const updateUser = async (req, res) => {
   const { id } = req.params;
   const { userName, email, password, groop , active ,admin } = req.body;
 
-
+  if (!id) {
+    return res.status(404).json({ message: "id Not found" });
+  }
 
   try {
     const user = await User.findById(id);
@@ -209,32 +211,13 @@ if (admin !== user.admin) {
   };
   
   
-  // const updateManyUsers = async (req, res) => {
-    
-    //   const { ids, groopName } = req.body;
-    
-    //   if (!Array.isArray(ids) || !groopName) {
-      //       return res.status(400).json({ message: 'Invalid input data' });
-      //   }
-      
-      //   try {
-        //       const result = await User.updateMany(
-          //           { _id: { $in: ids } },
-          //           { $set: { groop: groopName } }
-          //       );
-          
-          //       res.status(200).json({ message: 'Users updated successfully', result });
-          //   } catch (error) {
-            //       console.error("Error updating users:", error);
-            //       res.status(500).json({ message: 'Error updating users', error: error.message });
-            //   }
-            // };
-            // ;
+
+
             
 module.exports = {
   createUser,
   getUsers,
   deleteUser,
   updateUser,
-  getUser,
+  getUser
 };

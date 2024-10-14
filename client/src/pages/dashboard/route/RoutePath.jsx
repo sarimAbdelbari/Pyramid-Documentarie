@@ -132,7 +132,7 @@ const Routes = () => {
 <div  className="mx-5  shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg flex justify-around items-center gap-4 py-5 px-4">
  <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
    
-   <div className="flex justify-between items-center">
+   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
      <p>Nombre de Routes</p>
      <FaUncharted />
    </div>
@@ -146,7 +146,7 @@ const Routes = () => {
  </div>
  <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
    
-   <div className="flex justify-between items-center">
+   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
      <p>Nombre de Pdf</p>
      <FaUncharted />
    </div>
@@ -160,7 +160,7 @@ const Routes = () => {
  </div>
  <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
    
-   <div className="flex justify-between items-center">
+   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
      <p>Nombre de Excel</p>
      <FaUncharted />
    </div>
@@ -174,7 +174,7 @@ const Routes = () => {
  </div>
  <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
    
-   <div className="flex justify-between items-center">
+   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
      <p>Voir Commun</p>
      <FaUncharted />
    </div>

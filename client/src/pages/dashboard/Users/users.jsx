@@ -24,6 +24,7 @@ const Users = () => {
   const [userToEdit, setUserToEdit] = useState(null);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
   const [groopList, setGroopList] = useState([]);
+  const [usersStats, setUsersStats] = useState({});
 
   const { theme } = useContext(ThemeContext);
 
@@ -45,6 +46,11 @@ const Users = () => {
     try {
       const { data: usersData } = await axios.get("http://localhost:5000/api/users");
       const { data: groopData } = await axios.get("http://localhost:5000/api/groop");
+
+      const response = await axios.get("http://localhost:5000/api/stats");
+   
+      console.log("response",response.data)
+      setUsersStats(response.data);
 
       setGroopList(groopData);
 
@@ -165,56 +171,56 @@ const Users = () => {
 
        <div  className="mx-5  shadow-2xl bg-lightCyen  dark:shadow-white rounded-lg  dark:bg-mainDarkBg flex justify-around items-center gap-4 py-5 px-4">
         <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
-          <div className="flex justify-between items-center">
-            <p>Utilisateurs actifs</p>
+          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
+            <p >Utilisateurs actifs</p>
             <FaUncharted />
           </div>
           <div className="flex items-center gap-4 text-xl font-medium ">
           <LuUserCheck2   />
 
-          <p >7</p>
+          <p>{usersStats?.active}</p>
           </div>
         <div>
         </div>
         </div>
         <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
           
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
             <p>Utilisateurs Désactivent</p>
             <FaUncharted />
           </div>
           <div className="flex items-center gap-4  text-xl font-medium">
           <LuUserX2   />
 
-          <p>2</p>
+          <p>{usersStats?.disActive}</p>
           </div>
         <div>
         </div>
         </div>
         <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
           
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
             <p>Groupe commun</p>
             <FaUncharted />
           </div>
           <div className="flex items-center gap-4 text-xl font-medium">
             <TbUsersGroup   />
 
-          <p>Fantôme</p>
+          <p>{usersStats?.numberOftheMostCommunGroop} {usersStats?.most_common_groop?.groopName}</p>
           </div>
         <div>
         </div>
         </div>
         <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
           
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
             <p>Comptes administrateur</p>
             <FaUncharted />
           </div>
           <div className="flex items-center gap-4 text-xl font-medium">
           <RiAdminFill    />
 
-          <p>1</p>
+          <p>{usersStats?.admins}</p>
           </div>
         <div>
         </div>

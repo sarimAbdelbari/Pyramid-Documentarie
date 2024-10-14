@@ -313,6 +313,7 @@ const getTopUsers = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
 module.exports = {
   createUser,
   getUsers,

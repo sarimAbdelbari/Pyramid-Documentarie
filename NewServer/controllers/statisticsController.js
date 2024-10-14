@@ -2,28 +2,35 @@ const Groop = require("../models/GroopModel");
 const User = require("../models/UserModel");
 const Route = require("../models/RouteModel");
 
-const getUserStats = async () => {
-  const users = await User.find({});
-  let active = 0;
-  let disActive = 0;
-  let admins = 0;
-  users.map((user) => {
-    if (user.active) {
-      active = active + 1;
-    } else {
-      disActive = disActive + 1;
-    }
+const getUserStats = async (req, res) => {
+  try {
+    const users = await User.find({});
 
-    if (user.admin) {
-      admins = admins + 1;
-    }
-  });
+    let active = 0;
+    let disActive = 0;
+    let admins = 0;
 
-  return {
-    active: active,
-    disActive: disActive,
-    admins: admins,
-  };
+    users.forEach((user) => {
+      if (user.active) {
+        active += 1;
+      } else {
+        disActive += 1;
+      }
+
+      if (user.admin) {
+        admins += 1;
+      }
+    });
+
+    return res.status(200).json({
+      active,
+      disActive,
+      admins,
+      totalUsers: users.length
+    });
+  } catch (error) {
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
 };
 
 const getMostDistRoute = async () => {
@@ -44,6 +51,7 @@ const getMostDistRoute = async () => {
   result.sort((a, b) => b["groups"] - a["groups"]);
   return result[0];
 };
+
 
 const getGeneralStatistics = async (req, res) => {
   try {

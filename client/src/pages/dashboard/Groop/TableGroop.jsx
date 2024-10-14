@@ -81,7 +81,7 @@ const TableGroop = () => {
   
   return (
     <div className="py-10 px-4 lg:px-12  overflow-auto">
-      <h3 className="text-center text-4xl font-medium text-black dark:text-textSecDarkColor my-4">
+      <h3 className="text-center text-4xl font-medium text-black dark:text-textSecDarkColor mt-4 mb-6">
         Gestion des Groops
       </h3>
       <div className="flex flex-wrap gap-10 justify-center ">

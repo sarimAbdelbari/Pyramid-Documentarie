@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const routeRoutes = require("./routes/routeRoute");
 const userRoutes = require('./routes/usersRoute');
+const statRoutes = require('./routes/statRoutes')
 const groopRoutes = require('./routes/groopRoute');
 const authRoutes = require('./routes/authRoute');
 const mongoose = require('mongoose');
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use('/api/route' , routeRoutes);
 app.use('/api/groop', groopRoutes);
 app.use('/api/users' , userRoutes);
+app.use('/api/stats' , statRoutes);
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
