@@ -69,8 +69,8 @@ export default function TreePath() {
 
 const getNodeColor = (viewType) => {
   switch (viewType) {
-    case 'TableView':
-      return "#0056B3"; 
+    case 'WordReader':
+      return "#2B579A"; 
     case 'PdfReader':
       return "#980100"; 
     case 'ExcelReader':
@@ -241,15 +241,10 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
     });
   };
 
-//  const AddChildRoute = (nodeData) => {
-//   setSelectedNode(nodeData?._id ||"");
-//   setShowNew(true);
-//   setContextMenu({
-//     ...contextMenu,
-//     visible: false
-//   });
-//   }
   const ContextMenu = ({ position, onDelete, nodeData }) => (
+    <div>
+
+      <div className='absolute top-0 left-0 w-full h-full bg-secLightBg bg-opacity-25 ' onClick={() => setContextMenu({ ...contextMenu, visible: false })}></div>
     <div className="context-menu fixed bg-mainLightBg shadow-2xl rounded-3xl p-7 " style={{ top: position.y, left: position.x }}>
       <div className='absolute top-2 right-2 hover:opacity-70 '>
       <AiOutlineCloseCircle  className='text-xl cursor-pointer' onClick={() => setContextMenu({ ...contextMenu, visible: false })}/>
@@ -258,12 +253,13 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
       <ul className='flex flex-col gap-3'>
       {nodeData.view == "PdfReader" || nodeData.view == "ExcelReader" ? null : (
         <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3 ' onClick={() => AddChildRoute(nodeData)}><BsNodePlus  className='text-2xl' />Ajouter un nœud enfant</li>
-
+        
       ) }
         <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddRoute(nodeData)}><RxUpdate className='text-2xl' /> Mise à jour</li>
-        <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
+        <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center justify-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
       </ul>
     </div>
+        </div>
   );
 
 
@@ -288,8 +284,7 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
   };
 
   const AddChildRoute = (nodeData) => {
-    setParrentId(nodeData._id );
-
+    setSelectedNode(null);
     setParrentId({
       value: nodeData._id,
       label: nodeData.path,

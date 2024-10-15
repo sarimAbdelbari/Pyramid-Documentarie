@@ -28,9 +28,9 @@ const ExcelReader = ({ route }) => {
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 sm:p-12">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
                 {route.title}
-            </h2>
+            </h3>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex justify-between items-center my-4 w-full">
           <p className="text-gray-700 dark:text-gray-300 text-lg">
             Téléchargez le fichier Excel

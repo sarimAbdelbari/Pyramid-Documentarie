@@ -16,7 +16,7 @@ import { LuUserX2 } from "react-icons/lu";
 const Routes = () => {
   const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
-  const [selectedRoute, setSelectedRoute] = useState("");
+  const [selectedRoute, setSelectedRoute] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [routeToDelete, setRouteToDelete] = useState(null);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);

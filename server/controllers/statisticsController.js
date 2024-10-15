@@ -34,6 +34,21 @@ const getUserStats = async () => {
   }
 };
 
+const getRouteStats = async () => {
+  try {
+    const routes = await Route.find({});
+   
+    let Pdf = 0;
+    let Excel = 0;
+  
+
+    return routes.length;
+  } catch (error) {
+    console.error('Error in getRouteStats:', error);
+    throw new Error('Failed to get route stats'); // Throw error instead of responding directly
+  }
+};
+
 
 const getMostDistRoute = async () => {
   const routes = await Route.find({});

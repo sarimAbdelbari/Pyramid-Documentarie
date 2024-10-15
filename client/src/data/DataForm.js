@@ -138,6 +138,11 @@ const viewOptions = [
       imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/ExcelReader.png`,
       titre: "Lecteur Excel",
     },
+    {
+      name: "WordReader",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/WordReader.png`,
+      titre: "Lecteur Word",
+    },
   ];
 
 

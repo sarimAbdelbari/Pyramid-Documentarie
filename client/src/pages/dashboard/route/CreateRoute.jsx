@@ -16,7 +16,8 @@ import { fr } from "date-fns/locale";
 import { CiImageOn } from "react-icons/ci";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileExcel } from "react-icons/fa";
-
+import { viewOptions } from "@/data/DataForm";
+import { FaRegFileWord } from "react-icons/fa";
 
 const CreateRoute = ({ routeId ,parrentId}) => {
   const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch ,reloadfetch } = useStateContext();
@@ -46,16 +47,16 @@ const CreateRoute = ({ routeId ,parrentId}) => {
   }));
 
 
-    const viewOptions = [
-    { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
-    { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` , titre:"Voir 2"}, 
-    { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` , titre:"Voir 3"}, 
-    { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir 4" },
-    { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
-    { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
-    { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.png` ,titre:"Lecteur PDF"},
-    { name: "ExcelReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/excelReader.png` , titre:"Excel Reader"},
-  ];
+  //   const viewOptions = [
+  //   { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
+  //   { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` , titre:"Voir 2"}, 
+  //   { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` , titre:"Voir 3"}, 
+  //   { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir 4" },
+  //   { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
+  //   { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
+  //   { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.png` ,titre:"Lecteur PDF"},
+  //   { name: "ExcelReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/excelReader.png` , titre:"Excel Reader"},
+  // ];
 
   const handleViewSelection = (viewName) => {
     setSelectedRoute({ ...selectedRoute, view: viewName });
@@ -345,7 +346,6 @@ const handleFieldRowChange = (index, event, key) => {
     open={showNew}
     onClose={closeDialog}
     maxWidth="lg"
-    borderRadius='25px'
     PaperProps={{
       sx: {
         height: "100%",
@@ -457,7 +457,7 @@ const handleFieldRowChange = (index, event, key) => {
       htmlFor="pdf-upload"
       className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
     >
-      <FaRegFilePdf   className="text-xl mr-2" />
+      <FaRegFilePdf   className="text-xl  text-[#FF0000] mr-2" />
       Télécharger le fichier Pdf
     </label>
     
@@ -478,7 +478,7 @@ const handleFieldRowChange = (index, event, key) => {
       htmlFor="excel-upload"
       className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
     >
-      <FaRegFileExcel  className="text-xl mr-2" />
+      <FaRegFileExcel  className="text-xl text-[#217346] mr-2" />
       Télécharger le fichier Excel
     </label>
     
@@ -486,6 +486,26 @@ const handleFieldRowChange = (index, event, key) => {
       type="file"
       accept="application/vnd.ms-excel"
       id="excel-upload"
+      onChange={handleFileUpload}
+      className="hidden"
+    />
+    <p className="my-4 text-textSecLightColor font-semibold text-xl">{selectedRoute?.file}</p>
+  </div>
+)}
+{selectedRoute.view === "WordReader" && (
+  <div className="my-4">
+    <label
+      htmlFor="word-upload"
+      className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
+    >
+      <FaRegFileWord   className="text-lg text-[#2B579A] font-normal mr-2" />
+      Télécharger le fichier Word
+    </label>
+    
+    <input
+      type="file"
+      accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      id="word-upload"
       onChange={handleFileUpload}
       className="hidden"
     />

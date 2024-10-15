@@ -34,14 +34,13 @@ import ExcelReader from "./Routes/readers/excelReader";
 // import Test from "./Routes/readers/Test";
 import Dashboard from "./pages/dashboard/dashboard";
 import DuplicateGroop from "./pages/dashboard/Groop/DuplicateGroop";
+import WordReader from "./Routes/readers/wordReader";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
   const isAuthenticated = useAuth();
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
-
-  console.log("first" ,routeData)
 
   return (
     <div className="min-h-screen bg-[#f2f4f8] dark:bg-secDarkBg relative">
@@ -70,7 +69,6 @@ const App = () => {
                   <SideBar />
                   <div  className="flex-1">
                   <Routes>
- 
                     <Route
                       path="/dashboard/TableauDeBord"
                       element={
@@ -118,18 +116,7 @@ const App = () => {
                           <CreateRoute />
                         </ProtectedRoute>
                       }
-                    />
-
-                    {/* <Route
-                      path="/test"
-                      element={
-                        <ProtectedRoute>
-                          <Test />
-                        </ProtectedRoute>
-                      }
-                    /> */}
-                      
-
+                    />              
                     <Route
                       path="/dashboard/groop/update/:id"
                       element={
@@ -180,11 +167,12 @@ const App = () => {
                                 {route?.view === "TableView" && <TableView route={route} />}
                                 {route?.view === "PdfReader" && <PdfReader route={route} />}
                                 {route?.view === "ExcelReader" && <ExcelReader route={route} />}
+                                {route?.view === "WordReader" && <WordReader route={route} />}
                               </ProtectedRoute>
                             }
                           />
                         ))}
-                          <Route path="/View6" element={<View6 />} />
+                          <Route path="/View6" element={<View6 />} />   
                        </Routes>
                       </>
                     ) : (

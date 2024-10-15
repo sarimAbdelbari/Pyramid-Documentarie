@@ -7,6 +7,7 @@ const userRoutes = require('./routes/usersRoute');
 const groopRoutes = require('./routes/groopRoute');
 const authRoutes = require('./routes/authRoute');
 const statRoutes= require('./routes/statRoute')
+const editorRoutes = require('../server/routes/editorRoute');
 const mongoose = require('mongoose');
 
 
@@ -41,6 +42,8 @@ app.use('/api/groop', groopRoutes);
 app.use('/api/users' , userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/statistics',statRoutes );
+app.use('/api/editor',editorRoutes);
+
 app.get('/', (req, res) => {
     res.json([{ msg: 'Welcome To The App' }]);
 });
