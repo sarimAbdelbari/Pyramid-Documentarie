@@ -46,18 +46,6 @@ const CreateRoute = ({ routeId ,parrentId}) => {
     label: route.path,
   }));
 
-
-  //   const viewOptions = [
-  //   { name: "View1", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png` , titre:"Voir 1" },
-  //   { name: "View2", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png` , titre:"Voir 2"}, 
-  //   { name: "View3", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png` , titre:"Voir 3"}, 
-  //   { name: "View4", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png` , titre:"Voir 4" },
-  //   { name: "View5", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png` , titre:"Voir 5" },
-  //   { name: "TableView", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/tableView.png` , titre:"Vue de table" },
-  //   { name: "PdfReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.png` ,titre:"Lecteur PDF"},
-  //   { name: "ExcelReader", imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/excelReader.png` , titre:"Excel Reader"},
-  // ];
-
   const handleViewSelection = (viewName) => {
     setSelectedRoute({ ...selectedRoute, view: viewName });
   };
@@ -183,8 +171,6 @@ const handleFieldRowChange = (index, event, key) => {
         return updatedFields;
     });
 };
-
-  
 
   const handleRemoveField = (index) => {
     setDataFields((prevFields) => {
@@ -457,7 +443,7 @@ const handleFieldRowChange = (index, event, key) => {
       htmlFor="pdf-upload"
       className="cursor-pointer flex w-fit justify-center gap-2 items-center px-4 py-2 bg-white text-black border-black border font-medium text-md rounded-md shadow-md hover:bg-black hover:text-white duration-300"
     >
-      <FaRegFilePdf   className="text-xl  text-[#FF0000] mr-2" />
+      <FaRegFilePdf   className="text-xl  text-[#df3232] mr-2" />
       Télécharger le fichier Pdf
     </label>
     

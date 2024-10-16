@@ -46,15 +46,15 @@ export default function TreePath() {
     if (!visible) return null; // Early return if tooltip is not visible
   
     return (
-      <div className="custom-tooltip" style={{ top: position.y, left: position.x }}>
+      <div className="custom-tooltip bg-secLightBg px-4 py-2 shadow-2xl rounded-2xl bg-opacity-95" style={{ top: position.y, left: position.x }}>
         <p className='text-center text-xl my-3 font-medium text-black'>{data.title}</p>
-        {viewOptions.map((view) => {
+        {viewOptions.map((view , key) => {
           if (view.name === data.view) {
             return (
-              <>
+              <div key={key} className='p-3 rounded-2xl flex flex-col gap-3 justify-center items-center'>
                 <h4 className='text-center text-xl my-3 font-medium text-black'>{view.titre}</h4>
-                <img src={view.imgSrc} alt={data.title} style={{ width: '550px', height: 'auto' }} />
-              </>
+                <img src={view.imgSrc} alt={data.title}  className='h-32 w-auto' />
+              </div>
             );
           }
           return null;

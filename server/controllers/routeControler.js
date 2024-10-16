@@ -187,7 +187,7 @@ const deleteRouteById = async (req, res) => {
 
 // ? Get all feuilles with view = "PdfReader" or "ExcelReader"
 const getFeuilles = async (req,res)=>{
-  const views = ["PdfReader","ExcelReader"];
+  const views = ["PdfReader","ExcelReader","WordReader"];
 
   try {
     const feuilles = await  Route.find({view:{$in:views}});
@@ -202,7 +202,7 @@ const getFeuilles = async (req,res)=>{
 
 // ? Get All Feuilles that Does Not contain view = "PdfReader" or "ExcelReader"
 const getFeuillesNot = async (req,res)=>{
-  const views = ["PdfReader","ExcelReader"];
+  const views = ["PdfReader","ExcelReader","WordReader"];
 
   try {
     const feuilles = await  Route.find({view:{$nin:views}});
