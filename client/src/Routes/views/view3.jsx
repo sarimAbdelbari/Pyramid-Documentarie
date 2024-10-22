@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
-const View3 = ({ route }) => {
+const View3 = ({ route ,preview}) => {
   const [data, setData] = useState([]);
   const { routeData } = useStateContext();
 
@@ -14,27 +14,32 @@ const View3 = ({ route }) => {
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
 
-        // Extract the IDs from response.data
-        const responseIds = response.data.map((item) => item._id);
-
-        // Filter routes based on whether their _id is in the responseIds array
-        const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
-
-        setData(newRoutes);
+        
+        if(!preview){
+          // Extract the IDs from response.data
+          const responseIds = response.data.map((item) => item._id);
+          // Filter routes based on whether their _id is in the responseIds array
+          const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
+          setData(newRoutes);
+          
+        } else {
+          
+          setData(response.data);
+        }
       } catch (error) {
         console.error('Error fetching view data:', error);
       }
     };
 
     getViewData();
-  }, [route, routeData]); // Added routeData as a dependency
+  }, [route, routeData,preview]); // Added routeData as a dependency
 
   const getImageSrc = (src) => {
-    return src.startsWith('http') ? src : `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+    return src ? `${import.meta.env.VITE_PUBLIC_URL1}/${src}` : `${import.meta.env.VITE_PUBLIC_URL1}/imageHolder.jpg` ;
   };
 
   return (
-    <div className="pt-12">
+    <div className="pt-20">
       <div className="text-center my-11 flex justify-center flex-col gap-7 items-center">
         <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
           {route?.title}

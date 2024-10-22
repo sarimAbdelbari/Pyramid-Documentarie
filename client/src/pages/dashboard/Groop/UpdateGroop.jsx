@@ -216,7 +216,7 @@ const UpdateGroop = () => {
               isSearchable
               isMulti={true}
               placeholder="Sélectionner les utilisateurs"
-              className="w-full rounded-md focus:outline-none focus:border-primary"
+              className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-40 max-h-20"
             />
             <p className="mb-2 text-2xl font-normal">Route et Autorisation</p>
             <div className="w-full ">
@@ -242,7 +242,7 @@ const UpdateGroop = () => {
                   }
                   isSearchable
                   placeholder="Sélectionner une autorisation"
-                  className="w-full rounded-md focus:outline-none focus:border-primary"
+                  className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-30 max-h-20"
                 />
               )}
               <Select
@@ -268,7 +268,7 @@ const UpdateGroop = () => {
                     ? "Sélectionner une page"
                     : "Sélectionner un fichier"
                 }
-                className="w-full rounded-md focus:outline-none focus:border-primary"
+                className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-30 max-h-20"
               />
               <button
                 onClick={addRoutePermission}

@@ -146,8 +146,8 @@ const CreateGroop = ({onClose}) => {
 
   return (
    
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center  z-40 " >
+      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl ">
         <h2 className="text-xl font-semibold dark:text-white mb-4">
           Créer un Groop
         </h2>
@@ -173,7 +173,7 @@ const CreateGroop = ({onClose}) => {
             isSearchable
             isMulti
             placeholder="Sélectionner des utilisateurs"
-            className="w-full rounded-md focus:outline-none focus:border-primary z-30 max-h-20"
+            className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-30 max-h-20"
           />
         </div>
         <div className="mb-4">
@@ -193,7 +193,7 @@ const CreateGroop = ({onClose}) => {
               onChange={onChangePermission}
               isSearchable
               placeholder="Sélectionner une autorisation"
-              className="w-full rounded-md focus:outline-none focus:border-primary z-20"
+              className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-20 max-h-20"
             />}
             
             <Select
@@ -204,7 +204,7 @@ const CreateGroop = ({onClose}) => {
               options={showPages ? optionsfiles : optionsPages}
               isSearchable
               placeholder={showPages ? "Sélectionner une page" : "Sélectionner un fichier"}
-              className="w-full rounded-md focus:outline-none focus:border-primary z-20"
+              className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-20 max-h-20"
             />
 
             <button

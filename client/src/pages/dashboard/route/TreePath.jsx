@@ -14,18 +14,20 @@ import { ThemeContext } from '@/components/themeProvider';
 import { AiOutlineSisternode } from "react-icons/ai";
 import { viewOptions } from '../../../data/DataForm';
 import { BsNodePlus } from "react-icons/bs";
+import { MdOutlinePreview } from "react-icons/md";
+import LivePreview from './LivePreview';
 
 export default function TreePath() {
 
   const { theme } = useContext(ThemeContext);
   const [data, setData] = useState(null);
-  const { setShowNew, showNew, reloadfetch } = useStateContext();
+  const { setShowNew, showNew ,setShowLivePreview , showLivePreview} = useStateContext();
   const [tooltip, setTooltip] = useState({
     visible: false,
     position: { x: 0, y: 0 },
     data: {}
   });
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [translate, containerRef] = useCenteredTree();
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -46,13 +48,13 @@ export default function TreePath() {
     if (!visible) return null; // Early return if tooltip is not visible
   
     return (
-      <div className="custom-tooltip bg-secLightBg px-4 py-2 shadow-2xl rounded-2xl bg-opacity-95" style={{ top: position.y, left: position.x }}>
-        <p className='text-center text-xl my-3 font-medium text-black'>{data.title}</p>
+      <div className="custom-tooltip bg-secLightBg px-4 py-4 shadow-2xl rounded-2xl bg-opacity-95 flex flex-col justify-center items-center " style={{ top: position.y, left: position.x }}>
+        <p className='text-center text-xl font-medium text-black'>{data.title}</p>
         {viewOptions.map((view , key) => {
           if (view.name === data.view) {
             return (
               <div key={key} className='p-3 rounded-2xl flex flex-col gap-3 justify-center items-center'>
-                <h4 className='text-center text-xl my-3 font-medium text-black'>{view.titre}</h4>
+                <h4 className='text-center text-xl  font-medium text-black'>{view.titre}</h4>
                 <img src={view.imgSrc} alt={data.title}  className='h-32 w-auto' />
               </div>
             );
@@ -128,19 +130,33 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
   );
 };
 
+const fetchData = async ()=>{
+   try {
+    console.log("first")
+    setIsLoading(true);
+    
+    console.log("sec")
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
+    
+
+    if (data) {
+      const transformedData = transformData(data);
+      setData(transformedData);
+
+    } else {
+      console.error('Data is not an array or is undefined:', data);
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    setIsLoading(false);
+  } finally {   
+    setIsLoading(false);
+   }
+}
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/route`)
-      .then(response => {
-        const transformedData = transformData(response.data);
-        setData(transformedData);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
-  }, [reloadfetch]);
+    fetchData();
+  }, []);
 
   const showContextMenu = (nodeData, x, y) => {
     setContextMenu({
@@ -170,6 +186,11 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
   };
 
   const transformData = (routeData) => {
+
+    if (!routeData || !Array.isArray(routeData)) {
+      console.error('Invalid routeData:', routeData);
+      return; // Early exit if data is invalid
+    }
 
     const routeMap = {};
     const roots = [];
@@ -247,16 +268,17 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
       <div className='absolute top-0 left-0 w-full h-full bg-secLightBg bg-opacity-25 ' onClick={() => setContextMenu({ ...contextMenu, visible: false })}></div>
     <div className="context-menu fixed bg-mainLightBg shadow-2xl rounded-3xl p-7 " style={{ top: position.y, left: position.x }}>
       <div className='absolute top-2 right-2 hover:opacity-70 '>
-      <AiOutlineCloseCircle  className='text-xl cursor-pointer' onClick={() => setContextMenu({ ...contextMenu, visible: false })}/>
+      <AiOutlineCloseCircle  className='text-xl cursor-pointer text-darkPrimary' onClick={() => setContextMenu({ ...contextMenu, visible: false })}/>
 
       </div>
       <ul className='flex flex-col gap-3'>
       {nodeData.view == "PdfReader" || nodeData.view == "ExcelReader" ? null : (
-        <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3 ' onClick={() => AddChildRoute(nodeData)}><BsNodePlus  className='text-2xl' />Ajouter un nœud enfant</li>
+        <li  className='cursor-pointer text-lg font-medium text-darkPrimary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3 ' onClick={() => AddChildRoute(nodeData)}><BsNodePlus  className='text-2xl' />Ajouter un nœud enfant</li>
         
       ) }
-        <li  className='cursor-pointer text-xl font-medium text-primary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddRoute(nodeData)}><RxUpdate className='text-2xl' /> Mise à jour</li>
-        <li className='cursor-pointer text-xl font-medium text-red-600 flex  items-center justify-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
+        <li  className='cursor-pointer text-lg font-medium text-darkPrimary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => OnLivePreview(nodeData)}><MdOutlinePreview  className='text-2xl' /> Aperçu en direct</li>
+        <li  className='cursor-pointer text-lg font-medium text-darkPrimary flex justify-center items-center bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3 gap-3' onClick={() => AddRoute(nodeData)}><RxUpdate className='text-2xl' /> Mise à jour</li>
+        <li className='cursor-pointer text-lg font-medium text-red-600 flex  items-center justify-center gap-3 bg-white hover:bg-secLightBg transition-colors  rounded-xl p-3'  onClick={onDelete}><MdOutlineDeleteForever className='text-2xl' /> Supprimer</li>
       </ul>
     </div>
         </div>
@@ -288,19 +310,26 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
     setParrentId({
       value: nodeData._id,
       label: nodeData.path,
+      view: nodeData.view
     } || "");
     setShowNew(true);
   }
 
+
+ const OnLivePreview = (nodeData) => {
+  setSelectedNode(nodeData.attributes ||"");
+  setShowLivePreview(true);
+ }
   return (
     <>
       {showNew && <CreateRoute routeId={selectedNode} parrentId={parrentId}  />}
-      {loading ? (
+      {showLivePreview && <LivePreview routeId={selectedNode}  />}
+      {isLoading ? (
         <LoadingScreen />
       ) : (
-        <div className='pt-7 bg-mainLightBg dark:bg-mainDarkBg'>
+        <div className='pt-7 bg-secLightBg dark:bg-mainDarkBg'>
           <div className="flex flex-row justify-center items-center">
-            <h3 className="text-3xl pt-3 font-semibold text-textLightColor dark:text-textDarkColor">Routes</h3>
+            <h3 className="text-3xl pt-3 font-semibold text-black dark:text-textDarkColor">Les Pages</h3>
           </div>
           <div className="">
             <div className="flex justify-start p-4 ">
@@ -310,18 +339,20 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
             </div>
             </div>
             <div className="w-full h-screen " ref={containerRef}>
+              {data && 
               <Tree
-                data={data}
-                translate={translate}
-                renderCustomNodeElement={(rd3tProps) =>
-                  renderNodeWithCustomEvents({ ...rd3tProps, setTooltip, showContextMenu, selectNode })
-                }
-                orientation="vertical"
-                // initialDepth={0}
-                separation={{ siblings: 2, nonSiblings: 2 }}
-                allowForeignObjects={true}
-          
+              data={data}
+              translate={translate}
+              renderCustomNodeElement={(rd3tProps) =>
+                renderNodeWithCustomEvents({ ...rd3tProps, setTooltip, showContextMenu, selectNode })
+              }
+              orientation="vertical"
+              // initialDepth={0}
+              separation={{ siblings: 2, nonSiblings: 2 }}
+              allowForeignObjects={true}
+              
               />
+            }
               {contextMenu.visible && <ContextMenu position={contextMenu.position} onDelete={handleDeleteNode} nodeData={contextMenu.nodeData} />}
               <ConfirmModal isOpen={confirmModal.visible} onClose={() => setConfirmModal({ visible: false, nodeData: null })} onConfirm={confirmDeleteNode} />
               <CustomTooltip visible={tooltip.visible} position={tooltip.position} data={tooltip.data} />

@@ -6,6 +6,7 @@ import { FaFileDownload } from "react-icons/fa";
 const WordReader = ({route}) => {
   const wordUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
+
   useEffect(() => {
     // Fetch the Word file and render it using docx-preview
     fetch(wordUrl)
@@ -20,15 +21,15 @@ const WordReader = ({route}) => {
   }, [wordUrl]);
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12">
-      <div className="container mx-auto">
-        <div className="text-center mb-8 dark:bg-gray-800 p-4 rounded-lg shadow-md mx-4">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-12">
+      <div className="">
+        <div className="text-center mb-8 dark:bg-gray-800 p-4 rounded-lg shadow-md ">
           <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-200">
              {route.title}
           </h3>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex justify-between items-center mx-4 w-full">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex justify-between items-center  w-full">
           <p className="text-gray-700 dark:text-gray-300 text-lg">
             Téléchargez le fichier Word
           </p>
@@ -37,7 +38,7 @@ const WordReader = ({route}) => {
           </div>
         </div>
 
-        <div className="mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg mx-4 w-full p-6 relative border border-gray-200 dark:border-gray-700">
+        <div className="mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg  w-full p-6 relative border border-gray-200 dark:border-gray-700">
           <div
             id="docx-container"
             className="word-content text-gray-900 dark:text-gray-200 bg-gray-50 dark:bg-gray-900 p-4 rounded-md"

@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
-const Main = ({ route }) => {
+const View1 = ({ route ,preview}) => {
   const [data, setData] = useState([]);
   const { routeData } = useStateContext();
+
 
   useEffect(() => {
     const getViewData = async () => {
@@ -15,25 +16,31 @@ const Main = ({ route }) => {
         );
 
         // Extract the IDs from response.data
-        const responseIds = response.data.map((item) => item._id);
-
-        // Filter routes based on whether their _id is in the responseIds array
-        const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
-        setData(newRoutes);
+        
+        if(!preview){
+          // Filter routes based on whether their _id is in the responseIds array
+          const responseIds = response.data.map((item) => item._id);
+          const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
+          setData(newRoutes);
+          
+        } else {
+          
+          setData(response.data);
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
     getViewData();
-  }, [route, routeData]);
+  }, [route, routeData ,preview]);
 
   const getImageSrc = (src) => {
-    return src.startsWith('http') ? src : `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+    return src ? `${import.meta.env.VITE_PUBLIC_URL1}/${src}` : `${import.meta.env.VITE_PUBLIC_URL1}/imageHolder.jpg` ;
   };
 
   return (
-    <div className='pt-12 mx-7'>
+    <div className='pt-20'>
       <div className='flex items-center justify-around flex-wrap gap-7'>
         {data.map((item, index) => (
           <div key={index} className='flex justify-center items-center flex-col m-4'>
@@ -61,4 +68,4 @@ const Main = ({ route }) => {
   );
 };
 
-export default Main;
+export default View1;

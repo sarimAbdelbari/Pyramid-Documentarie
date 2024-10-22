@@ -40,9 +40,26 @@ const getRouteStats = async () => {
    
     let Pdf = 0;
     let Excel = 0;
+    let Word = 0;
   
+    routes.forEach((route) => {
+      if (route.view == "PdfReader") {
+        Pdf += 1;
+        
+      } else if (route.view == "ExcelReader") {
+        Excel += 1;
+      } else if (route.view == "WordReader") Word += 1;
 
-    return routes.length;
+    
+    });
+
+    return { // Instead of res.status(200)
+      Pdf,
+      Excel,
+      Word,
+      totalRoutes: routes.length
+    };
+
   } catch (error) {
     console.error('Error in getRouteStats:', error);
     throw new Error('Failed to get route stats'); // Throw error instead of responding directly
@@ -51,12 +68,15 @@ const getRouteStats = async () => {
 
 
 const getMostDistRoute = async () => {
-  const routes = await Route.find({});
 
-  if (!routes || routes.length == 0) {
+  const files = await Route.find({view: "PdfReader" }|| {view: "ExcelReader"} ||{view: "WordReader"});
+
+
+  if (!files || files.length == 0) {
     return " no routes available";
   }
-  const promises = routes.map(async (route) => {
+
+  const promises = files.map(async (route) => {
     const routeGroups = await Groop.find({ "groopRoutes.route": route._id });
     return {
       "route id": route._id,
@@ -110,11 +130,10 @@ const getMostCommonGroop = async () => {
 };
 
 
-const getGeneralStatistics = async (req, res) => {
+const getGeneralUserStatistics = async (req, res) => {
   try {
-    const [stat, mostDistRoute, mostCommonGroopResult] = await Promise.all([
+    const [stat,  mostCommonGroopResult] = await Promise.all([
       getUserStats(),  // Will now return an object, not respond
-      getMostDistRoute(), // Properly resolved result
       getMostCommonGroop(), // Properly resolved result
     ]);
 
@@ -122,12 +141,32 @@ const getGeneralStatistics = async (req, res) => {
       active: stat.active,
       disActive: stat.disActive,
       admins: stat.admins,
-      most_distributed_route: mostDistRoute,
+      totalUsers: stat.totalUsers,
       most_common_groop: mostCommonGroopResult ? mostCommonGroopResult.groop : null,
       numberOftheMostCommunGroop: mostCommonGroopResult ? mostCommonGroopResult.count : 0
     });
   } catch (error) {
-    console.error("Error in getGeneralStatistics:", error);  // Log the full error details for debugging
+    console.error("Error in getGeneralUserStatistics:", error);  // Log the full error details for debugging
+    res.status(500).json({ message: 'Something went wrong', error: error.message || error });
+  }
+};
+const getGeneralRouteStatistics = async (req, res) => {
+  try {
+    const [statRoute,  mostDistruptedRoute] = await Promise.all([
+      getRouteStats(),  // Will now return an object, not respond
+      getMostDistRoute(), // Properly resolved result
+    ]);
+
+    res.status(200).json({
+      pdf: statRoute.Pdf,
+      excel: statRoute.Excel,
+      word: statRoute.Word,
+      totalRoutes : statRoute.totalRoutes,
+      most_distributed_route: mostDistruptedRoute ? mostDistruptedRoute.route : null,
+      numberOftheMostDistruptedRoute: mostDistruptedRoute ? mostDistruptedRoute.groups : 0
+    });
+  } catch (error) {
+    console.error("Error in getGeneralRouteStatistics:", error);  // Log the full error details for debugging
     res.status(500).json({ message: 'Something went wrong', error: error.message || error });
   }
 };
@@ -135,6 +174,7 @@ const getGeneralStatistics = async (req, res) => {
 
 
 module.exports = {
-  getGeneralStatistics,
+  getGeneralUserStatistics,
+  getGeneralRouteStatistics,
   getNumOfSpecificView
 };

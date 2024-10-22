@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getGeneralStatistics , getNumOfSpecificView } = require('../controllers/statisticsController');
+const { getGeneralRouteStatistics,getGeneralUserStatistics , getNumOfSpecificView } = require('../controllers/statisticsController');
  
-router.get('/', getGeneralStatistics );
+router.get('/user', getGeneralUserStatistics);
+router.get('/route', getGeneralRouteStatistics);
 router.get('/getNumberOfView',getNumOfSpecificView );
 
 module.exports = router;

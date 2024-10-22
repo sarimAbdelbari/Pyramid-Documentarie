@@ -69,8 +69,8 @@ const createGroop = async (req, res) => {
 
     const populatedChildren = await Route.find({ _id: { $in: children } });
 
-    // Filter the children where view is 'PdfReader' or 'ExcelReader'
-    const filteredChildren = populatedChildren.filter(route => route.view === 'PdfReader' || route.view === 'ExcelReader').map(route => route._id);
+    // Filter the children where view is 'PdfReader' or 'ExcelReader'or 'WordReader'
+    const filteredChildren = populatedChildren.filter(route => route.view === 'PdfReader' || route.view === 'ExcelReader' || route.view === "WordReader").map(route => route._id);
 
     // Normalize the children to ensure all are strings
     const normalizedChildren = await normalizeObjectIds(filteredChildren);
@@ -203,7 +203,7 @@ const updateGroop = async (req, res) => {
    const populatedChildren = await Route.find({ _id: { $in: children } });
 
    // Filter the children where view is 'PdfReader' or 'ExcelReader'
-   const filteredChildren = populatedChildren.filter(route => route.view === 'PdfReader' || route.view === 'ExcelReader').map(route => route._id);
+   const filteredChildren = populatedChildren.filter(route => route.view === 'PdfReader' || route.view === 'ExcelReader' || route.view === 'WordReader').map(route => route._id);
 
    // Normalize the children to ensure all are strings
    const normalizedChildren = await normalizeObjectIds(filteredChildren);

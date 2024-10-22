@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
-const View2 = ({ route }) => {
+const View2 = ({ route , preview}) => {
   const [data, setData] = useState([]);
   const { routeData } = useStateContext();
+
 
   useEffect(() => {
     const getViewData = async () => {
@@ -14,32 +15,43 @@ const View2 = ({ route }) => {
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
 
-        // Extract the IDs from response.data
-        const responseIds = response.data.map((item) => item._id);
-
-        // Filter routes based on whether their _id is in the responseIds array
-        const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
-
-        setData(newRoutes);
+        
+        if(!preview){
+          // Extract the IDs from response.data
+          const responseIds = response.data.map((item) => item._id);
+          // Filter routes based on whether their _id is in the responseIds array
+          const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
+          setData(newRoutes);
+          
+        } else {
+          
+          setData(response.data);
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
     getViewData();
-  }, [route, routeData]); // Added routeData as a dependency
+  }, [route, routeData,preview]); // Added routeData as a dependency
 
   const getImageSrc = (src) => {
-    return src.startsWith('http') ? src : `${import.meta.env.VITE_PUBLIC_URL1}/${src}`;
+    return src ? `${import.meta.env.VITE_PUBLIC_URL1}/${src}` : `${import.meta.env.VITE_PUBLIC_URL1}/imageHolder.jpg` ;
   };
 
   return (
-    <div className='pt-12 mx-7'>
-      <div className='flex justify-around items-center flex-col mx-11'>
+    <div className='pt-20'>
+      <div className={`grid grid-flow-row justify-center place-items-center gap-7  ${
+            data.length === 1
+              ? 'grid-cols-1'
+              : data.length === 2
+              ? 'grid-cols-1 md:grid-cols-2 justify-center'
+              : 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 justify-center'
+          }`}>
         {data.map((item, index) => (
           <div
             key={index}
-            className='w-full min-w-64 px-5 lg:w-7/12 dark:shadow-md dark:shadow-white flex justify-center items-center flex-col my-4 shadow-2xl py-12 rounded-3xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
+            className='w-full h-full dark:shadow-md dark:shadow-white flex justify-center items-center flex-col my-4 shadow-2xl py-6 rounded-3xl bg-mainLightBg dark:bg-secDarkBg hover:bg-secLightBg dark:hover:bg-mainDarkBg transition duration-300 ease-in-out'
           >
             <Link
               to={item.path}
@@ -47,12 +59,12 @@ const View2 = ({ route }) => {
             >
               <div className='mx-9'>
                 {item.title && (
-                  <p className='my-2 text-center text-2xl text-textLightColor dark:text-textDarkColor font-semibold'>
+                  <p className='my-2 text-start text-2xl text-textLightColor dark:text-textDarkColor font-semibold'>
                     {item.title}
                   </p>
                 )}
                 {item.details && (
-                  <p className='text-center text-lg text-textSecLightColor dark:text-textDarkColor font-medium'>
+                  <p className='text-start text-md text-textSecLightColor dark:text-textDarkColor font-medium text-balance'>
                     {item.details}
                   </p>
                 )}
@@ -61,7 +73,7 @@ const View2 = ({ route }) => {
                 <img
                   src={getImageSrc(item.image)}
                   alt={item.title}
-                  className='object-contain h-32 md:h-48 pointer-events-none rounded-xl'
+                  className='object-contain h-24 md:h-36 pointer-events-none rounded-xl'
                 />
               )}
             </Link>

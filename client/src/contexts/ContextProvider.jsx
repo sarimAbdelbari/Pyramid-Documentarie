@@ -9,12 +9,14 @@ const initialState = {
   showNew: false,
   reloadfetch: false,
   authenticated: false,
+  showLivePreview: false,
 };
 
 export const ContextProvider = ({ children }) => {
   const [visible, setVisible] = useState(initialState.visible);
   const [isLoading, setIsLoading] = useState(initialState.isLoading);
   const [showNew, setShowNew] = useState(initialState.showNew);
+  const [showLivePreview, setShowLivePreview] = useState(initialState.showLivePreview);
   const [reloadfetch, setReloadfetch] = useState(initialState.reloadfetch);
   const [isAuthenticated, setIsAuthenticated] = useState(initialState.authenticated);
   const [selectedRoute, setSelectedRoute] = useState({});
@@ -53,7 +55,9 @@ export const ContextProvider = ({ children }) => {
         userInfo,
         setUserInfo,
         groopData,
-        setGroopData
+        setGroopData,
+        showLivePreview,
+        setShowLivePreview
       }}
     >
       {children}

@@ -14,9 +14,10 @@ import { LuUserX2 } from "react-icons/lu";
 import { TbUsersGroup } from "react-icons/tb";
 import { RiAdminFill } from "react-icons/ri";
 import { CiCircleCheck } from "react-icons/ci";
+import { LiaUsersSolid } from "react-icons/lia";
 
 const Users = () => {
-  const { isLoading } = useStateContext();
+  const { isLoading ,setIsLoading} = useStateContext();
   const [usersData, setUsersData] = useState([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
@@ -44,12 +45,14 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data: usersData } = await axios.get("http://localhost:5000/api/users");
-      const { data: groopData } = await axios.get("http://localhost:5000/api/groop");
+      setIsLoading(true);
+      const { data: usersData } = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+      const { data: groopData } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
 
-      const response = await axios.get("http://localhost:5000/api/stats");
-   
-      console.log("response",response.data)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/user`);
+    
+      console.log("response" ,response.data)
+
       setUsersStats(response.data);
 
       setGroopList(groopData);
@@ -61,14 +64,17 @@ const Users = () => {
 
       setUsersData(dataWithId);
     } catch (error) {
+      setIsLoading(false);
       error_toast("Impossible de récupérer les utilisateurs");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteUser = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userToDelete._id}`);
+      await axios.delete(`h${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
       sucess_toast("L'utilisateur a été supprimé avec succès");
       setUsersData((prevState) =>
         prevState.filter((user) => user._id !== userToDelete._id)
@@ -109,7 +115,7 @@ const Users = () => {
       field: "admin",
       headerName: "Admin",
       flex: 1,
-      renderCell: (params) => (params.row.admin ? <CiCircleCheck className="text-2xl my-auto h-full text-green-800 font-bold" /> : null),
+      renderCell: (params) => (params.row.admin ? <CiCircleCheck className="text-2xl my-auto h-full text-yellow-600 font-bold" /> : null),
     },
     { field: "createdAt", headerName: "Créé à", flex: 1 },
     { field: "updatedAt", headerName: "Mis à jour à", flex: 1 },
@@ -167,67 +173,69 @@ const Users = () => {
         <div onClick={() => setShowCreateUserModal(true)}>
           <Button Text="Crée un utilisateur" />
         </div>
-     <div className="w-full">
+        <div className="w-full">
+  <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
+    {/* Active Users */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-green-600 dark:text-green-400 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Nombre de  Utilisateurs</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-2xl font-medium text-blue-600 dark:text-blue-400">
+        <LiaUsersSolid  />
+        <p>{usersStats?.totalUsers}</p>
+      </div>
+    </div>
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-green-600 dark:text-green-400 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Utilisateurs actifs</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-2xl font-medium text-green-600 dark:text-green-400">
+        <LuUserCheck2 />
+        <p>{usersStats?.active}</p>
+      </div>
+    </div>
+    
+    {/* Deactivated Users */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-red-500 dark:text-red-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Utilisateurs Désactivent</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-2xl font-medium text-red-600 dark:text-red-400">
+        <LuUserX2 />
+        <p>{usersStats?.disActive}</p>
+      </div>
+    </div>
 
-       <div  className="mx-5  shadow-2xl bg-lightCyen  dark:shadow-white rounded-lg  dark:bg-mainDarkBg flex justify-around items-center gap-4 py-5 px-4">
-        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
-          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-            <p >Utilisateurs actifs</p>
-            <FaUncharted />
-          </div>
-          <div className="flex items-center gap-4 text-xl font-medium ">
-          <LuUserCheck2   />
+    {/* Common Group */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-purple-500 dark:text-purple-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Groupe commun</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-2xl font-medium text-purple-600 dark:text-purple-400">
+        <TbUsersGroup />
+        <p>{usersStats?.numberOftheMostCommunGroop} {usersStats?.most_common_groop?.groopName}</p>
+      </div>
+    </div>
 
-          <p>{usersStats?.active}</p>
-          </div>
-        <div>
-        </div>
-        </div>
-        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
-          
-          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-            <p>Utilisateurs Désactivent</p>
-            <FaUncharted />
-          </div>
-          <div className="flex items-center gap-4  text-xl font-medium">
-          <LuUserX2   />
+    {/* Admin Accounts */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-yellow-500 dark:text-yellow-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Comptes administrateur</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-2xl font-medium text-yellow-600 dark:text-yellow-400">
+        <RiAdminFill />
+        <p>{usersStats?.admins}</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <p>{usersStats?.disActive}</p>
-          </div>
-        <div>
-        </div>
-        </div>
-        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
-          
-          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-            <p>Groupe commun</p>
-            <FaUncharted />
-          </div>
-          <div className="flex items-center gap-4 text-xl font-medium">
-            <TbUsersGroup   />
 
-          <p>{usersStats?.numberOftheMostCommunGroop} {usersStats?.most_common_groop?.groopName}</p>
-          </div>
-        <div>
-        </div>
-        </div>
-        <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5  border-2 border-[#02020218]">
-          
-          <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-            <p>Comptes administrateur</p>
-            <FaUncharted />
-          </div>
-          <div className="flex items-center gap-4 text-xl font-medium">
-          <RiAdminFill    />
-
-          <p>{usersStats?.admins}</p>
-          </div>
-        <div>
-        </div>
-        </div>
-       
-       </div>
-     </div>
    
       <div className="w-full">
       <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px"  }}>

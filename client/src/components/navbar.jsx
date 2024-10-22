@@ -33,7 +33,7 @@ const Navbar = () => {
     <>
       <div onClick={() => setIsMenuOpen(!isMenuOpen)} className={`${isMenuOpen ? 'fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-40' : 'hidden'} `}></div>
 
-    <nav className=" sticky top-5 z-40 py-2 bg-white dark:bg-mainDarkBg shadow-md rounded-full mx-4 lg:mx-8 transition-colors duration-300">
+    <nav className=" sticky top-5 z-40 py-2 bg-white dark:bg-mainDarkBg shadow-md rounded-full  transition-colors duration-300">
       
       <div className="flex justify-between items-center px-4 lg:px-7">
         {/* Logo Section */}

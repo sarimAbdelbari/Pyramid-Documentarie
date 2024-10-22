@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
-const View5 = ({ route }) => {
+const View5 = ({ route, preview }) => {
   const [data, setData] = useState([]);
   const { routeData } = useStateContext();
 
@@ -14,61 +14,82 @@ const View5 = ({ route }) => {
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
 
-        // Extract the IDs from response.data
-        const responseIds = response.data.map((item) => item._id);
-
-        // Filter routes based on whether their _id is in the responseIds array
-        const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
-
-        setData(newRoutes);
+        if (!preview) {
+          const responseIds = response.data.map((item) => item._id);
+          const newRoutes = routeData.filter((route) =>
+            responseIds.includes(route._id)
+          );
+          setData(newRoutes);
+        } else {
+          setData(response.data);
+        }
       } catch (error) {
         console.error('Error fetching view data:', error);
       }
     };
 
     getViewData();
-  }, [route, routeData]); // Ensure routeData is included in the dependencies
+  }, [route, routeData, preview]);
 
   return (
-    <>
-      <div className="pt-12 h-full">
-        <div className="text-center  flex justify-center flex-col gap-9 items-center">
-          <h1 className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
-            {route.title}
-          </h1>
-          <p className="text-xl text-textSecLightColor dark:text-textDarkColor font-medium w-3/5 leading-relaxed">
-            {route.details}
-          </p>
-        </div>
-        <div className="mt-7 flex justify-center items-center flex-col gap-7 w-full ">
-          <div className="w-full lg:w-3/4 bg-white dark:bg-secDarkBg rounded-xl shadow-lg dark:shadow-md p-4">
-            <div className="grid grid-cols-3 gap-4 text-textLightColor dark:text-textDarkColor">
-              <div className="font-semibold text-xl text-start py-4 px-4">Lien</div>
-              <div className="font-semibold text-xl text-center py-4 px-4">Auteur</div>
-              <div className="font-semibold text-xl text-end py-4 px-4">Date</div>
-            </div>
-            <div className="h-96 overflow-y-auto">
-              {data.length > 0 ? (
-                data.map((item, index) => (
-                  <div
-                    key={item._id} // Use a unique key from item instead of index
-                    className={`grid grid-cols-3 gap-4 my-2 mx-2 p-3 rounded-md ${index % 2 === 0 ? 'bg-mainLightBg dark:bg-mainDarkBg' : 'bg-lightCyen dark:bg-secDarkBg'} transition duration-300 ease-in-out`}
+    <div className="pt-20 px-4">
+      {/* Title Section */}
+      <div className="text-center flex flex-col items-center gap-4">
+        <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white">
+          {route.title}
+        </h1>
+        <p className="text-base md:text-lg font-medium text-gray-600 dark:text-gray-300 w-full md:w-3/5">
+          {route.details}
+        </p>
+      </div>
+
+      {/* Content Section */}
+      <div className="my-11 w-full flex flex-col items-center gap-6">
+        <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6">
+          {/* Header */}
+          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 text-gray-700 dark:text-gray-200 font-semibold text-sm md:text-xl py-4 px-4">
+            <div className="text-start">Lien</div>
+            <div className="text-center">Auteur</div>
+            <div className="text-center">Details</div>
+            <div className="text-end">Date</div>
+          </div>
+
+          {/* Data Rows */}
+          <div className="h-96 overflow-y-auto">
+            {data.length > 0 ? (
+              data.map((item, index) => (
+                <div
+                  key={item._id}
+                  className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-md items-center transition duration-300 ease-in-out ${
+                    index % 2 === 0
+                      ? 'bg-gray-100 dark:bg-gray-700'
+                      : 'bg-gray-50 dark:bg-gray-800'
+                  }`}
+                >
+                  <Link
+                    to={item.path}
+                    className="text-blue-500 dark:text-blue-400 hover:underline"
                   >
-                    <Link to={item.path} className="text-blue-500 dark:text-blue-400 hover:underline">
-                      {item.title}
-                    </Link>
-                    <p className="text-center text-textLightColor dark:text-textDarkColor">{item.title}</p>
-                    <p className="text-end text-textLightColor dark:text-textDarkColor">{new Date(item.createdAt).toLocaleDateString()}</p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-textSecLightColor dark:text-textDarkColor">No data available</p>
-              )}
-            </div>
+                    {item.title}
+                  </Link>
+                  <p className="text-center md:text-left">{item.title}</p>
+                  <p className="text-center text-sm md:text-base">
+                    {item.details}
+                  </p>
+                  <p className="text-end text-sm md:text-base">
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 dark:text-gray-300">
+                No data available
+              </p>
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

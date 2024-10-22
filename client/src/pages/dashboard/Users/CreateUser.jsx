@@ -3,7 +3,7 @@ import axios from "axios";
 import Button from "@/components/button";
 import Select from "react-select";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
-import CheckButton from "../../../components/checkButton";
+import CheckButton from "@/components/checkButton";
 
 const CreateUser = ({ onClose, user }) => {
   const [selectedUser, setSelectedUser] = useState(user || {
@@ -20,7 +20,7 @@ const CreateUser = ({ onClose, user }) => {
   useEffect(() => {
     const fetchGroopOptions = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/groop");
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
         setGroopOptions(data.map(groop => ({ value: groop._id, label: groop.groopName })));
       } catch (error) {
         console.error("Failed to fetch groops", error);
@@ -39,7 +39,7 @@ const CreateUser = ({ onClose, user }) => {
 
   const handleCreateUser = async () => {
     try {
-       await axios.post("http://localhost:5000/api/users", selectedUser);
+       await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
 
       sucess_toast("Utilisateur créé avec succès");
 
@@ -54,7 +54,7 @@ const CreateUser = ({ onClose, user }) => {
   const handleUpdateUser = async () => {
     try {
 
-      await axios.patch(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
+      await axios.patch(`${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`, selectedUser);
    
       sucess_toast("Mise à jour de l'utilisateur réussie");
 
@@ -75,7 +75,7 @@ const CreateUser = ({ onClose, user }) => {
           {!user ? "Créer un utilisateur" : "Mettre à jour l'utilisateur"}
         </h2>
         <div className="mb-4">
-          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom d'utilisateur</label>
+          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom D`&apos;utilisateur</label>
           <input
             type="text"
             value={selectedUser.userName}

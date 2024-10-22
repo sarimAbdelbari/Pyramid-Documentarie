@@ -16,7 +16,7 @@ import CreateRoute from "./pages/dashboard/route/CreateRoute";
 import useRouteAuth from "./hooks/useRoutesContext";
 import LoadingScreen from "./utils/loadingScreen";
 import PdfReader from "./Routes/readers/pdfReader";
-import TableView from "./Routes/readers/tableView";
+import TableView from "./Routes/views/tableView";
 import Navbar from '@/components/navbar';
 import useAuth from "./hooks/useAuthContext";
 import DepthBar from "./components/DepthBar";
@@ -28,7 +28,7 @@ import { ThemeContext } from '@/components/themeProvider';
 import TableGroop from "./pages/dashboard/Groop/TableGroop";
 import UpdateGroop from "./pages/dashboard/Groop/UpdateGroop";
 import RDPage from "./pages/Other/RDPage";
-import View6 from "./Routes/views/View6";
+import View6 from "./Routes/views/view6";
 import CreateUser from "./pages/dashboard/Users/CreateUser";
 import ExcelReader from "./Routes/readers/excelReader"; 
 // import Test from "./Routes/readers/Test";
@@ -58,7 +58,7 @@ const App = () => {
       />
 
       {isAuthenticated ? (
-        <>
+        <div className="px-4 lg:px-8">
           {userInfo?.active ? (
             <>
               <Navbar />
@@ -67,7 +67,7 @@ const App = () => {
                 {userInfo?.admin ? (
                   <div className="flex">
                   <SideBar />
-                  <div  className="flex-1">
+                  <div className="w-full">
                   <Routes>
                     <Route
                       path="/dashboard/TableauDeBord"
@@ -192,7 +192,7 @@ const App = () => {
             
             </>
           )}
-        </>
+        </div>
       ) : (
         // Login Route for unauthenticated users
         <Routes>

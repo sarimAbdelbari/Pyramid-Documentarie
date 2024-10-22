@@ -37,21 +37,22 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
+// bg-[#a1a1a148] 
+// bg-[#dfdcdc48] 
   return (
     <>
       {isLoading && <LoadingScreen />}
       <div className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat h-full" style={{ backgroundImage: `url(${signUpImg})` }}>
-        <div className="bg-[#dfdcdc48] shadow-2xl shadow-black flex flex-col items-center justify-center px-16 py-6 mx-5 border border-transparent rounded-3xl lg:px-32">
+        <div className="bg-[#61616177]  shadow-2xl shadow-black flex flex-col items-center justify-center px-16 py-6 mx-5 border border-transparent rounded-3xl lg:px-32">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm pointer-events-none">
             <img className="mx-auto h-36 w-auto" src={LogoPngChiali} alt="LogoChiali" />
-            <h2 className="mt-10 text-2xl font-bold text-center text-gray-900 leading-9 tracking-tight">Login</h2>
+            <h2 className="mt-10 text-2xl font-semibold text-center text-textDarkColor leading-9 tracking-tight">Login</h2>
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <div className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-900 leading-6">
+                <label htmlFor="email" className="block text-sm font-medium text-textDarkColor leading-6">
                   Adresse e-mail
                 </label>
                 <div className="mt-2">
@@ -69,7 +70,7 @@ const Login = () => {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-900 leading-6">
+                  <label htmlFor="password" className="block text-sm font-medium text-textDarkColor leading-6">
                     Mot de passe
                   </label>
                 </div>
@@ -100,7 +101,7 @@ const Login = () => {
             {/* <p className="mt-10 text-center text-xl text-white cursor-pointer ">
               Reset Pasword 
             </p> */}
-            <p className="mt-10 text-center text-sm text-gray-800">
+            <p className="mt-10 text-center text-sm text-textDarkColor">
               Conditions générales {'Link To It'}
             </p>
           </div>

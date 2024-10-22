@@ -3,9 +3,14 @@ import * as XLSX from 'xlsx';
 import Button from "@/components/button";
 import { FaFileDownload } from "react-icons/fa";
 
+
 const ExcelReader = ({ route }) => {
+
+
+    console.log("ExcelReader")
     const [data, setData] = useState([]);
 
+    console.log("route" ,route)
     const ExcelUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
     const fetchAndParseExcel = async () => {
@@ -27,7 +32,7 @@ const ExcelReader = ({ route }) => {
     }, [ExcelUrl]);
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 sm:p-12">
+        <div className=" bg-gray-100 dark:bg-gray-900 pt-12">
             <h3 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
                 {route.title}
             </h3>

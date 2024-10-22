@@ -538,7 +538,7 @@ const handleFieldRowChange = (index, event, key) => {
 
 
 
-{selectedRoute.view === "PdfReader" && (
+{(selectedRoute.view === "PdfReader" || selectedRoute.view === "ExcelReader" || selectedRoute.view === "WordReader")  && (
   <div className="my-4 flex items-center gap-4">
     <label className="font-medium text-md text-gray-700 dark:text-gray-300">
       Expire date du fichier:
@@ -579,7 +579,7 @@ const handleFieldRowChange = (index, event, key) => {
         <div className="my-4">
           <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">Colonnes du tableau :</label>
           {dataFields.map((field, index) => (
-            <div key={index} className="flex items-center space-x-4">
+            <div key={index} className="flex items-center space-x-4 my-6">
               <input
                 label={`Colonne ${index + 1}`}
                 type="text"
@@ -587,7 +587,7 @@ const handleFieldRowChange = (index, event, key) => {
                 onChange={(event) => handleFieldTableChange(index, event, "tableCol")}
                 className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
               />
-              <div className="flex items-center space-x-4" onClick={() => handleRemoveField(index)}>
+              <div className="flex items-center " onClick={() => handleRemoveField(index)}>
                 <Button Text="Retirer"  />
               </div>
               
@@ -600,7 +600,7 @@ const handleFieldRowChange = (index, event, key) => {
         </div>
       )}
     </div>
-    <div className="mt-6 mx-5 flex justify-end space-x-4">
+    <div className="my-6 mx-5 flex justify-end gap-7 ">
           <div onClick={closeDialog}>
 
           <Button  Text="Annuler"/>

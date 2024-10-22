@@ -11,11 +11,16 @@ import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CreateRoute from "./CreateRoute";
 import Button from "@/components/button";
 import { FaUncharted } from "react-icons/fa6";
-import { LuUserCheck2 } from "react-icons/lu";
-import { LuUserX2 } from "react-icons/lu";
+import { VscFilePdf } from "react-icons/vsc";
+import { PiMicrosoftWordLogo } from "react-icons/pi";
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
+import { CiRoute } from "react-icons/ci";
+import { SiReactrouter } from "react-icons/si";
+
 const Routes = () => {
   const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch } = useStateContext();
   const [routesData, setRoutesData] = useState([]);
+  const [routesStats, setRoutesStats] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [routeToDelete, setRouteToDelete] = useState(null);
@@ -34,6 +39,12 @@ const Routes = () => {
   const fetchRoutes = async () => {
     try {
       const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/route`);
+
+      setRoutesStats(response.data);
+ 
+      console.log("routesStats" , response.data);
+      
       const dataWithId = data.map((route, index) => ({
         ...route,
         id: index + 1,
@@ -105,6 +116,8 @@ const Routes = () => {
   ];
 
   const handleOpenDialog = (id) => {
+     console.log("Value Id ", id);
+
     setSelectedRoute(id);
     setShowNew(true);
   };
@@ -128,67 +141,71 @@ const Routes = () => {
               <Button Text="Ajouter" Icon={<AddIcon />} className="bg-primary hover:bg-darkPrimary transition-colors duration-300"/>
             </div>
             <div className="w-full">
+  <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 py-5 px-4">
+    
+    {/* Nombre de Routes */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-textSecLightColor  text-lg font-semibold">
+        <p>Nombre de Routes</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-blue-600 dark:text-blue-400">
+        <SiReactrouter className="text-2xl" />
+        <p className="font-medium text-lg">{routesStats?.totalRoutes}</p>
+      </div>
+    </div>
 
-<div  className="mx-5  shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg flex justify-around items-center gap-4 py-5 px-4">
- <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
-   
-   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-     <p>Nombre de Routes</p>
-     <FaUncharted />
-   </div>
-   <div className="flex items-center gap-4">
-   <LuUserCheck2  className="text-2xl" />
+    {/* Nombre de Pdf */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-textSecLightColor dark:text-red-300 text-lg font-semibold">
+        <p>Nombre de Pdf</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-[#980100]">
+        <VscFilePdf className="text-2xl" />
+        <p className="font-medium text-lg">{routesStats?.pdf}</p>
+      </div>
+    </div>
 
-   <p>25</p>
-   </div>
- <div>
- </div>
- </div>
- <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
-   
-   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-     <p>Nombre de Pdf</p>
-     <FaUncharted />
-   </div>
-   <div className="flex items-center gap-4">
-   <LuUserX2  className="text-2xl" />
+    {/* Nombre de Excel */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-textSecLightColor dark:text-green-300 text-lg font-semibold">
+        <p>Nombre de Excel</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-[#005217]">
+        <PiMicrosoftExcelLogoFill className="text-2xl" />
+        <p className="font-medium text-lg">{routesStats?.excel}</p>
+      </div>
+    </div>
 
-   <p>7</p>
-   </div>
- <div>
- </div>
- </div>
- <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
-   
-   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-     <p>Nombre de Excel</p>
-     <FaUncharted />
-   </div>
-   <div className="flex items-center gap-4">
-   <LuUserCheck2  className="text-2xl" />
+    {/* Lecture Word */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-textSecLightColor dark:text-blue-300 text-lg font-semibold">
+        <p>Lecture Word</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-[#2B579A]">
+        <PiMicrosoftWordLogo className="text-2xl" />
+        <p className="font-medium text-lg">{routesStats?.word}</p>
+      </div>
+    </div>
 
-   <p>4</p>
-   </div>
- <div>
- </div>
- </div>
- <div className="flex-1 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218]">
-   
-   <div className="flex justify-between items-center text-textSecLightColor text-lg font-normal">
-     <p>Voir Commun</p>
-     <FaUncharted />
-   </div>
-   <div className="flex items-center gap-4">
-   <LuUserCheck2  className="text-2xl" />
+    {/* Voir Commun */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center text-purple-500 dark:text-purple-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Voir Commun</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-purple-600 dark:text-purple-300">
+        <CiRoute className="text-3xl" />
+        <p className="font-medium text-lg">{routesStats?.most_distributed_route}</p>
+      </div>
+    </div>
 
-   <p>Lecture Pdf</p>
-   </div>
- <div>
- </div>
- </div>
-
+  </div>
 </div>
-</div>
+
           <div className="w-full">
 
           <div className=" mx-5 shadow2-xl bg-lightCyen   dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px" }} >

@@ -95,11 +95,11 @@ const GroopCard = ({ groop, onDelete }) => {
               <p className="text-xs text-textSecLightColor font-light " >{routePermission.route.details}</p>
               {routePermission.route.file && (
                 <a
-                  href={routePermission.route.file}
+                  href={`${import.meta.env.VITE_PUBLIC_URLFILE}/${routePermission.route.file}`}
                   download
                   className="text-primary hover:text-darkPrimary my-2 underline"
                 >
-                  Télécharger le fichier
+                  Télécharger le fichier  
                 </a>
               )}
             </div>
