@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import useAuth from '../hooks/useAuthContext';
-import LoadingScreen from "../utils/loadingScreen";
-import useRouteAuth from '../hooks/useRoutesContext';
+import useAuth from '@/hooks/useAuthContext';
+import LoadingScreen from "@/utils/loadingScreen";
+import useRouteAuth from '@/hooks/useRoutesContext';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuth();

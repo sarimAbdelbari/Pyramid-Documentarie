@@ -5,7 +5,7 @@ import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { ThemeContext } from './themeProvider';
 import { useStateContext } from '@/contexts/ContextProvider';
-import LogoPngChiali from '../../public/assets/images/LogoPngChiali.png';
+import LogoPngChiali from '/assets/images/LogoPngChiali.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { IoIosLogOut } from "react-icons/io";
@@ -19,10 +19,10 @@ const Navbar = () => {
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
-
+  
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/logout', {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, { withCredentials: true });
       window.location.href = '/login';
     } catch (error) {
       console.error('Error logging out:', error);
@@ -110,7 +110,7 @@ const Navbar = () => {
                   <MdOutlineLightMode className="text-2xl text-gray-600 dark:text-gray-200" />
                 )}
               </button>
-              <div onClick={handleLogout}  className='mt-4 w-full  '>
+              <div onClick={() => handleLogout()}  className='mt-4 w-full  '>
               <Button Text="Déconnexion" Icon={<IoIosLogOut className="text-xl text-textDarkColor hover:text-textLightColor  dark:text-gray-200 hover:dark:text-textLightColor" />} />
 
               </div>

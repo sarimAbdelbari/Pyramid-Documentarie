@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
-import CreateRoute from "./CreateRoute";
+import CreateRoute from "@/pages/dashboard/route/CreateRoute";
 import Button from "@/components/button";
 import { FaUncharted } from "react-icons/fa6";
 import { VscFilePdf } from "react-icons/vsc";
@@ -43,8 +43,7 @@ const Routes = () => {
 
       setRoutesStats(response.data);
  
-      console.log("routesStats" , response.data);
-      
+
       const dataWithId = data.map((route, index) => ({
         ...route,
         id: index + 1,
@@ -91,8 +90,13 @@ const Routes = () => {
     { field: "image", headerName: "Image", flex: 2 , renderCell: (params) => (
       params.row.image &&
       <div className="flex items-center">
-          <img src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.image}`} alt="image" className="w-12 h-12 object-cover rounded-full" />
-      </div> 
+      <img 
+          src={`${import.meta.env.VITE_PUBLIC_URL1}/${params?.row?.image || "imageHolder.jpg"}`} 
+          alt="image" 
+          className="w-12 h-12 object-cover rounded-full" 
+      />
+  </div>
+  
       )},
     { field: "details", headerName: "Détails", flex: 2 },
     { field: "createdAt", headerName: "Créé à", flex: 2 },
@@ -116,7 +120,6 @@ const Routes = () => {
   ];
 
   const handleOpenDialog = (id) => {
-     console.log("Value Id ", id);
 
     setSelectedRoute(id);
     setShowNew(true);
@@ -137,7 +140,7 @@ const Routes = () => {
             <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
             Gestion des Routes
         </h3>
-            <div onClick={openNewDialog}>
+            <div onClick={()=> openNewDialog()}>
               <Button Text="Ajouter" Icon={<AddIcon />} className="bg-primary hover:bg-darkPrimary transition-colors duration-300"/>
             </div>
             <div className="w-full">
@@ -194,7 +197,7 @@ const Routes = () => {
     {/* Voir Commun */}
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-center text-purple-500 dark:text-purple-300 text-lg font-semibold">
-        <p className="text-lg text-textLightColor">Voir Commun</p>
+        <p className="text-lg text-textLightColor">Route Commun</p>
         <FaUncharted className="text-xl text-textLightColor" />
       </div>
       <div className="flex items-center gap-4 text-purple-600 dark:text-purple-300">
@@ -249,7 +252,7 @@ const Routes = () => {
 
           {/* Create Route Dialog */}
           {showNew && 
-            <CreateRoute routeId={selectedRoute} />
+            <CreateRoute selectedRoute={selectedRoute} />
           } 
      
  

@@ -1,34 +1,36 @@
 import { useState } from 'react';
-import LogoPngChiali from "../../../public/assets/images/LogoPngChiali.png";
-import signUpImg from '../../../public/assets/images/signUpImg.jpg';
+import LogoPngChiali from "/assets/images/LogoPngChiali.png";
+import signUpImg from '/assets/images/signUpImg.jpg';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 import LoadingScreen from "@/utils/loadingScreen";
 import { sucess_toast, warn_toast } from "@/utils/toastNotification";
-
+import { FaRegEyeSlash } from "react-icons/fa";
+import { LuEye } from "react-icons/lu";
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
-  const { isLoading, setIsLoading } = useStateContext();
-
+  const { isLoading, setIsLoading ,setUserInfo  ,setIsAuthenticated } = useStateContext();
+  const [isShowPassword , setIsShowPassword] = useState(false);
   const [values, setValues] = useState({
     email: '',
     password: ''
   });
 
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       setIsLoading(true);
-
-      await axios.post('http://localhost:5000/api/auth/login', values, {
+      const result = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, values, {
         withCredentials: true
       });
-
+      
+      setUserInfo(result.data.user);
       sucess_toast("Connexion réussie");
-    
-      setTimeout(() => {
-        window.location.href = "/principal";
-      }, 1000);
 
+      navigate("/principal")
+        
+      setIsAuthenticated(true);
     } catch (err) {
       setIsLoading(false);
       console.log("Erreur de connexion", err.response?.data?.error || "Message d'erreur", err.message);
@@ -37,6 +39,7 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+  
 // bg-[#a1a1a148] 
 // bg-[#dfdcdc48] 
   return (
@@ -74,16 +77,19 @@ const Login = () => {
                     Mot de passe
                   </label>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 flex justify-center items-center relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={!isShowPassword ? `password` : `text`}
                     autoComplete="current-password"
                     required
                     onChange={(e) => setValues({ ...values, password: e.target.value })}
-                    className="w-full py-1.5 px-2 text-gray-900 placeholder:text-gray-400 rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className=" w-full py-1.5 px-2 text-gray-900 placeholder:text-gray-400 rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
+                  {!isShowPassword ? <LuEye  onClick={()=> setIsShowPassword(!isShowPassword)} className='absolute top-50 right-2   text-textLightColor text-lg font-semibold '/> : <FaRegEyeSlash onClick={()=> setIsShowPassword(!isShowPassword)} className='absolute top-50 right-2   text-textLightColor text-lg font-semibold '/>}
+                  
+                  
                 </div>
               </div>
 

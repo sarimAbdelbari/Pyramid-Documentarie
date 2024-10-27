@@ -7,10 +7,8 @@ import { FaFileDownload } from "react-icons/fa";
 const ExcelReader = ({ route }) => {
 
 
-    console.log("ExcelReader")
     const [data, setData] = useState([]);
 
-    console.log("route" ,route)
     const ExcelUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
     const fetchAndParseExcel = async () => {

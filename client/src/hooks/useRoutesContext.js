@@ -44,7 +44,7 @@ const useRouteAuth = () => {
             return;
           }
 
-        const responseRoutes = await axios.post('http://localhost:5000/api/route/all',{ids:routes});
+        const responseRoutes = await axios.post(`${import.meta.env.VITE_API_URL}/route/all`,{ids:routes});
         
       
  
@@ -61,7 +61,7 @@ const useRouteAuth = () => {
       getData();
  
     }
-  }, [userInfo.groop]);
+  }, [userInfo.groop,routeData,setRouteData]);
 
 
 

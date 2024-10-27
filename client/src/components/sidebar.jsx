@@ -33,11 +33,11 @@ export default function SideBar() {
       localStorage.setItem('dropdowns', JSON.stringify(newDropdowns));
       return newDropdowns;
     });
-  };
+  }; 
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/logout', {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, { withCredentials: true });
       window.location.href = '/login';
     } catch (error) {
       console.error('Error logging out:', error);
@@ -45,7 +45,7 @@ export default function SideBar() {
   };
 
   return (
-    <div className=' sticky top-0  h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-10  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
+    <div className='sticky top-0  h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-10  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
       <div className='flex flex-col gap-3'>
         <p className='text-md font-medium text-gray-600 dark:text-gray-200 uppercase'>Menu</p>
         <div className='pl-2 flex flex-col gap-1'>

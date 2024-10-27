@@ -6,8 +6,9 @@ const createToken = (_id) => {
 };
 
 const loginUser = async (req, res) => {
+    
+    
     const { email, password } = req.body;
-
     try {
         const user = await User.login(email, password);
 
@@ -18,9 +19,12 @@ const loginUser = async (req, res) => {
         res.cookie('token', token, { 
             httpOnly: true, 
             maxAge: 24 * 60 * 60 * 1000,
-            secure: true, 
-            sameSite: 'None' // Adjust based on your deployment
+            secure: false, 
+            sameSite: 'Lax' // Use 'Lax' for development over HTTP
         });
+
+        console.log("Headers " ,res.getHeaders())
+
         
         res.status(200).json({ email, token , user});
     } catch (error) {
@@ -30,10 +34,13 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
     try {
+
+        console.log("i am Here &&&&&&&&&&&&&&&&&&&&&&")
         res.clearCookie('token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'None' // Adjust based on your deployment
+            httpOnly: true, 
+            maxAge: 24 * 60 * 60 * 1000,
+            secure: false, 
+            sameSite: 'Lax' // Use 'Lax' for development over HTTP
         })
 
 
@@ -49,6 +56,7 @@ const logoutUser = async (req, res) => {
 const checkAuth = async (req, res) => {
     try {
         const user = await User.findById(req.userId); // Retrieve the user using the userId set in the middleware
+
 
         if (!user) {
             return res.status(404).json({ authenticated: false, message: 'Utilisateur non trouvé' });

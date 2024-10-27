@@ -1,11 +1,11 @@
-import SME from "../../public/assets/images/SME.png";
-import SMQ from "../../public/assets/images/SMQ.png";
-import SMSST from "../../public/assets/images/SMSST.png";
-import Certification from "../../public/assets/images/Certification.png";
-import imageHolder from "../../public/assets/images/imageHolder.jpg";
-import Dispostions from "../../public/assets/images/Dispostions.png";
-import Formations from "../../public/assets/images/Formations.png";
-import NormsISo from "../../public/assets/images/normsISo.png";
+import SME from "/assets/images/SME.png";
+import SMQ from "/assets/images/SMQ.png";
+import SMSST from "/assets/images/SMSST.png";
+import Certification from "/assets/images/Certification.png";
+import imageHolder from "/assets/images/imageHolder.jpg";
+import Dispostions from "/assets/images/Dispostions.png";
+import Formations from "/assets/images/Formations.png";
+import NormsISo from "/assets/images/normsISo.png";
 
 const mainPageImages = {
     Certification: {

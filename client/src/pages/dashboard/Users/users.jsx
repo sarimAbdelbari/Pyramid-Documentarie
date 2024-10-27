@@ -177,21 +177,21 @@ const Users = () => {
   <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
     {/* Active Users */}
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-center text-green-600 dark:text-green-400 text-lg font-semibold">
+      <div className="flex justify-between items-center gap-3 text-green-600 dark:text-green-400 text-lg font-semibold">
         <p className="text-lg text-textLightColor">Nombre de  Utilisateurs</p>
         <FaUncharted className="text-xl text-textLightColor" />
       </div>
-      <div className="flex items-center gap-4 text-2xl font-medium text-blue-600 dark:text-blue-400">
+      <div className="flex items-center gap-4 text-xl font-medium text-blue-600 dark:text-blue-400">
         <LiaUsersSolid  />
         <p>{usersStats?.totalUsers}</p>
       </div>
     </div>
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-center text-green-600 dark:text-green-400 text-lg font-semibold">
+      <div className="flex justify-between items-center gap-3 text-green-600 dark:text-green-400 text-lg font-semibold">
         <p className="text-lg text-textLightColor">Utilisateurs actifs</p>
         <FaUncharted className="text-xl text-textLightColor" />
       </div>
-      <div className="flex items-center gap-4 text-2xl font-medium text-green-600 dark:text-green-400">
+      <div className="flex items-center gap-4 text-xl font-medium text-green-600 dark:text-green-400">
         <LuUserCheck2 />
         <p>{usersStats?.active}</p>
       </div>
@@ -199,11 +199,11 @@ const Users = () => {
     
     {/* Deactivated Users */}
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-center text-red-500 dark:text-red-300 text-lg font-semibold">
+      <div className="flex justify-between items-center gap-3  text-red-500 dark:text-red-300 text-lg font-semibold">
         <p className="text-lg text-textLightColor">Utilisateurs Désactivent</p>
         <FaUncharted className="text-xl text-textLightColor" />
       </div>
-      <div className="flex items-center gap-4 text-2xl font-medium text-red-600 dark:text-red-400">
+      <div className="flex items-center gap-4 text-xl font-medium text-red-600 dark:text-red-400">
         <LuUserX2 />
         <p>{usersStats?.disActive}</p>
       </div>
@@ -211,11 +211,11 @@ const Users = () => {
 
     {/* Common Group */}
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-center text-purple-500 dark:text-purple-300 text-lg font-semibold">
+      <div className="flex justify-between items-center gap-3 text-purple-500 dark:text-purple-300 text-lg font-semibold">
         <p className="text-lg text-textLightColor">Groupe commun</p>
         <FaUncharted className="text-xl text-textLightColor" />
       </div>
-      <div className="flex items-center gap-4 text-2xl font-medium text-purple-600 dark:text-purple-400">
+      <div className="flex items-center gap-4 text-xl font-medium text-purple-600 dark:text-purple-400">
         <TbUsersGroup />
         <p>{usersStats?.numberOftheMostCommunGroop} {usersStats?.most_common_groop?.groopName}</p>
       </div>
@@ -223,11 +223,11 @@ const Users = () => {
 
     {/* Admin Accounts */}
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-center text-yellow-500 dark:text-yellow-300 text-lg font-semibold">
+      <div className="flex justify-between items-center gap-3 text-yellow-500 dark:text-yellow-300 text-lg font-semibold">
         <p className="text-lg text-textLightColor">Comptes administrateur</p>
         <FaUncharted className="text-xl text-textLightColor" />
       </div>
-      <div className="flex items-center gap-4 text-2xl font-medium text-yellow-600 dark:text-yellow-400">
+      <div className="flex items-center gap-4 text-xl font-medium text-yellow-600 dark:text-yellow-400">
         <RiAdminFill />
         <p>{usersStats?.admins}</p>
       </div>

@@ -13,6 +13,6 @@ router.post('/logout', logoutUser);
 // signup route
 // router.post('/signup', signupUser);
 
-router.get('/check-auth', verifyToken, checkAuth);
+router.post('/check-auth', verifyToken, checkAuth);
 
 module.exports = router;
