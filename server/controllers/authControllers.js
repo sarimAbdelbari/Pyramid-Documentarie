@@ -9,12 +9,13 @@ const loginUser = async (req, res) => {
     
     
     const { email, password } = req.body;
+
     try {
         const user = await User.login(email, password);
 
         // create a token
         const token = createToken(user._id);
-// 
+
         // Set the token in a cookie
         res.cookie('token', token, { 
             httpOnly: true, 
@@ -22,8 +23,6 @@ const loginUser = async (req, res) => {
             secure: false, 
             sameSite: 'Lax' // Use 'Lax' for development over HTTP
         });
-
-        console.log("Headers " ,res.getHeaders())
 
         
         res.status(200).json({ email, token , user});
@@ -35,7 +34,6 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
 
-        console.log("i am Here &&&&&&&&&&&&&&&&&&&&&&")
         res.clearCookie('token', {
             httpOnly: true, 
             maxAge: 24 * 60 * 60 * 1000,
@@ -55,6 +53,7 @@ const logoutUser = async (req, res) => {
 
 const checkAuth = async (req, res) => {
     try {
+        
         const user = await User.findById(req.userId); // Retrieve the user using the userId set in the middleware
 
 

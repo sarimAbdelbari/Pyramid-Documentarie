@@ -51,7 +51,7 @@ const Users = () => {
 
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/user`);
     
-      console.log("response" ,response.data)
+
 
       setUsersStats(response.data);
 

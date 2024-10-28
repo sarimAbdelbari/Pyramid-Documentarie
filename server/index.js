@@ -28,8 +28,10 @@ app.use((req, res, next) => {
 //     optionsSuccessStatus: 200
 //   };
 
+// , 'http://10.10.4.62:5173'
+
 const corsOptions = {
-    origin: ['http://localhost:5173', 'http://10.10.4.62:5173'],
+    origin: process.env.CorsOptionsOriginPc,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 200
@@ -45,11 +47,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 //  * Routes
-app.use('/api/route' ,verifyToken,  routeRoutes);
-app.use('/api/groop',verifyToken, groopRoutes);
-app.use('/api/users' ,verifyToken, userRoutes);
-app.use('/api/stats' ,verifyToken, statRoutes);
-app.use('/api/auth',verifyToken, authRoutes);
+app.use('/api/route' ,  routeRoutes);
+app.use('/api/groop', groopRoutes);
+app.use('/api/users' , userRoutes);
+app.use('/api/stats' , statRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
     res.json([{ msg: 'Welcome To The App' }]);

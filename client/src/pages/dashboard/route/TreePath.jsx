@@ -254,7 +254,7 @@ const fetchData = async ()=>{
 
   const AddRoute = (nodeData) => {
 
-    setSelectedNode(nodeData?._id ||"");
+    setSelectedNode(nodeData ||"");
     setShowNew(true);
     setContextMenu({
       ...contextMenu,

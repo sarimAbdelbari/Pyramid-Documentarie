@@ -21,6 +21,9 @@ import { FaRegFileWord } from "react-icons/fa";
 
 
 const CreateRoute = ({ routeId ,parrentId}) => {
+
+  console.log("routeId",routeId)
+
   const { isLoading, setIsLoading, showNew, setShowNew, setReloadfetch ,reloadfetch } = useStateContext();
   const [routes, setRoutes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -28,7 +31,7 @@ const CreateRoute = ({ routeId ,parrentId}) => {
   const [dataFields, setDataFields] = useState([{ tableCol: "", value: "" }]);
   const [dataRowFields, setDataRowFields] = useState([{}]);
   const [selectedRoute, setSelectedRoute] = useState({
-    parrentPath: parrentId.value ||"",
+    parrentPath: parrentId?.value ||"",
     title: "",
     path: "",
     view: "",
@@ -93,13 +96,12 @@ const CreateRoute = ({ routeId ,parrentId}) => {
       setRoutes(data);
 
       if (routeId) {
-        const dataWithId = await axios.get(`${import.meta.env.VITE_API_URL}/route/${routeId}`);
 
 
-        setSelectedRoute(dataWithId?.data);
+        setSelectedRoute(routeId);
  
 
-        const dataWithParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${dataWithId.data.parrentPath}`);
+        const dataWithParrent = await axios.get(`${import.meta.env.VITE_API_URL}/route/${routeId?.parrentPath}`);
 
         setSelectedParrent({
           value: dataWithParrent?.data?._id,
@@ -109,11 +111,11 @@ const CreateRoute = ({ routeId ,parrentId}) => {
 
         setParrentData(dataWithParrent.data)
 
-        const dataFields = Object.entries(dataWithId?.data?.data.tableCol || {}).map(([tableCol, value]) => ({ tableCol, value }));
+        const dataFields = Object.entries(routeId?.data?.tableCol || {}).map(([tableCol, value]) => ({ tableCol, value }));
         setDataFields(dataFields);
 
 
-        setDataRowFields(dataWithId?.data?.data.tableRow || []);
+        setDataRowFields(routeId?.data?.tableRow || []);
       }
 
 

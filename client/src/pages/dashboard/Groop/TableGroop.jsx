@@ -80,7 +80,7 @@ const TableGroop = () => {
   };
   
   return (
-    <div className="py-10 px-4 lg:px-12  overflow-auto">
+    <div className="py-10 px-4 lg:px-12  overflow-y-auto h-screen">
       <h3 className="text-center text-4xl font-medium text-black dark:text-textSecDarkColor mt-4 mb-6">
         Gestion des Groops
       </h3>
