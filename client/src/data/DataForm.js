@@ -145,5 +145,8 @@ const viewOptions = [
     },
   ];
 
+  const localeText = {
+    
+  }
 
 export  {mainPageImages , View4Data ,viewOptions};

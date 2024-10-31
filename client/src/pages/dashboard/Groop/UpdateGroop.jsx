@@ -8,7 +8,7 @@ import {
   sucess_toast,
 } from "@/utils/toastNotification";
 import { FaRegCircleXmark } from "react-icons/fa6";
-import CheckButton from "../../../components/checkButton";
+import CheckButton from "@/components/checkButton";
 import Button from "@/components/button";
 
 const UpdateGroop = () => {
@@ -19,6 +19,10 @@ const UpdateGroop = () => {
   const [files, setFiles] = useState([]);
 
   const [users, setUsers] = useState([]);
+
+  const [optionsPages, setOptionsPages] = useState([]);
+  const [optionsFiles, setOptionsFiles] = useState([]);
+  
   const [selectedRoutes, setSelectedRoutes] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [routePermissionPair, setRoutePermissionPair] = useState({
@@ -38,19 +42,9 @@ const UpdateGroop = () => {
     { value: "NoDownload", label: "pas de téléchargement" },
   ];
 
-  const optionsPages = routes
-    ?.filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
-    .map((route) => ({
-      value: route._id,
-      label: route.title,
-    }));
+  
 
-  const optionsfiles = files
-    ?.filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
-    .map((route) => ({
-      value: route._id,
-      label: route.title,
-    }));
+  
 
   const addRoutePermission = () => {
 
@@ -86,9 +80,13 @@ const UpdateGroop = () => {
   };
 
   const removeRoutePermission = (index) => {
+  
+   
     const updatedRoutes = [...selectedRoutes];
     updatedRoutes.splice(index, 1);
     setSelectedRoutes(updatedRoutes);
+ 
+    updatedOptions();
   };
 
   const fetchData = async () => {
@@ -96,12 +94,12 @@ const UpdateGroop = () => {
     try {
 
       const responseFiles = await axios.get(
-        "http://localhost:5000/api/route/files"
+        `${import.meta.env.VITE_API_URL}/route/files`
       );
       const responsePages = await axios.get(
-        "http://localhost:5000/api/route/pages"
+        `${import.meta.env.VITE_API_URL}/route/pages`
       );
-      const responseUsers = await axios.get("http://localhost:5000/api/users");
+      const responseUsers = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
 
       setFiles(responseFiles.data);
       setRoutes(responsePages.data);
@@ -109,7 +107,7 @@ const UpdateGroop = () => {
 
       if (id) {
         const responseGroop = await axios.get(
-          `http://localhost:5000/api/groop/${id}`
+          `${import.meta.env.VITE_API_URL}/groop/${id}`
         );
         setGroopName(responseGroop.data.groopName);
         setSelectedUsers(
@@ -135,6 +133,7 @@ const UpdateGroop = () => {
         setSelectedRoutes(...selectedRoutes, filteredRoutes);
 
       }
+
     } catch (error) {
       console.error(error);
     }
@@ -143,6 +142,29 @@ const UpdateGroop = () => {
   useEffect(() => {
     fetchData();
   }, [id]);
+  
+
+  const updatedOptions = () => {
+    
+    setOptionsPages(routes
+      ?.filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
+      .map((route) => ({
+        value: route._id,
+        label: route.title,
+      }))) 
+ 
+      setOptionsFiles( files
+        ?.filter((route) => !selectedRoutes.some((pair) => pair.route === route._id))
+        .map((route) => ({
+          value: route._id,
+          label: route.title,
+        })))
+  
+  }
+
+  useEffect(()=>{
+    updatedOptions();
+  },[selectedRoutes])
 
   const handleSubmit = async () => {
     try {
@@ -161,7 +183,7 @@ const UpdateGroop = () => {
  
       console.log("selectedRoutes" ,selectedRoutes)
 
-      await axios.patch(`http://localhost:5000/api/groop/${id}`, {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/groop/${id}`, {
         groopName,
         groopUsers: selectedUsers.map((user) => user.value),
         groopRoutes: selectedRoutes,
@@ -192,7 +214,7 @@ const UpdateGroop = () => {
     <div className="pt-7 min-h-screen">
       <div className="relative bg-white dark:bg-mainDarkBg dark:shadow-white flex justify-center flex-col gap-9 items-center py-4 px-8 shadow-xl m-8 rounded-xl">
         <p className="text-3xl text-textLightColor dark:text-textDarkColor font-semibold">
-        Mise à jour de Groop
+        Mise à jour de <span className="text-darkPrimary">{groopName}</span>
         </p>
         <FaRegCircleXmark
           onClick={() => navigate(-1)}
@@ -224,7 +246,7 @@ const UpdateGroop = () => {
                 <CheckButton Text="ShowPages" Checked={showPages} />
               </div>
             </div>
-            <div className="flex  gap-4 w-full bg-mainLightBg dark:bg-mainDarkBg rounded-lg px-4 py-6">
+            <div className="flex  gap-4 w-full bg-secLightBg dark:bg-mainDarkBg rounded-lg px-4 py-6">
               {showPages ? null : (
                 <Select
                   value={
@@ -251,7 +273,7 @@ const UpdateGroop = () => {
                     ? optionsPages.find(
                         (option) => option.value === routePermissionPair.route
                       ) || null
-                    :  optionsfiles.find(
+                    :  optionsFiles.find(
                         (option) => option.value === routePermissionPair.route
                       ) || null
                 }
@@ -261,7 +283,7 @@ const UpdateGroop = () => {
                     route: selected.value,
                   }))
                 }
-                options={showPages ? optionsPages :  optionsfiles }
+                options={showPages ? optionsPages :  optionsFiles }
                 isSearchable
                 placeholder={
                   showPages
@@ -278,8 +300,8 @@ const UpdateGroop = () => {
               </button>
             </div>
             <div className="w-full">
-              <div className="w-full">
-                {selectedRoutes.map((pair, index) => (
+              <div className="w-full h-64 overflow-y-auto">
+              {selectedRoutes.map((pair, index) => (
                   <div
                     key={index}
                     className="flex justify-between items-center bg-secLightBg p-2 rounded-lg mb-2"

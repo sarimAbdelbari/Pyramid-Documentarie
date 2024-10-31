@@ -3,19 +3,19 @@ import axios from 'axios';
 import Tree from 'react-d3-tree';
 import { error_toast, sucess_toast } from '@/utils/toastNotification';
 import LoadingScreen from '@/utils/loadingScreen';
-import { useCenteredTree } from './helpers';
+import { useCenteredTree } from '@/pages/dashboard/route/helpers';
 import Button from '@/components/button';
-import CreateRoute from './CreateRoute';
+import CreateRoute from '@/pages/dashboard/route/CreateRoute';
 import { useStateContext } from '@/contexts/ContextProvider';
 import { RxUpdate } from "react-icons/rx";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { ThemeContext } from '@/components/themeProvider';
+import { ThemeContext } from '@/contexts/themeProvider';
 import { AiOutlineSisternode } from "react-icons/ai";
-import { viewOptions } from '../../../data/DataForm';
+import { viewOptions } from '@/data/DataForm';
 import { BsNodePlus } from "react-icons/bs";
 import { MdOutlinePreview } from "react-icons/md";
-import LivePreview from './LivePreview';
+import LivePreview from '@/pages/dashboard/route/LivePreview';
 
 export default function TreePath() {
 
@@ -310,7 +310,10 @@ const fetchData = async ()=>{
     setParrentId({
       value: nodeData._id,
       label: nodeData.path,
-      view: nodeData.view
+      view: nodeData.view,
+      data: nodeData?.view == "TableView" ? {data:nodeData.data} : null ,
+     
+
     } || "");
     setShowNew(true);
   }
@@ -327,7 +330,7 @@ const fetchData = async ()=>{
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <div className='pt-7 bg-secLightBg dark:bg-mainDarkBg'>
+        <div className='pt-7 bg-secLightBg dark:bg-secDarkBg'>
           <div className="flex flex-row justify-center items-center">
             <h3 className="text-3xl pt-3 font-semibold text-black dark:text-textDarkColor">Les Pages</h3>
           </div>
@@ -347,6 +350,7 @@ const fetchData = async ()=>{
                 renderNodeWithCustomEvents({ ...rd3tProps, setTooltip, showContextMenu, selectNode })
               }
               orientation="vertical"
+              collapsible={true}
               // initialDepth={0}
               separation={{ siblings: 2, nonSiblings: 2 }}
               allowForeignObjects={true}

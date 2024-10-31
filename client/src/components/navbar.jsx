@@ -3,7 +3,7 @@ import { BsMoonStarsFill } from 'react-icons/bs';
 import { MdOutlineLightMode, MdOutlineAddComment } from 'react-icons/md';
 import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import { ThemeContext } from './themeProvider';
+import { ThemeContext } from '@/contexts/themeProvider';
 import { useStateContext } from '@/contexts/ContextProvider';
 import LogoPngChiali from '/assets/images/LogoPngChiali.png';
 import axios from 'axios';
@@ -40,7 +40,7 @@ const Navbar = () => {
         <Link to="/principal" className="flex items-center gap-4 flex-1" onClick={() => setVisible(true)}>
           <img
             src={LogoPngChiali}
-            className="w-12 md:w-16 hover:scale-105 transition-transform"
+            className="w-12 md:w-16 hover:scale-105 transition-transform object-contain"
             alt="LogoPngChiali"
           />
         </Link>
@@ -68,7 +68,7 @@ const Navbar = () => {
           >
             <img
               src={`${import.meta.env.VITE_PUBLIC_URL1}/profileImage.avif`}
-              className="w-10 md:w-12 rounded-full"
+              className="w-10 md:w-12 rounded-full object-contain"
               alt="Profile"
             />
             <div className="hidden md:flex flex-col text-left">

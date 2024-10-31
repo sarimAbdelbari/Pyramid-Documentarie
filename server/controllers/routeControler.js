@@ -78,11 +78,18 @@ const getRouteByManyId = async (req, res) => {
       return res.status(404).json({ message: 'No routes found with the provided IDs.' });
     }
 
-    res.status(200).json(routes);
+    // Exclude createdAt and updatedAt from the response
+    const sanitizedRoutes = routes.map(route => {
+      const { createdAt, updatedAt , ...rest } = route.toObject();
+      return rest;
+    });
+
+    res.status(200).json(sanitizedRoutes);
   } catch (error) {
     res.status(500).json({ message: `Error retrieving routes: ${error.message}` });
   }
 };
+
 
 
 const getRouteByParrentId = async (req, res) => {

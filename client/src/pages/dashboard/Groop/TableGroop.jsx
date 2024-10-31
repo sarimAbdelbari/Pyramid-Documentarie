@@ -3,7 +3,7 @@ import axios from "axios";
 import GroopCard from "@/components/GroopCard";
 import { CiCirclePlus } from "react-icons/ci";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
-import CreateGroop from "./CreateGroop";
+import CreateGroop from "@/pages/dashboard/Groop/CreateGroop";
 
 const TableGroop = () => {
   const [groopData, setGroopData] = useState([]);
@@ -14,7 +14,7 @@ const TableGroop = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/groop');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
         setGroopData(response.data);
       } catch (error) {
         console.error('Error fetching groop data:', error);
@@ -26,7 +26,7 @@ const TableGroop = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/groop/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/groop/${id}`);
       setGroopData(groopData.filter(groop => groop._id !== id));
       setIsModalOpen(false); // Close modal after deletion
       sucess_toast("Le groop a été supprimé avec succès");
@@ -103,135 +103,3 @@ const TableGroop = () => {
 };
 
 export default TableGroop;
-
-
-
-{/* <DataGrid
-  rows={rows}
-  columns={columns} 
-  pageSize={10}
-  rowsPerPageOptions={[10]}
-  checkboxSelection
-  disableSelectionOnClick
-/> */}
-
-
- // const columns = [
-  //   { field: 'id', headerName: 'ID', width: 150 },
-  //   { field: 'groopName', headerName: 'Groop Name', width: 150 },
-  //   {
-  //     field: 'groopRoutes',
-  //     headerName: 'Routes',
-  //     width: 300,
-  //     renderCell: (params) => (
-  //       <ul>
-  //         {params.value && params.value.map((route, index) => (
-  //           <li key={index}>
-  //             {route?.route?.title || 'No title'} - {route?.permission || 'No permission'}
-  //           </li>
-  //         ))}
-  //       </ul>
-  //     ),
-  //   },
-  //   {
-  //     field: 'groopUsers',
-  //     headerName: 'Users',
-  //     width: 300,
-  //     renderCell: (params) => (
-  //       <ul>
-  //         {params.value && params.value.map((user, index) => (
-  //           <li key={index}>{user.userName}</li>
-  //         ))}
-  //       </ul>
-  //     ),
-  //   },
-  // ];
-
-  // Transform the groopData into rows for the DataGrid
-  // const rows = groopData.map((groop) => ({
-  //   id: groop._id,
-  //   groopName: groop.groopName,
-  //   groopRoutes: groop.groopRoutes || [],
-  //   groopUsers: groop.groopUsers || [],
-  // }));
-
-
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import { DataGrid } from '@mui/x-data-grid';
-
-// const TableGroop = () => {
-//   const [groopData, setGroopData] = useState([]);
-
-//   useEffect(() => {
-//     // Fetch the data from the API
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:5000/api/groop');
-//         setGroopData(response.data);
-
-
-//         console.log("response.data" ,response.data)
-//       } catch (error) {
-//         console.error('Error fetching groop data:', error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   const columns = [
-//     { field: 'id', headerName: 'ID', width: 150 },
-//     { field: 'groopName', headerName: 'Groop Name', width: 150 },
-//     {
-//       field: 'groopRoutes',
-//       headerName: 'Routes',
-//       width: 300,
-//       renderCell: (params) => (
-//         <ul>
-//           {params.value.map((route) => (
-//             <li key={route?._id}>
-//               {route?.route?.title} - {route?.permission}
-//             </li>
-//           ))}
-//         </ul>
-//       ),
-//     },
-//     {
-//       field: 'groopUsers',
-//       headerName: 'Users',
-//       width: 300,
-//       renderCell: (params) => (
-//         <ul>
-//           {params.value.map((user) => (
-//             <li key={user._id}>{user.userName}</li>
-//           ))}
-//         </ul>
-//       ),
-//     },
-//   ];
-
-//   // Transform the groopData into rows for the DataGrid
-//   const rows = groopData.map((groop) => ({
-//     id: groop._id,
-//     groopName: groop.groopName,
-//     groopRoutes: groop.groopRoutes,
-//     groopUsers: groop.groopUsers,
-//   }));
-
-//   return (
-//     <div className="py-28" style={{ height: 600, width: '100%' }}>
-//       <h1>Groop Table</h1>
-//       <DataGrid
-//         rows={rows}
-//         columns={columns}
-//         pageSize={10}
-//         rowsPerPageOptions={[10]}
-//         checkboxSelection
-//         disableSelectionOnClick
-//       />
-//     </div>
-//   );
-// };
-
-// export default TableGroop;

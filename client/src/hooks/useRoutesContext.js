@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import axios from 'axios';
-import { useStateContext } from '../contexts/ContextProvider';
+import { useStateContext } from '@/contexts/ContextProvider';
 
 const useRouteAuth = () => {
   const { routeData, setRouteData, userInfo} = useStateContext();

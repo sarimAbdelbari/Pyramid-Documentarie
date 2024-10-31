@@ -21,9 +21,9 @@ const CreateGroop = ({onClose}) => {
   
   const fetchData = async () => {
     try {
-      const responseFiles = await axios.get("http://localhost:5000/api/route/files");
-      const responsePages = await axios.get("http://localhost:5000/api/route/pages");
-      const responseUsers = await axios.get("http://localhost:5000/api/users");
+      const responseFiles = await axios.get(`${import.meta.env.VITE_API_URL}/route/files`);
+      const responsePages = await axios.get(`${import.meta.env.VITE_API_URL}/route/pages`);
+      const responseUsers = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       setRoutes(responseFiles.data);
       setFiles(responsePages.data);
       setUsers(responseUsers.data);
@@ -120,7 +120,7 @@ const CreateGroop = ({onClose}) => {
       }
 
 
-      await axios.post("http://localhost:5000/api/groop", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/groop`, {
         groopName,
         groopUsers: selectedUsers.map((user) => user.value),
         groopRoutes: selectedRoutes,

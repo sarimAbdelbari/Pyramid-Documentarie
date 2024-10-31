@@ -8,7 +8,7 @@ import {
   sucess_toast,
 } from "@/utils/toastNotification";
 import { FaRegCircleXmark } from "react-icons/fa6";
-import CheckButton from "../../../components/checkButton";
+import CheckButton from "@/components/checkButton";
 import Button from "@/components/button";
 
 const DuplicateGroop = () => {
@@ -95,13 +95,9 @@ const DuplicateGroop = () => {
   
       try {
   
-        const responseFiles = await axios.get(
-          "http://localhost:5000/api/route/files"
-        );
-        const responsePages = await axios.get(
-          "http://localhost:5000/api/route/pages"
-        );
-        const responseUsers = await axios.get("http://localhost:5000/api/users");
+        const responseFiles = await axios.get(`${import.meta.env.VITE_API_URL}/route/files`);
+        const responsePages = await axios.get(`${import.meta.env.VITE_API_URL}/route/pages`);
+        const responseUsers = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
   
         setFiles(responseFiles.data);
         setRoutes(responsePages.data);
@@ -109,7 +105,7 @@ const DuplicateGroop = () => {
   
         if (id) {
           const responseGroop = await axios.get(
-            `http://localhost:5000/api/groop/${id}`
+            `${import.meta.env.VITE_API_URL}/groop/${id}`
           );
           setGroopName(responseGroop.data.groopName);
           setSelectedUsers(
@@ -161,7 +157,7 @@ const DuplicateGroop = () => {
    
   
         
-      await axios.post("http://localhost:5000/api/groop", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/groop`, {
         groopName,
         groopUsers: selectedUsers.map((user) => user.value),
         groopRoutes: selectedRoutes,

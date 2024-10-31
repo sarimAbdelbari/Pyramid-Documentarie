@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 // , 'http://10.10.4.62:5173'
 
 const corsOptions = {
-    origin: process.env.CorsOptionsOriginPc,
+    origin: process.env.CorsOptionsOriginLocal,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 200

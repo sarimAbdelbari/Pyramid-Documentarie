@@ -38,10 +38,10 @@ const WordReader = ({route}) => {
           </div>
         </div>
 
-        <div className="mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg  w-full p-6 relative border border-gray-200 dark:border-gray-700">
+        <div className="mt-10 bg-white  dark:bg-gray-800 rounded-lg shadow-lg  w-full p-6 relative border border-gray-200 dark:border-gray-700">
           <div
             id="docx-container"
-            className="word-content text-gray-900 dark:text-gray-200 bg-gray-50 dark:bg-gray-900 p-4 rounded-md"
+            className="word-content text-gray-900 dark:text-gray-200  bg-secLightBg dark:bg-gray-900 p-4 rounded-md"
           >
             {/* This div will be populated with the rendered Word content */}
           </div>

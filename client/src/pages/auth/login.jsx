@@ -90,7 +90,7 @@ const Login = () => {
                     onChange={(e) => setValues({ ...values, password: e.target.value })}
                     className=" w-full py-1.5 px-2 text-gray-900 placeholder:text-gray-400 rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
-                  {!isShowPassword ? <LuEye  onClick={()=> setIsShowPassword(!isShowPassword)} className='absolute top-50 right-2   text-textLightColor text-lg font-semibold '/> : <FaRegEyeSlash onClick={()=> setIsShowPassword(!isShowPassword)} className='absolute top-50 right-2   text-textLightColor text-lg font-semibold '/>}
+                  {!isShowPassword ? <LuEye  onClick={()=> setIsShowPassword(!isShowPassword)} className='absolute top-50 right-2   text-textLightColor text-lg font-semibold cursor-pointer'/> : <FaRegEyeSlash onClick={()=> setIsShowPassword(!isShowPassword)} className='absolute top-50 right-2   text-textLightColor text-lg font-semibold cursor-pointer'/>}
                   
                   
                 </div>

@@ -11,13 +11,16 @@ import axios from 'axios';
 import { FaTimes, FaChevronDown } from "react-icons/fa";
 import { TbRouteScan } from "react-icons/tb";
 import { MdOutlineLocalPolice } from "react-icons/md";
-
+import { useNavigate } from 'react-router-dom';
 export default function SideBar() {
   const [dropdowns, setDropdowns] = useState({
     users: false,
     routes: false,
     permissions: false,
   });
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const storedDropdowns = JSON.parse(localStorage.getItem('dropdowns'));
@@ -38,14 +41,14 @@ export default function SideBar() {
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, { withCredentials: true });
-      window.location.href = '/login';
+      navigate("/login");
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
   return (
-    <div className='sticky top-0  h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-10  rounded-3xl w-80 bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
+    <div className='fixed w-1/5 h-[700px] flex flex-col gap-3 justify-between overflow-auto mt-16  rounded-3xl  bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
       <div className='flex flex-col gap-3'>
         <p className='text-md font-medium text-gray-600 dark:text-gray-200 uppercase'>Menu</p>
         <div className='pl-2 flex flex-col gap-1'>

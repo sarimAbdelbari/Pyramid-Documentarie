@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid   } from "@mui/x-data-grid";
 import { useStateContext } from "@/contexts/ContextProvider";
 import axios from "axios";
 import Button from "@/components/button";
 import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
-import { ThemeContext } from '@/components/themeProvider';
-import CreateUser from "./CreateUser"; // Import CreateUser component
+import { ThemeContext } from '@/contexts/themeProvider';
+import CreateUser from "@/pages/dashboard/Users/CreateUser"; // Import CreateUser component
 import { FaUncharted } from "react-icons/fa6";
 import { LuUserCheck2 } from "react-icons/lu";
 import { LuUserX2 } from "react-icons/lu";
@@ -15,7 +15,7 @@ import { TbUsersGroup } from "react-icons/tb";
 import { RiAdminFill } from "react-icons/ri";
 import { CiCircleCheck } from "react-icons/ci";
 import { LiaUsersSolid } from "react-icons/lia";
-
+// import { frFR as frFRCore } from '@mui/material/locale';
 const Users = () => {
   const { isLoading ,setIsLoading} = useStateContext();
   const [usersData, setUsersData] = useState([]);
@@ -50,8 +50,6 @@ const Users = () => {
       const { data: groopData } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
 
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/user`);
-    
-
 
       setUsersStats(response.data);
 
@@ -166,7 +164,7 @@ const Users = () => {
 
   return (
     <>
-      <div className="pt-10 flex flex-col items-center gap-3">
+      <div className="pt-11 flex flex-col items-center gap-3">
         <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
           Utilisateurs
         </h3>
@@ -249,6 +247,7 @@ const Users = () => {
             loading={isLoading}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={handleColumnVisibilityChange}
+            // localeText={frFRCore}
             className="m-4 border-none text-textLightColor dark:text-gray-100 "
             sx={{
               "& .MuiDataGrid-root": {

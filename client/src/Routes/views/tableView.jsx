@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
-const TableView = ({ route }) => {
+const TableView = ({ route ,preview }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [columnsUi, setColumnsUi] = useState([]);
   const [rowsUi, setRowsUi] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({});
   const { routeData } = useStateContext();
+
 
   const fetchData = async () => {
     try {
@@ -26,7 +27,7 @@ const TableView = ({ route }) => {
       // Add the File column
       col.push({
         field: 'file',
-        headerName: 'File',
+        headerName: 'Fichiers',
         minWidth: 150,
         flex: 1,
         renderCell: (params) => (
@@ -72,7 +73,7 @@ const TableView = ({ route }) => {
           );
         },
       });
-
+ 
       setColumnsUi(col);
 
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`);
@@ -81,20 +82,40 @@ const TableView = ({ route }) => {
         return;
       }
 
-      const responseIds = response.data.map((item) => item._id);
-      const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
+   
+ 
+      if(!preview){
+        const responseIds = response.data.map((item) => item._id);
+        const newRoutes = routeData.filter((route) => responseIds.includes(route._id));
+        const tableRows = newRoutes.map((row, index) => {
+          const combinedRow = row.data.tableRow.reduce((acc, current) => ({ ...acc, ...current }), {});
+          return {
+            id: index,
+            ...combinedRow,
+            file: row,
+            expiredate: row.expiredate,
+          };
+        });
 
-      const tableRows = newRoutes.map((row, index) => {
-        const combinedRow = row.data.tableRow.reduce((acc, current) => ({ ...acc, ...current }), {});
-        return {
+        console.log("tableRows ::: ;;;" ,tableRows);
+        setRowsUi(tableRows);
+         
+      } else {
+        const TableRows = response.data.map((row, index) => ({
           id: index,
-          ...combinedRow,
           file: row,
           expiredate: row.expiredate,
-        };
-      });
+          ...row.data.tableRow.reduce((acc, current) => ({ ...acc, ...current }), {}),
+        }))
 
-      setRowsUi(tableRows);
+        console.log("TableRows",TableRows)
+        setRowsUi(TableRows);
+      }
+     
+
+     
+
+      
 
     } catch (error) {
       console.error('Fetching data error:', error);
