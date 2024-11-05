@@ -105,8 +105,14 @@ const createGroop = async (req, res) => {
 
     const finalRoutes = newRoutes.flat();
 
+    const uniqueFinalRoutes = finalRoutes.filter((item, index, self) =>
+      index === self.findIndex((t) => (
+          t.route === item.route
+      ))
+  )
+
     // Uncomment to save the new group
-    const newGroop = new Groop({ groopName, groopUsers, groopRoutes: finalRoutes });
+    const newGroop = new Groop({ groopName, groopUsers, groopRoutes: uniqueFinalRoutes });
     const savedGroop = await newGroop.save();
     await User.updateMany(
       { _id: { $in: groopUsers } },
@@ -236,7 +242,12 @@ const updateGroop = async (req, res) => {
 
 
   const finalRoutes = newRoutes.flat();
-
+  
+  const uniqueFinalRoutes = finalRoutes.filter((item, index, self) =>
+    index === self.findIndex((t) => (
+        t.route === item.route
+    ))
+)
 
 
 
@@ -244,7 +255,7 @@ const updateGroop = async (req, res) => {
 
     // Update group details (name, routes, users)
     existingGroop.groopName = groopName || existingGroop.groopName;
-    existingGroop.groopRoutes = finalRoutes || existingGroop.groopRoutes;
+    existingGroop.groopRoutes = uniqueFinalRoutes || existingGroop.groopRoutes;
     existingGroop.groopUsers = groopUsers || existingGroop.groopUsers;
 
     // Save the updated group

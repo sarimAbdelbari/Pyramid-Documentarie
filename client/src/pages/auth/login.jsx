@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import LogoPngChiali from "/assets/images/LogoPngChiali.png";
+import LogoPngChiali from "/assets/images/LogoPngChiali.webp";
 import signUpImg from '/assets/images/signUpImg.jpg';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';

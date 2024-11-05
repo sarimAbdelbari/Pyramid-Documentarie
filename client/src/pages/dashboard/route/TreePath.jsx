@@ -132,10 +132,10 @@ const renderNodeWithCustomEvents = ({ nodeDatum, toggleNode, wrapper, setTooltip
 
 const fetchData = async ()=>{
    try {
-    console.log("first")
+
     setIsLoading(true);
     
-    console.log("sec")
+
     const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
     
 

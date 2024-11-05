@@ -69,13 +69,13 @@ const CreateUser = ({ onClose, user }) => {
   // if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-lg">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50 p-3 md:p-5 lg:p-7">
+      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-lg h-full overflow-y-auto flex flex-col justify-between">
         <h2 className="text-xl font-semibold dark:text-white mb-4">
           {!user ? "Créer un utilisateur" : "Mettre à jour l'utilisateur"}
         </h2>
         <div className="mb-4">
-          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom D`&apos;utilisateur</label>
+          <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom D&apos;utilisateur</label>
           <input
             type="text"
             value={selectedUser.userName}

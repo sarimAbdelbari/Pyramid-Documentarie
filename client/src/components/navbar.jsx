@@ -5,7 +5,7 @@ import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { ThemeContext } from '@/contexts/themeProvider';
 import { useStateContext } from '@/contexts/ContextProvider';
-import LogoPngChiali from '/assets/images/LogoPngChiali.png';
+import LogoPngChiali from '/assets/images/LogoPngChiali.webp';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { IoIosLogOut } from "react-icons/io";

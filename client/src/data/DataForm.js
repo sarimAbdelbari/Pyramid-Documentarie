@@ -100,53 +100,51 @@ const View4Data = {
 const viewOptions = [
     {
       name: "View1",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View1.webp`,
       titre: "Voir 1",
     },
     {
       name: "View2",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View2.webp`,
       titre: "Voir 2",
     },
     {
       name: "View3",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View3.webp`,
       titre: "Voir 3",
     },
     {
       name: "View4",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View4.webp`,
       titre: "Voir 4",
     },
     {
       name: "View5",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View5.webp`,
       titre: "Voir 5",
     },
     {
       name: "TableView",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/TableView.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/TableView.webp`,
       titre: "Vue de table",
     },
     {
       name: "PdfReader",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/PdfReader.webp`,
       titre: "Lecteur PDF",
     },
     {
       name: "ExcelReader",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/ExcelReader.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/ExcelReader.webp`,
       titre: "Lecteur Excel",
     },
     {
       name: "WordReader",
-      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/WordReader.png`,
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/WordReader.webp`,
       titre: "Lecteur Word",
     },
   ];
 
-  const localeText = {
-    
-  }
+ 
 
 export  {mainPageImages , View4Data ,viewOptions};

@@ -4,11 +4,14 @@ import GroopCard from "@/components/GroopCard";
 import { CiCirclePlus } from "react-icons/ci";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
 import CreateGroop from "@/pages/dashboard/Groop/CreateGroop";
-
+import UpdateGroop from "@/pages/dashboard/Groop/UpdateGroop";
+import DuplicateGroop from "@/pages/dashboard/Groop/DuplicateGroop";
 const TableGroop = () => {
   const [groopData, setGroopData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isModalDuplicateOpen, setIsModalDuplicateOpen] = useState(false);
   const [selectedGroop, setSelectedGroop] = useState(null); // Track the group to delete
 
   useEffect(() => {
@@ -28,7 +31,7 @@ const TableGroop = () => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/groop/${id}`);
       setGroopData(groopData.filter(groop => groop._id !== id));
-      setIsModalOpen(false); // Close modal after deletion
+      setIsModalOpen(false); 
       sucess_toast("Le groop a été supprimé avec succès");
     } catch (error) {
       console.error('Error deleting groop:', error);
@@ -37,13 +40,13 @@ const TableGroop = () => {
   };
 
   const openDeleteModal = (id) => {
-    setSelectedGroop(id); // Set the group to delete
-    setIsModalOpen(true);  // Open the modal
+    setSelectedGroop(id); 
+    setIsModalOpen(true);  
   };
 
   const closeDeleteModal = () => {
     setIsModalOpen(false);
-    setSelectedGroop(null); // Clear selection on close
+    setSelectedGroop(null); 
   };
 
   const AreYouSure = () => {
@@ -72,32 +75,52 @@ const TableGroop = () => {
     );
   };
   
-  const handleCloseCreateUserModal = () => {
+  const handleCloseCreateModal = () => {
     setIsModalCreateOpen(false);
   };
-  const handleOpenCreateUserModal = () => {
+  const handleOpenCreateModal = () => {
     setIsModalCreateOpen(true);
   };
+
+  const openUpdateComponent = (id) =>{
+    setSelectedGroop(id);
+    setIsModalUpdateOpen(true);
+  }
+  const openDuplicateComponent = (id) =>{
+    setSelectedGroop(id);
+    setIsModalDuplicateOpen(true);
+  }
   
+ 
+  const handleCloseUpdateModal = () => {
+    setSelectedGroop(null);
+    setIsModalUpdateOpen(false);
+  }
+  const handleCloseDuplicateModal = () => {
+    setSelectedGroop(null);
+    setIsModalDuplicateOpen(false);
+  }
+
   return (
-    <div className="py-10 px-4 lg:px-12  overflow-y-auto h-screen">
+    <div className="py-10 px-4 lg:px-12 ">
       <h3 className="text-center text-4xl font-medium text-black dark:text-textSecDarkColor mt-4 mb-6">
         Gestion des Groops
       </h3>
-      <div className="flex flex-wrap gap-10 justify-center ">
-        <div className="bg-white dark:bg-gray-800 min-h-96   shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-center items-center min-w-[600px] w-full md:w-[540px] lg:w-[580px]  duration-300 hover:scale-105 hover:shadow-2xl">
-          <div onClick={handleOpenCreateUserModal} className="flex flex-col items-center justify-center cursor-pointer">
+      <div className="grid grid-flow-rows grid-cols-1  xl:grid-cols-2  gap-4 md:gap-6   ">
+        <div className="bg-white dark:bg-gray-800 h-full min-h-96   shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-center items-center  duration-300 hover:scale-105 hover:shadow-2xl">
+          <div onClick={handleOpenCreateModal} className="flex flex-col items-center justify-center cursor-pointer">
             <CiCirclePlus className="text-6xl text-textSecLightColor hover:bg-textSecLightColor hover:text-white p-2 rounded-full duration-300 ease-in-out" />
           </div>
         </div>
         {groopData.map((groop) => (
-          <GroopCard key={groop._id} groop={groop} onDelete={openDeleteModal} />
+          <GroopCard key={groop._id} groop={groop} onDelete={openDeleteModal} OnUpdateOpen={openUpdateComponent} OnDuplicateOpen={openDuplicateComponent} />
         ))}
       </div>
 
       {isModalOpen && <AreYouSure />}
-
-      {isModalCreateOpen && <CreateGroop onClose={handleCloseCreateUserModal}  />}
+      {isModalCreateOpen && <CreateGroop onClose={handleCloseCreateModal}  />}
+      {isModalUpdateOpen && <UpdateGroop onClose={handleCloseUpdateModal}  groop={selectedGroop} />}
+      {isModalDuplicateOpen && <DuplicateGroop onClose={handleCloseDuplicateModal}  groop={selectedGroop} />}
     </div>
   );
 };

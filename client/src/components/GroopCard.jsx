@@ -5,19 +5,16 @@ import { useEffect, useState } from "react";
 import { HiMiniPlusSmall ,HiMiniMinusSmall} from "react-icons/hi2";
 import { GoDuplicate } from "react-icons/go";
 
-const GroopCard = ({ groop, onDelete }) => {
+const GroopCard = ({ groop, onDelete ,OnUpdateOpen ,OnDuplicateOpen }) => {
   const [openRoutes, setOpenRoutes] = useState({}); // Track open/close state of each route
   const [organizedRoutes, setOrganizedRoutes] = useState([]);
-  const [isModalDuplicateOpen,setIsModalDuplicateOpen] = useState(false);
-  // Toggle function for opening/closing accordions based on a unique key
+
   const toggleAccordion = (key) => {
     setOpenRoutes((prevState) => ({
       ...prevState,
       [key]: !prevState[key],
     }));
   };
-
-  // Function to organize routes into parent-child hierarchy
   const organizeRoutes = (routes) => {
     const routeMap = {};
     const rootRoutes = [];
@@ -47,12 +44,12 @@ const GroopCard = ({ groop, onDelete }) => {
     organizeRoutes(groop.groopRoutes);
   }, [groop]);
 
-  // Recursive function to render routes and their children
+
   const renderRoutes = (routes, depth = 0, parentKey = "") => (
     routes.map((routePermission, index) => {
-      const key = `${parentKey}-${index}`; // Unique key for each route, including nested ones
-      const isOpen = openRoutes[key]; // Determine if the current route is open
-
+      const key = `${parentKey}-${index}`; 
+      const isOpen = openRoutes[key];
+  
       return (
         <div key={key} className="border-b border-slate-200 overflow-y-auto px-3" >
           <button
@@ -77,32 +74,37 @@ const GroopCard = ({ groop, onDelete }) => {
             className={`transition-all duration-300 ease-in-out overflow-y-auto
               ${isOpen ? 'max-h-[500px] pb-5' : 'max-h-0'}`}
           >
-            <div className="text-sm text-slate-500 dark:text-gray-400 flex flex-col gap-4" >
+            {(routePermission?.route?.view === 'PdfReader' || routePermission?.route?.view === 'ExcelReader' || routePermission?.route?.view === 'WordReader') && (
+              
+              <div className="text-sm text-slate-500 dark:text-gray-400 flex flex-col gap-4" >
               <p>
                 Permission:{" "}
                 <span
                   className={`font-medium ${
                     routePermission?.route?.view.includes('PdfReader')
-                      ? 'text-red-600'
+                      ? 'text-[#980100]'
                       : routePermission?.route?.view.includes('ExcelReader')
-                      ? 'text-green-600'
+                      ? 'text-[#005217]'
+                      : routePermission?.route?.view.includes('WordReader')
+                      ? 'text-[#2B579A]' 
                       : 'text-textSecLightColor'
-                  }`}
-                >
+                      }`}
+                      >
                   {routePermission.permission === 'Download' ? 'Télécharger' : 'Pas de telechargement'}
                 </span>
               </p>
               <p className="text-xs text-textSecLightColor font-light " >{routePermission.route.details}</p>
               {routePermission.route.file && (
                 <a
-                  href={`${import.meta.env.VITE_PUBLIC_URLFILE}/${routePermission.route.file}`}
-                  download
-                  className="text-primary hover:text-darkPrimary my-2 underline"
+                href={`${import.meta.env.VITE_PUBLIC_URLFILE}/${routePermission.route.file}`}
+                download
+                className="text-primary hover:text-darkPrimary my-2 underline"
                 >
                   Télécharger le fichier  
                 </a>
               )}
             </div>
+)}
 
             {/* Recursively render child routes if present */}
             {routePermission.route.children.length > 0 && (
@@ -117,12 +119,17 @@ const GroopCard = ({ groop, onDelete }) => {
   );
 
   return (
-    <div className="relative bg-white dark:bg-gray-800 min-h-96 shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-between min-w-[600px] w-full md:w-[540px] lg:w-[580px] duration-300 hover:scale-105 hover:shadow-2xl">
+    <div className="relative bg-white dark:bg-gray-800 shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-between  h-full min-h-96    duration-300 hover:scale-105 hover:shadow-2xl">
       <h2 className="text-2xl font-semibold my-4 text-center text-gray-800 dark:text-gray-200">
         {groop.groopName}
       </h2>
-      <Link to={`/dashboard/groop/duplicate/${groop._id}`} className="absolute top-9 right-9" onClick={() => setIsModalDuplicateOpen(!isModalDuplicateOpen)}><GoDuplicate  className="text-2xl hover:scale-125 text-textSecLightColor hover:text-textLightColor cursor-pointer ease-in-out duration-300"/>
-      </Link>
+    
+      <div 
+          onClick={()=> OnDuplicateOpen(groop._id)}
+           className="absolute top-9 right-9"
+        >
+          <GoDuplicate  className="text-2xl hover:scale-125 text-textSecLightColor hover:text-textLightColor cursor-pointer ease-in-out duration-300"/>
+        </div>
      <div className="absolute top-0 right-0"></div>
       <div className="mb-4 bg-gray-50 bg-opacity-50 dark:bg-gray-700 rounded-lg p-4 shadow-md">
         <div className="mb-4  overflow-y-auto px-4">
@@ -156,12 +163,12 @@ const GroopCard = ({ groop, onDelete }) => {
       </div>
 
       <div className="flex justify-between items-center">
-        <Link 
-          to={`/dashboard/groop/update/${groop._id}`} 
+        <div 
+          onClick={()=> OnUpdateOpen(groop._id)}
           className="bg-gray-100 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-xl flex items-center gap-2 transition-colors"
         >
           <Button Text="Mise à jour" Icon={<FaEdit />} />
-        </Link>
+        </div>
         <button
           onClick={() => onDelete(groop._id)}
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-2xl transition-colors"

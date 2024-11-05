@@ -146,11 +146,11 @@ const CreateGroop = ({onClose}) => {
 
   return (
    
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center  z-40 " >
-      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl ">
-        <h2 className="text-xl font-semibold dark:text-white mb-4">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center  z-40 p-5 md:p-7 lg:p-10 " >
+      <div className="bg-white dark:bg-gray-800 px-9 py-7 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl  h-full overflow-y-auto flex flex-col justify-between ">
+        <h3 className="text-xl font-semibold dark:text-white mb-4">
           Créer un Groop
-        </h2>
+        </h3>
         <div className="mb-4">
           <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300 ">
             Nom du groupe
@@ -200,8 +200,8 @@ const CreateGroop = ({onClose}) => {
               value={showPages ? optionsfiles.find((option) => option.value === routePermissionPair.route) || null :
                 optionsPages.find((option) => option.value === routePermissionPair.route) || null
               }
-              onChange={onChangeRoute}
               options={showPages ? optionsfiles : optionsPages}
+              onChange={onChangeRoute}
               isSearchable
               placeholder={showPages ? "Sélectionner une page" : "Sélectionner un fichier"}
               className="w-full rounded-md focus:outline-none focus:border-b-secLightBg z-20 max-h-20"
@@ -216,7 +216,8 @@ const CreateGroop = ({onClose}) => {
           </div>
         </div>
         <div className="p-4  grid grid-flow-row gap-4 max-h-64 overflow-y-auto">
-          {selectedRoutes.map((pair, index) => (
+        {selectedRoutes.length > 0 && (
+          selectedRoutes.map((pair, index) => (
             <div
               key={index}
               className="flex justify-between items-center px-3 py-3 border-gray-300 shadow-md dark:bg-gray-700 dark:text-white p-2 rounded-lg"
@@ -231,7 +232,7 @@ const CreateGroop = ({onClose}) => {
                 Supprimer
               </button>
             </div>
-          ))}
+          )) )}
         </div>
         <div className="mt-6 flex justify-end space-x-4">
             <div onClick={onClose}>
