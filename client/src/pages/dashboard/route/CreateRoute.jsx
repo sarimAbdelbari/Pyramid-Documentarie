@@ -25,6 +25,8 @@ import { FaRegFileWord } from "react-icons/fa";
 
 const CreateRoute = ({ routeId, parrentId }) => {
 
+
+
   const {
     isLoading,
     setIsLoading,
@@ -98,18 +100,22 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
       setRoutes(data);
 
-      if (parrentId.view == "TableView") {
+      if (parrentId) {
         setSelectedParrent({
           value: parrentId?.value,
           label: parrentId?.label,
         });
 
-        setParrentData(parrentId.data);
+        
+        if(parrentId.data){
+          
+          setParrentData(parrentId.data);
+          const dataFields = Object.entries(
+            parrentId.data.data?.tableCol || {}
+          ).map(([tableCol, value]) => ({ tableCol, value }));
+          setDataFields(dataFields);
 
-        const dataFields = Object.entries(
-          parrentId.data.data?.tableCol || {}
-        ).map(([tableCol, value]) => ({ tableCol, value }));
-        setDataFields(dataFields);
+        }
       }
 
       if (routeId) {

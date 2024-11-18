@@ -11,7 +11,6 @@ import axios from 'axios';
 import { FaTimes, FaChevronDown } from "react-icons/fa";
 import { TbRouteScan } from "react-icons/tb";
 import { MdOutlineLocalPolice } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
 export default function SideBar() {
   const [dropdowns, setDropdowns] = useState({
     users: false,
@@ -19,7 +18,6 @@ export default function SideBar() {
     permissions: false,
   });
 
-  const navigate = useNavigate();
 
 
   useEffect(() => {

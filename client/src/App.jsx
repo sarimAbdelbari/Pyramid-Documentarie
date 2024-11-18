@@ -31,6 +31,7 @@ import View6 from "@/Routes/views/view6";
 import ExcelReader from "@/Routes/readers/excelReader";
 
 import WordReader from "@/Routes/readers/wordReader";
+import TableauDeBord from "@/pages/dashboard/Statistiques/tableauDeBord";
 
 const App = () => {
   const { theme } = useContext(ThemeContext);
@@ -67,12 +68,12 @@ const App = () => {
                   </div>
                   <div className="w-4/5">
                     <Routes>
-                      {/* <Route
+                      <Route
                         path="/dashboard/TableauDeBord"
                         element={
-                            
+                            <TableauDeBord/>
                         }
-                      /> */}
+                      />
                       <Route
                         path="/dashboard/users/table"
                         element={<Users />}

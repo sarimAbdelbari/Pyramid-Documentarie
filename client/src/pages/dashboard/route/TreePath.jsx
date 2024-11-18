@@ -307,6 +307,8 @@ const fetchData = async ()=>{
 
   const AddChildRoute = (nodeData) => {
     setSelectedNode(null);
+
+
     setParrentId({
       value: nodeData._id,
       label: nodeData.path,
