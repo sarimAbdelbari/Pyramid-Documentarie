@@ -1,6 +1,8 @@
 import React from 'react';
-// import TopTenUsers from '@/components/statistiques/topTenUsers';
+import TopTenUsers from '@/components/statistiques/topTenUsers';
 import PieDocuments from '@/components/statistiques/pieDocuments'
+import BoxOfCards from '@/components/statistiques/boxOfCards';
+import ActiveGroops from '@/components/statistiques/activeGroops';
 
 const TableauDeBord = () => {
   return (
@@ -10,8 +12,10 @@ const TableauDeBord = () => {
       </div>
 
       <div>
-        {/* <TopTenUsers/> */}
+        <TopTenUsers/>
         <PieDocuments/>
+        <BoxOfCards/>
+        <ActiveGroops/>
       </div>
     </div>
   )

@@ -35,28 +35,36 @@ const PieDocuments = () => {
     }
 
     const size = {
-        width: 400,
-        height: 200,
+        width: 500,
+        height: 300,
     };
+   
 
     return (
+        <div className="m-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
+            <div   style={{ padding: '2rem', maxWidth: '900px', margin: 'auto' }}>
+        <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1rem',
+        }}
+      >
+        <h2 style={{ fontSize: '1.5rem', fontWeight: '600' }}>Information sur les document</h2>
+       
+      </div>
+
         <PieChart
             series={[
                 {
-                    arcLabel: (item) => (<>{`${item.value}`}</>),
-
-                    // arcLabel: (item) => (
-                    //     <span className='text-white font-bold'>
-                    //       ${`${item.label}: ${item.value}%`}
-                    //     </span>
-                    //   ),
-
+                    arcLabel: (item) => `${item.value}`,
                     arcLabelMinAngle: 20,
                     arcLabelRadius: '70%',
                     innerRadius: '50%', // Optional: To create a donut chart
-                    
-                    ...pieData,
-                },
+                        
+                        ...pieData,
+                    },
             ]}
             sx={{
                 [`& .${pieArcLabelClasses.root}`]: {
@@ -67,7 +75,10 @@ const PieDocuments = () => {
                 },
             }}
             {...size}
-        />
+            />
+            </div>
+        </div>
+        
     );
 };
 

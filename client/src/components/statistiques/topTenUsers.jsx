@@ -17,7 +17,7 @@ const TopTenUsers = () => {
     <div style={{ padding: '2rem', maxWidth: '900px', margin: 'auto' }}>
       <div
         style={{
-          display: 'flex',
+          display: 'flex', 
           justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: '1rem',

@@ -197,7 +197,7 @@ const UpdateGroop = ({groop ,onClose}) => {
           setGroopName("");
           setSelectedRoutes([]);
           setSelectedUsers([]);
-    
+          onClose()
           sucess_toast("Groop updated successfully");
     
         } catch (error) {

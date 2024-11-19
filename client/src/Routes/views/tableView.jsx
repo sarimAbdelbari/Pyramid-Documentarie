@@ -3,6 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
+import { FcExpired } from "react-icons/fc";
+import { FcDocument } from "react-icons/fc";
 
 const TableView = ({ route ,preview }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -63,12 +65,8 @@ const TableView = ({ route ,preview }) => {
           const status = diffInHours > 24 ? 'expired' : 'new';
 
           return (
-            <div className='flex justify-center items-center py-2'>
-              <img
-                src={`${import.meta.env.VITE_PUBLIC_URL1}/${status === 'expired' ? 'expired.webp' : 'new.jpg'}`}
-                alt={status}
-                className='w-14'
-              />
+            <div className='flex justify-center items-center py-2 h-full'>
+              {status === 'expired' ? <FcExpired className='text-3xl' /> : <FcDocument className='text-3xl'/>}
             </div>
           );
         },
@@ -97,7 +95,6 @@ const TableView = ({ route ,preview }) => {
           };
         });
 
-        console.log("tableRows ::: ;;;" ,tableRows);
         setRowsUi(tableRows);
          
       } else {
@@ -108,7 +105,6 @@ const TableView = ({ route ,preview }) => {
           ...row.data.tableRow.reduce((acc, current) => ({ ...acc, ...current }), {}),
         }))
 
-        console.log("TableRows",TableRows)
         setRowsUi(TableRows);
       }
      
