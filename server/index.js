@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const routeRoutes = require("./routes/routeRoute");
 const userRoutes = require('./routes/usersRoute');
+const statRoutes = require('./routes/statRoutes')
 const groopRoutes = require('./routes/groopRoute');
 const authRoutes = require('./routes/authRoute');
 const mongoose = require('mongoose');
@@ -20,13 +21,24 @@ app.use((req, res, next) => {
 });
 
 // * Configure CORS options
+// const corsOptions = {
+//     origin: '*',
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true,
+//     optionsSuccessStatus: 200
+//   };
+
+// , 'http://10.10.4.62:5173'
+
 const corsOptions = {
-  origin: 'http://localhost:5173',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 200
+    origin: process.env.CorsOptionsOriginLocal,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 200
 };
 
+
+//  ? my phone IP Adress 192.168.137.195
 // * Use CORS middleware
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
@@ -35,9 +47,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 //  * Routes
-app.use('/api/route', routeRoutes);
+app.use('/api/route' ,  routeRoutes);
 app.use('/api/groop', groopRoutes);
 app.use('/api/users' , userRoutes);
+app.use('/api/stats' , statRoutes);
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
@@ -50,6 +63,9 @@ const startServer = async () => {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
+        // app.listen(PORT, () => {
+        //     console.log(`Server is running on port ${PORT}`);
+        // });
 
       // * Ensure  successful database connection.
       await mongoose.connect(process.env.MONGO_URI);
@@ -61,3 +77,14 @@ const startServer = async () => {
 
 // * Potantial For Seperating the Index to (A Server.js and An App.js)
 startServer();
+
+
+
+// * allow opening of the express server ()
+
+// const corsOptions = {
+//     origin: 'http://localhost:5173',
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true,
+//     optionsSuccessStatus: 200
+//   };

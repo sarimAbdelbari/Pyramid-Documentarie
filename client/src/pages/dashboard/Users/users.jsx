@@ -1,144 +1,246 @@
-import { useEffect, useState } from 'react';
-import Navbar from '@/components/navbar';
-import SideBar from '@/components/sidebar';
-import { DataGrid } from '@mui/x-data-grid';
-import { useStateContext } from '@/contexts/ContextProvider';
-import axios from 'axios';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import { sucess_toast, error_toast } from '@/utils/toastNotification';
+import { useContext, useEffect, useState } from "react";
+import { DataGrid   } from "@mui/x-data-grid";
+import { useStateContext } from "@/contexts/ContextProvider";
+import axios from "axios";
+import Button from "@/components/button";
+import { CiEdit } from "react-icons/ci";
+import { AiOutlineDelete } from "react-icons/ai";
+import { sucess_toast, error_toast } from "@/utils/toastNotification";
+import { ThemeContext } from '@/contexts/themeProvider';
+import CreateUser from "@/pages/dashboard/Users/CreateUser"; // Import CreateUser component
+import { FaUncharted } from "react-icons/fa6";
+import { LuUserCheck2 } from "react-icons/lu";
+import { LuUserX2 } from "react-icons/lu";
+import { TbUsersGroup } from "react-icons/tb";
+import { RiAdminFill } from "react-icons/ri";
+import { CiCircleCheck } from "react-icons/ci";
+import { LiaUsersSolid } from "react-icons/lia";
 
 const Users = () => {
-  const { isLoading } = useStateContext();
+  const { isLoading ,setIsLoading} = useStateContext();
   const [usersData, setUsersData] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState('');
-  const [selectedUser, setSelectedUser] = useState({ userName: '', email: '', password: '', groop: '' });
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState([]);
+  const [groopList, setGroopList] = useState([]);
+  const [usersStats, setUsersStats] = useState({});
+
+  const { theme } = useContext(ThemeContext);
+
+  const groopOptions = groopList.map((groop) => ({
+    value: groop._id,
+    label: groop.groopName,
+  }));
+
 
   useEffect(() => {
     fetchUsers();
+    const savedVisibilityModel = localStorage.getItem("columnVisibilityModelUsers");
+    if (savedVisibilityModel) {
+      setColumnVisibilityModel(JSON.parse(savedVisibilityModel));
+    }
   }, []);
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/users`);
-      console.log(data);
-      const dataWithId = data.map((user, index) => ({ ...user, id: index + 1 }));
+      setIsLoading(true);
+      const { data: usersData } = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+      const { data: groopData } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
+
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/user`);
+
+      setUsersStats(response.data);
+
+      setGroopList(groopData);
+
+      const dataWithId = usersData?.map((user, index) => ({
+        ...user,
+        id: index + 1,
+      }));
+
       setUsersData(dataWithId);
     } catch (error) {
-      error_toast('Failed to fetch users');
+      setIsLoading(false);
+      error_toast("Impossible de récupérer les utilisateurs");
       console.error(error);
-    }
-  };
-
-  const handleCreateUser = async () => {
-    try {
-      const { data } = await axios.post(`http://localhost:5000/api/users`, selectedUser);
-      sucess_toast('User created successfully');
-      setUsersData(prevState => [...prevState, { ...data, id: prevState.length + 1 }]);
-      handleCloseDialog();
-    } catch (error) {
-      error_toast('Failed to create user');
-      console.error(error);
-    }
-  };
-
-  const handleUpdateUser = async () => {
-    try {
-      const { data } = await axios.patch(`http://localhost:5000/api/users/${selectedUser._id}`, selectedUser);
-      sucess_toast('User updated successfully');
-      setUsersData(prevState => prevState.map(user => (user._id === data._id ? { ...data, id: user.id } : user)));
-      handleCloseDialog();
-    } catch (error) {
-      error_toast('Failed to update user');
-      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteUser = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userToDelete._id}`);
-      sucess_toast('User deleted successfully');
-      setUsersData(prevState => prevState.filter(user => user._id !== userToDelete._id));
+      setIsLoading(true);
+      await axios.delete(`h${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
+      sucess_toast("L'utilisateur a été supprimé avec succès");
+      setUsersData((prevState) =>
+        prevState.filter((user) => user._id !== userToDelete._id)
+      );
       handleCloseConfirmDialog();
     } catch (error) {
-      error_toast('Failed to delete user');
+      setIsLoading(false);
+      error_toast("Impossible de supprimer l'utilisateur");
       console.error(error);
+    } finally{
+      setIsLoading(false)
     }
   };
 
   const columns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'userName', headerName: 'User Name', flex: 2 },
-    { field: 'email', headerName: 'Email', flex: 2 },
-    { field: 'groop', headerName: 'Groop', flex: 2 },
-    { field: 'createdAt', headerName: 'Created At', flex: 1 },
-    { field: 'updatedAt', headerName: 'Updated At', flex: 1 },
+    { field: "id", headerName: "ID", flex: 1 },
+    { field: "userName", headerName: "Nom d'utilisateur", flex: 2 },
+    { field: "email", headerName: "Email", flex: 2 },
     {
-      field: 'actions', headerName: 'Actions', flex: 1, renderCell: (params) => (
-        <>
-          <IconButton 
-            onClick={() => handleOpenDialog('update', params.row)}
-            className="text-primary hover:text-darkPrimary transition-colors duration-300"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton 
+      field: "groop",
+      headerName: "Group",
+      flex: 2,
+      renderCell: (params) => {
+        const groopLabels = (params.row.groop || [])
+          .map((groopId) => groopOptions.find((option) => option.value === groopId)?.label)
+          .filter((label) => label);
+        return groopLabels.map((label, index) => (
+          <span key={index} className="bg-primary p-2 mx-2 text-white dark:bg-darkPrimary dark:text-gray-100 rounded-xl">
+            {label || "No Group"}
+          </span>
+        ));
+      },
+    },
+    {
+      field: "active",
+      headerName: "Actif",
+      flex: 1,
+      renderCell: (params) => (params.row.active ? <CiCircleCheck className="text-2xl my-auto h-full text-green-800 font-bold" /> : null),
+    },
+    {
+      field: "admin",
+      headerName: "Admin",
+      flex: 1,
+      renderCell: (params) => (params.row.admin ? <CiCircleCheck className="text-2xl my-auto h-full text-yellow-600 font-bold" /> : null),
+    },
+    { field: "createdAt", headerName: "Créé à", flex: 1 },
+    { field: "updatedAt", headerName: "Mis à jour à", flex: 1 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="flex items-center gap-3 justify-center h-full">
+          <CiEdit
+            onClick={() => handleEditUser(params.row)}
+            className="text-primary dark:text-textDarkColor hover:text-darkPrimary dark:hover:text-primary duration-300 text-2xl cursor-pointer hover:scale-125 ease-in-out"
+          />
+          <AiOutlineDelete
             onClick={() => handleOpenConfirmDialog(params.row)}
-            className="text-accent hover:text-darkAccent transition-colors duration-300"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
-      )
-    }
+            className="text-accent dark:text-textDarkColor hover:text-darkAccent dark:hover:text-red-500 duration-300 text-2xl cursor-pointer hover:scale-125 ease-in-out"
+          />
+        </div>
+      ),
+    },
   ];
-
-  const handleOpenDialog = (type, user = { userName: '', email: '', password: '', groop: '' }) => {
-    setDialogType(type);
-    setSelectedUser(user);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedUser({ userName: '', email: '', password: '', groop: '' });
-  };
 
   const handleOpenConfirmDialog = (user) => {
     setUserToDelete(user);
-    setOpenConfirmDialog(true);
+    setShowConfirmDialog(true);
   };
 
   const handleCloseConfirmDialog = () => {
-    setOpenConfirmDialog(false);
+    setShowConfirmDialog(false);
   };
 
-  return  (
-    <div className='min-h-screen bg-mainLightBg dark:bg-mainDarkBg text-textLightColor '>
-      <Navbar />
-      <SideBar />
-      <div className='pt-28 flex flex-col items-center gap-7'>
-        <h3 className='text-3xl font-semibold text-textLightColor  dark:text-textDarkColor leading-relaxed'>Users</h3>
-        <Button 
-          variant="contained" 
-          className='bg-primary hover:bg-darkPrimary text-white shadow-lg rounded-xl'
-          startIcon={<AddIcon />} 
-          onClick={() => handleOpenDialog('create')}
-        >
-          Create User
-        </Button>
-        <div className='w-full max-w-7xl  shadow-2xl rounded-lg' style={{ height: '600px' }}>
+  const handleEditUser = (user) => {
+
+    setUserToEdit(user);
+    setShowCreateUserModal(true);
+  };
+
+  const handleCloseCreateUserModal = () => {
+    setShowCreateUserModal(false);
+    setUserToEdit(null);
+  };
+
+  const handleColumnVisibilityChange = (newModel) => {
+    setColumnVisibilityModel(newModel);
+    localStorage.setItem("columnVisibilityModelUsers", JSON.stringify(newModel));
+  };
+
+
+  return (
+    <>
+      <div className="pt-11 flex flex-col items-center gap-3">
+        <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
+          Utilisateurs
+        </h3>
+        <div onClick={() => setShowCreateUserModal(true)}>
+          <Button Text="Crée un utilisateur" />
+        </div>
+        <div className="w-full">
+  <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
+    {/* Active Users */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center gap-3 text-green-600 dark:text-green-400 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Nombre de  Utilisateurs</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-xl font-medium text-blue-600 dark:text-blue-400">
+        <LiaUsersSolid  />
+        <p>{usersStats?.totalUsers}</p>
+      </div>
+    </div>
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center gap-3 text-green-600 dark:text-green-400 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Utilisateurs actifs</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-xl font-medium text-green-600 dark:text-green-400">
+        <LuUserCheck2 />
+        <p>{usersStats?.active}</p>
+      </div>
+    </div>
+    
+    {/* Deactivated Users */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center gap-3  text-red-500 dark:text-red-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Utilisateurs Désactivent</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-xl font-medium text-red-600 dark:text-red-400">
+        <LuUserX2 />
+        <p>{usersStats?.disActive}</p>
+      </div>
+    </div>
+
+    {/* Common Group */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center gap-3 text-purple-500 dark:text-purple-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Groupe commun</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-xl font-medium text-purple-600 dark:text-purple-400">
+        <TbUsersGroup />
+        <p>{usersStats?.numberOftheMostCommunGroop} {usersStats?.most_common_groop?.groopName}</p>
+      </div>
+    </div>
+
+    {/* Admin Accounts */}
+    <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-center gap-3 text-yellow-500 dark:text-yellow-300 text-lg font-semibold">
+        <p className="text-lg text-textLightColor">Comptes administrateur</p>
+        <FaUncharted className="text-xl text-textLightColor" />
+      </div>
+      <div className="flex items-center gap-4 text-xl font-medium text-yellow-600 dark:text-yellow-400">
+        <RiAdminFill />
+        <p>{usersStats?.admins}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+   
+      <div className="w-full">
+      <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px"  }}>
           <DataGrid
             rows={usersData}
             columns={columns}
@@ -146,92 +248,85 @@ const Users = () => {
             rowsPerPageOptions={[10, 25, 50]}
             disableSelectionOnClick
             checkboxSelection={false}
-            loading={isLoading} 
-            className='m-4  border-none bg-[#f9fafb] text-textLightColor '
+            loading={isLoading}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={handleColumnVisibilityChange}
+            // localeText={frFRCore}
+            className="m-4 border-none text-textLightColor dark:text-gray-100 "
             sx={{
-              // Row background color
-              '& .MuiDataGrid-row': {
-                backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1f2937' : '#f9fafb',
-                '&:nth-of-type(even)': {
-                  backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#111827' : '#e5e7eb',
+              "& .MuiDataGrid-root": {
+                backgroundColor: theme === "dark" ? "#1E293B" : "#FFFFFF",
+              },
+              "& .MuiDataGrid-row": {
+                backgroundColor: theme === "dark" ? "#1E293B" : "#FFFFFF",
+                "&:nth-of-type(even)": {
+                  backgroundColor: theme === "dark" ? "#111827" : "#F3F4F6",
                 },
-                '&:hover:nth-of-type(even)': {
-                  backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#2d3748' : '#e2e8f0', // Customize hover color here
-                },
-                // Row hover color
-                '&:hover': {
-                  backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#2d3748' : '#e2e8f0', // Customize hover color here
+                "&:hover": {
+                  backgroundColor: theme === "dark" ? "#334155" : "#E5E7EB",
                 },
               },
-              // Row text color
-              '& .MuiDataGrid-cell': {
-                color: (theme) => theme.palette.mode === 'dark' ? '#e5e7eb' : '#1f2937', // Customize text color here
+              "& .MuiDataGrid-cell": {
+                color: theme === "dark" ? "#F9FAFB" : "#1F2937",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: theme === "dark" ? "#1E293B" : "#F9FAFB",
+                color: theme === "dark" ? "#F9FAFB" : "#1F2937",
+              },
+              "& .MuiDataGrid-footerContainer": {
+                backgroundColor: theme === "dark" ? "#1E293B" : "#F9FAFB",
+                color: theme === "dark" ? "#F9FAFB" : "#1F2937",
               },
             }}
           />
         </div>
       </div>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>{dialogType === 'create' ? 'Create User' : 'Update User'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="User Name"
-            value={selectedUser.userName}
-            onChange={(e) => setSelectedUser({ ...selectedUser, userName: e.target.value })}
-            fullWidth
-            margin="normal"
-            className="text-primary"
+        
+      </div>
+
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white">
+            <h2 className="text-xl font-semibold dark:text-white">
+              Confirmer la suppression
+            </h2>
+            <p className="mt-4 text-textLightColor dark:text-gray-300">
+              Êtes-vous sûr de vouloir supprimer{" "}
+              <span className="font-semibold text-primary dark:text-darkPrimary">
+                {userToDelete?.userName}
+              </span>{" "}
+              ?
+            </p>
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                onClick={handleCloseConfirmDialog}
+                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleDeleteUser}
+                className="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded hover:bg-red-700 dark:hover:bg-red-400"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showCreateUserModal && (
+        <>
+        <CreateUser
+          user={userToEdit}
+          onClose={handleCloseCreateUserModal}
+          onSave={() => {
+            fetchUsers(); // Refresh user list after saving
+            handleCloseCreateUserModal();
+          }}
           />
-          <TextField
-            label="Email"
-            value={selectedUser.email}
-            onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Password"
-            type="password"
-            value={selectedUser.password}
-            onChange={(e) => setSelectedUser({ ...selectedUser, password: e.target.value })}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Groop"
-            value={selectedUser.groop}
-            onChange={(e) => setSelectedUser({ ...selectedUser, groop: e.target.value })}
-            fullWidth
-            margin="normal"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button 
-            onClick={dialogType === 'create' ? handleCreateUser : handleUpdateUser} 
-            color="primary"
-          >
-            {dialogType === 'create' ? 'Create' : 'Update'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete {userToDelete?.userName}?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteUser} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+      </>
+      )}
+    </>
   );
 };
 

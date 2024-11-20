@@ -6,32 +6,74 @@ const createToken = (_id) => {
 };
 
 const loginUser = async (req, res) => {
-    const {email, password} = req.body
-  
+    
+    
+    const { email, password } = req.body;
+
     try {
-      const user = await User.login(email, password)
-  
-      // create a token
-      const token = createToken(user._id)
-  
-       // Set the token in a cookie
-       res.cookie('token', token, { 
-        httpOnly: true, 
-        maxAge: 24 * 60 * 60 * 1000 ,
-        secure: true,
-      });
+        const user = await User.login(email, password);
 
+        // create a token
+        const token = createToken(user._id);
 
-      res.status(200).json({email, token})
+        // Set the token in a cookie
+        res.cookie('token', token, { 
+            httpOnly: true, 
+            maxAge: 24 * 60 * 60 * 1000,
+            secure: false, 
+            sameSite: 'Lax' // Use 'Lax' for development over HTTP
+        });
+
+        
+        res.status(200).json({ email, token , user});
     } catch (error) {
-      res.status(400).json({error: error.message})
+        res.status(400).json({ error: error.message });
     }
-  }
-  
-  module.exports = { loginUser }
-  // ? Haker so3odi 
-  // eyJhbGciOiJlUzl1NllslnR5cCl6lkpXVCJ9.eyJpZCl6ljElLCJpYXQlOjE3MjE4MDg4NzEslmV4cCl6MTcyMjY5NTl3MX0.j9v9pqe1pJVCfpzw8YB2qquKySOg6cdjQYCycyPd12Q
+}
 
+const logoutUser = async (req, res) => {
+    try {
+
+        res.clearCookie('token', {
+            httpOnly: true, 
+            maxAge: 24 * 60 * 60 * 1000,
+            secure: false, 
+            sameSite: 'Lax' // Use 'Lax' for development over HTTP
+        })
+
+
+        // console.log(res.getHeaders())
+
+        res.status(200).json({ message: 'Déconnexion réussie' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Impossible de se déconnecter' });
+    }
+}
+
+const checkAuth = async (req, res) => {
+    try {
+        
+        const user = await User.findById(req.userId); // Retrieve the user using the userId set in the middleware
+
+
+        if (!user) {
+            return res.status(404).json({ authenticated: false, message: 'Utilisateur non trouvé' });
+        }
+
+        res.status(200).json({ authenticated: true, user }); // Send back the user data and authentication status
+    } catch (error) {
+        res.status(500).json({ authenticated: false, message: 'Erreur de serveur' });
+    }
+};
+
+
+
+module.exports = { loginUser, logoutUser , checkAuth};
+
+
+
+  
 // * signup user 
 
 // const signupUser = async (req, res) => {

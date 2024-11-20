@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-import forms from '@tailwindcss/forms';
+// import forms from '@tailwindcss/forms';
 
 export default {
   darkMode: 'class',
@@ -12,21 +12,24 @@ export default {
     extend: {
       colors: {
         mainLightBg: '#f2f2f2', // Slightly darker off-white background
-        secLightBg: '#d0d0d0', // Medium light gray background
-        mainDarkBg: '#001f3f', // Deeper navy blue background
-        secDarkBg: '#00274d', // Darker blue background
+        secLightBg: '#f2f4f8', // Medium light gray background
+        lightCyen:'#f2f4f8',
+        secDarkBg: '#001428', // Deeper navy blue background
+        mainDarkBg: '#002040', // Darker blue background
         textLightColor: '#1c1c1c', // Darker gray text
         textSecLightColor: '#3f3f3f', // Darker medium gray text
         textDarkColor: '#e0e0e0', // Lighter almost white text
         textSecDarkColor: '#a8a8a8', // Slightly darker light gray text
         darkPrimary: '#002060', // Darker blue
-        primary: '#0056b3', // Darker bright blue
+        primary: '#423cf3', // Darker bright blue
+        secPrimary: '#9292d4', // Darker bright blue
+        blueish:'#423cf3',
         accent: '#ff5c5c', // Darker coral
         darkAccent: '#c62839', // Darker deep pink
       },
     },
-  },
-  plugins: [
-    forms,
-  ],
+  }
+  // plugins: [
+  //   forms,
+  // ],
 }
