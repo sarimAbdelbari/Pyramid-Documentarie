@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
 
 const useRouteAuth = () => {
-  const { routeData, setRouteData, userInfo} = useStateContext();
+  const { routeData, setRouteData, userInfo , setIsLoading} = useStateContext();
 
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const useRouteAuth = () => {
       
       try {
  
-
+        setIsLoading(true)
         const responseGroop = await axios.post(`${import.meta.env.VITE_API_URL}/groop/all` ,{
           groupsIds: userInfo?.groop
         });
@@ -52,7 +52,10 @@ const useRouteAuth = () => {
         setRouteData(responseRoutes.data);
 
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching route data:", error);
+      } finally{
+        setIsLoading(false)
       }
     };
     

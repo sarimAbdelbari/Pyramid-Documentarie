@@ -21,13 +21,12 @@ export default function TreePath() {
 
   const { theme } = useContext(ThemeContext);
   const [data, setData] = useState(null);
-  const { setShowNew, showNew ,setShowLivePreview , showLivePreview} = useStateContext();
+  const { setShowNew, showNew ,setShowLivePreview , showLivePreview ,isLoading,setIsLoading} = useStateContext();
   const [tooltip, setTooltip] = useState({
     visible: false,
     position: { x: 0, y: 0 },
     data: {}
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [translate, containerRef] = useCenteredTree();
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -231,6 +230,7 @@ const fetchData = async ()=>{
       const routeId  = nodeToDelete._id;
 
       try {
+        setIsLoading(true)
         await axios.delete(`${import.meta.env.VITE_API_URL}/route/${routeId}`);
 
         
@@ -246,8 +246,11 @@ const fetchData = async ()=>{
         sucess_toast('Nœud supprimé avec succès');
 
       } catch (error) {
+        setIsLoading(false)
         console.error('Erreur lors de la suppression du nœud:', error);
         error_toast('Erreur lors de la suppression du nœud');
+      } finally {
+        setIsLoading(false)
       }
     }
   };
@@ -356,7 +359,7 @@ const fetchData = async ()=>{
               // initialDepth={0}
               separation={{ siblings: 2, nonSiblings: 2 }}
               allowForeignObjects={true}
-              
+              loading={isLoading}
               />
             }
               {contextMenu.visible && <ContextMenu position={contextMenu.position} onDelete={handleDeleteNode} nodeData={contextMenu.nodeData} />}

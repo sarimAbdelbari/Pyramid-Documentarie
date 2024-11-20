@@ -5,11 +5,12 @@ import { useStateContext } from '@/contexts/ContextProvider';
 
 const View3 = ({ route ,preview}) => {
   const [data, setData] = useState([]);
-  const { routeData } = useStateContext();
+  const { routeData  } = useStateContext();
 
   useEffect(() => {
     const getViewData = async () => {
       try {
+      
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
@@ -27,8 +28,9 @@ const View3 = ({ route ,preview}) => {
           setData(response.data);
         }
       } catch (error) {
+      
         console.error('Error fetching view data:', error);
-      }
+      } 
     };
 
     getViewData();

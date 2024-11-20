@@ -7,7 +7,6 @@ import { FcExpired } from "react-icons/fc";
 import { FcDocument } from "react-icons/fc";
 
 const TableView = ({ route ,preview }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [columnsUi, setColumnsUi] = useState([]);
   const [rowsUi, setRowsUi] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({});
@@ -16,7 +15,7 @@ const TableView = ({ route ,preview }) => {
 
   const fetchData = async () => {
     try {
-      setIsLoading(true);
+     
 
       // Create dynamic columns based on route data
       const col = Object.keys(route.data.tableCol).map((field) => ({
@@ -76,7 +75,7 @@ const TableView = ({ route ,preview }) => {
 
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`);
       if (response.data.length === 0) {
-        setIsLoading(false);
+        
         return;
       }
 
@@ -114,9 +113,11 @@ const TableView = ({ route ,preview }) => {
       
 
     } catch (error) {
+
+      
       console.error('Fetching data error:', error);
     } finally {
-      setIsLoading(false);
+ 
     }
   };
 
@@ -151,7 +152,6 @@ const TableView = ({ route ,preview }) => {
             rows={rowsUi}
             columns={columnsUi}
             autoHeight
-            loading={isLoading}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={handleColumnVisibilityChange}
             rowHeight={80}

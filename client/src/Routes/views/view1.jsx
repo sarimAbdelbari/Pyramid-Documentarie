@@ -28,7 +28,10 @@ const View1 = ({ route ,preview}) => {
           setData(response.data);
         }
       } catch (error) {
+        
         console.error(error);
+      } finally {
+        
       }
     };
 

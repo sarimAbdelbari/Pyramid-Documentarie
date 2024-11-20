@@ -13,7 +13,7 @@ import Button from "@/components/button";
 
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
-  const { setVisible, userInfo } = useStateContext();
+  const { setVisible, userInfo ,setIsLoading } = useStateContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleTheme = () => {
@@ -22,10 +22,14 @@ const Navbar = () => {
   
   const handleLogout = async () => {
     try {
+      setIsLoading(true)
       await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, { withCredentials: true });
       window.location.href = '/login';
     } catch (error) {
+      setIsLoading(false)
       console.error('Error logging out:', error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -40,7 +44,7 @@ const Navbar = () => {
         <Link to="/principal" className="flex items-center gap-4 flex-1" onClick={() => setVisible(true)}>
           <img
             src={LogoPngChiali}
-            className="w-12 md:w-16 hover:scale-105 transition-transform object-contain"
+            className="w-12 md:w-16 h-full  hover:scale-105 transition-transform object-contain"
             alt="LogoPngChiali"
           />
         </Link>
@@ -67,8 +71,8 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <img
-              src={`${import.meta.env.VITE_PUBLIC_URL1}/profileImage.avif`}
-              className="w-10 md:w-12 rounded-full object-contain"
+              src={`${import.meta.env.VITE_PUBLIC_URL1}/profileImage.webp`}
+              className="w-10 md:w-12 h-full rounded-full object-contain"
               alt="Profile"
             />
             <div className="hidden md:flex flex-col text-left">

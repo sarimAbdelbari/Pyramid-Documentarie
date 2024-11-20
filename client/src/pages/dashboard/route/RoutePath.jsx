@@ -17,7 +17,7 @@ import { CiRoute } from "react-icons/ci";
 import { SiReactrouter } from "react-icons/si";
 
 const Routes = () => {
-  const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch } = useStateContext();
+  const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch ,setIsLoading} = useStateContext();
   const [routesData, setRoutesData] = useState([]);
   const [routesStats, setRoutesStats] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState(null);
@@ -39,6 +39,7 @@ const Routes = () => {
 
   const fetchRoutes = async () => {
     try {
+      setIsLoading(true);
       const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/route`);
 
@@ -50,12 +51,15 @@ const Routes = () => {
       }));
       setRoutesData(dataWithId);
     } catch (error) {
+      setIsLoading(false)
       error_toast(
         `Échec de la récupération des routes: ${
           error.response ? error.response.data.message : error.message
         }`
       );
       console.error(error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -119,6 +123,7 @@ const Routes = () => {
 
   const handleDeleteRoute = async () => {
     try {
+      setIsLoading(true)
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/route/${routeToDelete}`
       );
@@ -128,12 +133,15 @@ const Routes = () => {
       );
       handleCloseConfirmDialog();
     } catch (error) {
+      setIsLoading(false)
       error_toast(
         `Échec de la suppression de la route: ${
           error.response ? error.response.data.message : error.message
         }`
       );
       console.error(error);
+    } finally {
+      setIsLoading(false)
     }
   };
 

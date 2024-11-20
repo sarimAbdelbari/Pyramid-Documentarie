@@ -3,11 +3,9 @@ import useFetchData from '@/hooks/useFetchData';
 
 const TopTenUsers = () => {
   // Fetch data using your custom hook
-  const { data, loading, error } = useFetchData(`${import.meta.env.VITE_API_URL}/users/TopUsers`);
+  const { data, error } = useFetchData(`${import.meta.env.VITE_API_URL}/users/TopUsers`);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+ 
 
   if (error) {
     return <div>Error: {error}</div>;

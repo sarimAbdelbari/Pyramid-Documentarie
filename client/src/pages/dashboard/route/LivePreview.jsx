@@ -16,6 +16,32 @@ const LivePreview = (selectedNode) => {
   
   const preview = true;
 
+ // Function to render the appropriate component
+ const renderView = () => {
+  const view = selectedNode?.routeId?.view;
+  switch (view) {
+    case "View1":
+      return <View1 route={selectedNode?.routeId} preview={preview} />;
+    case "View2":
+      return <View2 route={selectedNode?.routeId} preview={preview} />;
+    case "View3":
+      return <View3 route={selectedNode?.routeId} preview={preview} />;
+    case "View4":
+      return <View4 route={selectedNode?.routeId} preview={preview} />;
+    case "View5":
+      return <View5 route={selectedNode?.routeId} preview={preview} />;
+    case "TableView":
+      return <TableView route={selectedNode?.routeId} preview={preview} />;
+    case "PdfReader":
+      return <PdfReader route={selectedNode?.routeId} preview={preview} />;
+    case "ExcelReader":
+      return <ExcelReader route={selectedNode?.routeId} preview={preview} />;
+    case "WordReader":
+      return <WordReader route={selectedNode?.routeId} preview={preview} />;
+    default:
+      return <p>No view available</p>; // A fallback message or component
+  }
+};
   return (
 
     <div className="absolute top-0 left-0 w-full h-screen bg-secLightBg bg-opacity-65 flex justify-center items-center p-9" style={{zIndex: 100}}>
@@ -27,15 +53,7 @@ const LivePreview = (selectedNode) => {
       <div className="pointer-events-none">
 
       <Navbar/>
-     {selectedNode?.routeId?.view === "View1" && <View1 route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "View2" && <View2 route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "View3" && <View3 route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "View4" && <View4 route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "View5" && <View5 route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "TableView" && <TableView route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "PdfReader" && <PdfReader route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "ExcelReader" && <ExcelReader route={selectedNode?.routeId} preview={preview} />}
-     {selectedNode?.routeId?.view === "WordReader" && <WordReader route={selectedNode?.routeId} preview={preview} />}
+      {renderView()}
       </div>
      </div>
     </div>

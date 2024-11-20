@@ -4,6 +4,7 @@ import Button from "@/components/button";
 import Select from "react-select";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CheckButton from "@/components/checkButton";
+import { useStateContext } from '@/contexts/ContextProvider';
 
 const CreateUser = ({ onClose, user }) => {
   const [selectedUser, setSelectedUser] = useState(user || {
@@ -17,13 +18,19 @@ const CreateUser = ({ onClose, user }) => {
 
   const [groopOptions, setGroopOptions] = useState([]);
   
+  const {setIsLoading} = useStateContext();
+
   useEffect(() => {
     const fetchGroopOptions = async () => {
       try {
+        setIsLoading(true);
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
         setGroopOptions(data.map(groop => ({ value: groop._id, label: groop.groopName })));
       } catch (error) {
+        setIsLoading(false);
         console.error("Failed to fetch groops", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -39,6 +46,7 @@ const CreateUser = ({ onClose, user }) => {
 
   const handleCreateUser = async () => {
     try {
+      setIsLoading(true);
        await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
 
       sucess_toast("Utilisateur créé avec succès");
@@ -46,14 +54,17 @@ const CreateUser = ({ onClose, user }) => {
       onClose();
 
     } catch (error) {
+      setIsLoading(false);
       error_toast("Échec de la création de l'utilisateur");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleUpdateUser = async () => {
     try {
-
+      setIsLoading(true)
       await axios.patch(`${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`, selectedUser);
    
       sucess_toast("Mise à jour de l'utilisateur réussie");
@@ -61,12 +72,15 @@ const CreateUser = ({ onClose, user }) => {
       onClose();
       
     } catch (error) {
+      setIsLoading(false)
       error_toast("Échec de la mise à jour de l'utilisateur");
       console.error(error);
+    } finally{
+
+      setIsLoading(false)
     }
   };
 
-  // if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50 p-3 md:p-5 lg:p-7">

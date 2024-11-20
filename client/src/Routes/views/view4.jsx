@@ -13,6 +13,7 @@ const View4 = ({ route , preview }) => {
   useEffect(() => {
     const getViewData = async () => {
       try {
+       
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
@@ -26,12 +27,12 @@ const View4 = ({ route , preview }) => {
           setData(newRoutes);
           
         } else {
-          
           setData(response.data);
         }
       } catch (error) {
+       
         console.error('Error fetching view data:', error);
-      }
+      } 
     };
 
     getViewData();

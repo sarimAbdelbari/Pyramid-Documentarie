@@ -10,6 +10,7 @@ import {
 import CheckButton from "@/components/checkButton";
 import Button from "@/components/button";
 import { MdOutlineFileDownload ,MdOutlineFileDownloadOff } from "react-icons/md";
+import { useStateContext } from '@/contexts/ContextProvider';
 
 
 const DuplicateGroop = ({groop ,onClose}) => {
@@ -26,7 +27,7 @@ const DuplicateGroop = ({groop ,onClose}) => {
       permission: 'NoDownload',
       type: "file",
     });
-  
+   const {setIsLoading} = useStateContext()
     const optionsUsers = users.map((user) => ({
       value: user._id,
       label: user.userName,
@@ -110,7 +111,7 @@ const DuplicateGroop = ({groop ,onClose}) => {
       const fetchData = async () => {
     
         try {
-    
+          setIsLoading(true);
           const responseFiles = await axios.get(
             `${import.meta.env.VITE_API_URL}/route/files`
           );
@@ -156,7 +157,10 @@ const DuplicateGroop = ({groop ,onClose}) => {
           }
     
         } catch (error) {
+          setIsLoading(false);
           console.error(error);
+        } finally {
+          setIsLoading(false)
         }
       };
     
@@ -169,6 +173,7 @@ const DuplicateGroop = ({groop ,onClose}) => {
     
       const handleSubmit = async () => {
         try {
+          setIsLoading(true)
           if (!groopName) {
             info_toast("Nom du groupe doit être renseigné");
             return;
@@ -196,8 +201,11 @@ const DuplicateGroop = ({groop ,onClose}) => {
           sucess_toast("Groop Created successfully");
     
         } catch (error) {
+          setIsLoading(false)
           error_toast("Erreur lors de la mise à jour du groupe :");
           console.error("Error:", error.response?.data);
+        } finally {
+          setIsLoading(false)
         }
       };
       const changeType = (showPages) => {

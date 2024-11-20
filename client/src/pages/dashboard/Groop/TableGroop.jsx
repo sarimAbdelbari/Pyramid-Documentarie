@@ -3,6 +3,7 @@ import axios from "axios";
 import GroopCard from "@/components/GroopCard";
 import { CiCirclePlus } from "react-icons/ci";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
+import { useStateContext } from '@/contexts/ContextProvider';
 import CreateGroop from "@/pages/dashboard/Groop/CreateGroop";
 import UpdateGroop from "@/pages/dashboard/Groop/UpdateGroop";
 import DuplicateGroop from "@/pages/dashboard/Groop/DuplicateGroop";
@@ -13,14 +14,18 @@ const TableGroop = () => {
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isModalDuplicateOpen, setIsModalDuplicateOpen] = useState(false);
   const [selectedGroop, setSelectedGroop] = useState(null); // Track the group to delete
-
+ const {setIsLoading} =useStateContext()
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true)
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
         setGroopData(response.data);
       } catch (error) {
+        setIsLoading(false)
         console.error('Error fetching groop data:', error);
+      } finally {
+        setIsLoading(false)
       }
     };
 
@@ -29,13 +34,17 @@ const TableGroop = () => {
 
   const handleDelete = async (id) => {
     try {
+      setIsLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/groop/${id}`);
       setGroopData(groopData.filter(groop => groop._id !== id));
       setIsModalOpen(false); 
       sucess_toast("Le groop a été supprimé avec succès");
     } catch (error) {
+      setIsLoading(false)
       console.error('Error deleting groop:', error);
       error_toast("Impossible de supprimer le groop");
+    } finally {
+      setIsLoading(false);
     }
   };
 

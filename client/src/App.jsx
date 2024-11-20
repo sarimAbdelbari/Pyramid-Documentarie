@@ -38,6 +38,7 @@ const App = () => {
   const isAuthenticated = useAuth();
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
+  const {isLoading } = useStateContext();
 
   return (
     <div className="min-h-screen bg-[#f2f4f8] dark:bg-secDarkBg ">
@@ -53,6 +54,7 @@ const App = () => {
         pauseOnHover
         theme={theme}
       />
+      {isLoading && <LoadingScreen />}
 
       {isAuthenticated ? (
         <div className="px-4 lg:px-8">

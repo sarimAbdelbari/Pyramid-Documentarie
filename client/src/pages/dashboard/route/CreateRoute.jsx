@@ -16,7 +16,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { fr } from "date-fns/locale";
+import { fr, se } from "date-fns/locale";
 import { CiImageOn } from "react-icons/ci";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileExcel } from "react-icons/fa";
@@ -28,7 +28,6 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
 
   const {
-    isLoading,
     setIsLoading,
     showNew,
     setShowNew,
@@ -96,6 +95,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
   const fetchRoutes = async () => {
     try {
+      setIsLoading(true);
       const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route/pages`);
 
       setRoutes(data);
@@ -140,6 +140,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
         setDataRowFields(routeId?.data?.tableRow || []);
       }
     } catch (error) {
+      setIsLoading(false)
       console.error(
         `Impossible de récupérer les routes: ${
           error.response ? error.response.data.message : error.message
@@ -217,6 +218,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
   const handleCreateRoute = async () => {
     try {
+      setIsLoading(true)
       if (!selectedRoute.path.includes("/")) {
         info_toast("Le chemin de la route doit contenir un '/'.");
         return;
@@ -243,12 +245,15 @@ const CreateRoute = ({ routeId, parrentId }) => {
       setShowNew(false);
       setReloadfetch(!reloadfetch);
     } catch (error) {
+      setIsLoading(false)
       error_toast(
         `Échec de la création de route: ${
           error.response ? error.response.data.message : error.message
         }`
       );
       console.error(error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -305,23 +310,36 @@ const CreateRoute = ({ routeId, parrentId }) => {
   };
 
   const parrentSData = async (id) => {
-    const dataWithId = await axios.get(
-      `${import.meta.env.VITE_API_URL}/route/${id}`
-    );
+    try {
+      setIsLoading(true)
+      if(id) {
 
-    setParrentData(dataWithId.data);
+        const dataWithId = await axios.get(
+          `${import.meta.env.VITE_API_URL}/route/${id}`
+        );
+        
+        setParrentData(dataWithId.data);
+      } else {
+        error_toast("id Is Not valid")
+      }
+      
+    } catch (error) {
+      setIsLoading(false)
+      console.error(error)
+      error_toast("id Is Not valid")
+
+    } finally {
+      setIsLoading(false)
+    }
+
   };
 
   const onChangeParrentPath = async (selectedOption) => {
-    // const pathArray =  selectedRoute.path.split("/");
-
-    // const path = pathArray[pathArray.length - 1]
-    console.log("selectedOption", selectedOption.value);
 
     setSelectedRoute({
       ...selectedRoute,
       parrentPath: selectedOption.value,
-      // path: `${selectedOption.label}/${path}`,
+
     });
 
     await parrentSData(selectedOption.value);
@@ -338,7 +356,6 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
   return (
     <>
-      {isLoading && <LoadingScreen />}
       <Dialog
         open={showNew}
         onClose={closeDialog}

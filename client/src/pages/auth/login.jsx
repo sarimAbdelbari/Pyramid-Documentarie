@@ -3,13 +3,12 @@ import LogoPngChiali from "/assets/images/LogoPngChiali.webp";
 import signUpImg from '/assets/images/signUpImg.jpg';
 import axios from 'axios';
 import { useStateContext } from '@/contexts/ContextProvider';
-import LoadingScreen from "@/utils/loadingScreen";
 import { sucess_toast, warn_toast } from "@/utils/toastNotification";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { LuEye } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
 const Login = () => {
-  const { isLoading, setIsLoading ,setUserInfo  ,setIsAuthenticated } = useStateContext();
+  const { setIsLoading ,setUserInfo  ,setIsAuthenticated } = useStateContext();
   const [isShowPassword , setIsShowPassword] = useState(false);
   const [values, setValues] = useState({
     email: '',
@@ -43,11 +42,9 @@ const Login = () => {
     }
   };
   
-// bg-[#a1a1a148] 
-// bg-[#dfdcdc48] 
+
   return (
     <>
-      {isLoading && <LoadingScreen />}
       <div className="min-h-screen flex justify-center items-center bg-cover bg-center bg-no-repeat h-full" style={{ backgroundImage: `url(${signUpImg})` }}>
         <div className="bg-[#61616177]  shadow-2xl shadow-black flex flex-col items-center justify-center px-16 py-6 mx-5 border border-transparent rounded-3xl lg:px-32">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm pointer-events-none">
@@ -106,10 +103,6 @@ const Login = () => {
                 </button>
               </div>
             </div>
-
-            {/* <p className="mt-10 text-center text-xl text-white cursor-pointer ">
-              Reset Pasword 
-            </p> */}
             <p className="mt-10 text-center text-sm text-textDarkColor">
               Conditions générales {'Link To It'}
             </p>

@@ -4,6 +4,8 @@ import Button from "@/components/button";
 import { FaFileDownload } from "react-icons/fa";
 
 const WordReader = ({route}) => {
+
+
   const wordUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
 

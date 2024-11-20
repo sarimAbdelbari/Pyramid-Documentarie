@@ -3,7 +3,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 const ImageModal = ({ onClose, imgSrc }) => {
   return (
     <>
-      <></>
+      
       <div className="fixed  inset-0 bg-gray-600 bg-opacity-50 z-50">
         <div className="h-full w-full flex justify-center items-center relative">
           <IoCloseCircleOutline

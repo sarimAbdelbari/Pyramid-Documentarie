@@ -15,7 +15,7 @@ import { TbUsersGroup } from "react-icons/tb";
 import { RiAdminFill } from "react-icons/ri";
 import { CiCircleCheck } from "react-icons/ci";
 import { LiaUsersSolid } from "react-icons/lia";
-// import { frFR as frFRCore } from '@mui/material/locale';
+
 const Users = () => {
   const { isLoading ,setIsLoading} = useStateContext();
   const [usersData, setUsersData] = useState([]);
@@ -72,6 +72,7 @@ const Users = () => {
 
   const handleDeleteUser = async () => {
     try {
+      setIsLoading(true);
       await axios.delete(`h${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
       sucess_toast("L'utilisateur a été supprimé avec succès");
       setUsersData((prevState) =>
@@ -79,8 +80,11 @@ const Users = () => {
       );
       handleCloseConfirmDialog();
     } catch (error) {
+      setIsLoading(false);
       error_toast("Impossible de supprimer l'utilisateur");
       console.error(error);
+    } finally{
+      setIsLoading(false)
     }
   };
 

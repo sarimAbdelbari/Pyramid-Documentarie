@@ -21,6 +21,7 @@ const CreateGroop = ({onClose}) => {
   
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const responseFiles = await axios.get(`${import.meta.env.VITE_API_URL}/route/files`);
       const responsePages = await axios.get(`${import.meta.env.VITE_API_URL}/route/pages`);
       const responseUsers = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
@@ -28,7 +29,10 @@ const CreateGroop = ({onClose}) => {
       setFiles(responsePages.data);
       setUsers(responseUsers.data);
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
+    } finally{
+      setIsLoading(false)
     }
   };
 
@@ -104,6 +108,7 @@ const CreateGroop = ({onClose}) => {
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true)
       if (!groopName) {
         info_toast("Nom du groupe doit être renseigné");
         return;
@@ -135,8 +140,11 @@ const CreateGroop = ({onClose}) => {
      
       sucess_toast("Groop created successfully");
     } catch (error) {
+      setIsLoading(false)
       error_toast("Erreur lors de la création du groupe :");
       console.error("Error:", error.response?.data);
+    } finally {
+      setIsLoading(false)
     }
   };
   const changeType = (showPages) => {

@@ -5,12 +5,13 @@ import { useStateContext } from '@/contexts/ContextProvider';
 
 const View2 = ({ route , preview}) => {
   const [data, setData] = useState([]);
-  const { routeData } = useStateContext();
+  const { routeData ,} = useStateContext();
 
 
   useEffect(() => {
     const getViewData = async () => {
       try {
+        
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
@@ -24,12 +25,12 @@ const View2 = ({ route , preview}) => {
           setData(newRoutes);
           
         } else {
-          
           setData(response.data);
         }
       } catch (error) {
+        
         console.error(error);
-      }
+      } 
     };
 
     getViewData();
