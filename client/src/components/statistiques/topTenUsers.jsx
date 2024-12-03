@@ -12,7 +12,7 @@ const TopTenUsers = () => {
   }
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '900px', margin: 'auto' }}>
+    <div style={{ padding: '2rem', margin: 'auto' , width: '100%' }}>
       <div
         style={{
           display: 'flex', 
@@ -26,38 +26,27 @@ const TopTenUsers = () => {
       </div>
 
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          gap: '1rem',
-        }}
+        className='flex gap-3 flex-wrap justify-center items-center'
       >
         {data &&
           data.map((item, index) => (
             <div
               key={item.user._id}
-              style={{
-                textAlign: 'center',
-                padding: '1rem',
-                border: '1px solid #ddd',
-                borderRadius: '12px',
-                background: '#fff',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              }}
+              className='text-center p-3 rounded-2xl flex  gap-3 justify-center items-center bg-lightCyen shadow-xl dark:bg-mainDarkBg dark:shadow-white'
             >
-              <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{`${index + 1}st`}</div>
+              <p style={{ fontSize: '1.25rem', fontWeight: '600' }}>{`${index + 1}st`}</p>
               <img
                 src={`https://ui-avatars.com/api/?name=${item.user.userName}&background=random`}
                 alt={`${item.user.userName}`}
                 style={{
-                  width: '80px',
-                  height: '80px',
+                  width: '45px',
+                  height: '45px',
                   borderRadius: '50%',
                   margin: '0.5rem auto',
                 }}
               />
-              <div style={{ fontSize: '1.1rem', fontWeight: '500' }}>{item.user.userName}</div>
-              <div style={{ color: '#888', fontSize: '0.9rem' }}>{item.user.email}</div>
+              <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>{item.user.userName}</p>
+              <p style={{ color: '#888', fontSize: '0.9rem' }}>{item.user.email}</p>
               <div style={{ marginTop: '0.5rem', fontSize: '1rem', fontWeight: '600' }}>
                 {item["routes count"]} Documents
               </div>

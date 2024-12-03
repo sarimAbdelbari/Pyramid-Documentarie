@@ -168,7 +168,7 @@ const Users = () => {
 
   return (
     <>
-      <div className="pt-11 flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-3 bg-white dark:bg-secDarkBg py-4 px-5 rounded-3xl">
         <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
           Utilisateurs
         </h3>
@@ -176,7 +176,7 @@ const Users = () => {
           <Button Text="Crée un utilisateur" />
         </div>
         <div className="w-full">
-  <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
+  <div className=" shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
     {/* Active Users */}
     <div className="min-w-64 bg-white dark:bg-secDarkBg rounded-lg p-4 flex flex-col gap-5 border-2 border-[#02020218] shadow-md hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-center gap-3 text-green-600 dark:text-green-400 text-lg font-semibold">
@@ -240,7 +240,7 @@ const Users = () => {
 
    
       <div className="w-full">
-      <div className="mx-5 shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px"  }}>
+      <div className=" shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px"  }}>
           <DataGrid
             rows={usersData}
             columns={columns}

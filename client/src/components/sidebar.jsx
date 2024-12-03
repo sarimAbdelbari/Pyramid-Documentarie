@@ -45,52 +45,39 @@ export default function SideBar() {
     }
   };
   return (
-    <div className='fixed w-1/5 h-3/4 flex flex-col gap-3 justify-between overflow-auto mt-11  rounded-3xl  bg-white dark:bg-mainDarkBg py-4 px-5 z-30 shadow-2xl dark:shadow-white transition-transform duration-700 ease-in-out'>
+    <div className=' flex flex-col gap-3 justify-between  rounded-3xl  py-4 dark:shadow-white transition-transform duration-700 ease-in-out'>
       <div className='flex flex-col gap-3'>
-        <p className='text-sm lg:text-md font-medium text-gray-600 dark:text-gray-200 uppercase'>Menu</p>
-        <div className='pl-2 flex flex-col gap-1'>
+        <p className='text-sm lg:text-md font-medium  text-gray-500 dark:text-gray-200 p-4'>Dashboard</p>
+        <div className='flex flex-col gap-1'>
           {/* Dashboard */}
-          <Link to='/dashboard/TableauDeBord' className='flex items-center gap-4  text-sm lg:text-base text-textSecLightColor dark:text-textDarkColor hover:bg-[#ececfe] dark:hover:text-textLightColor hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-            <RxDashboard />
+          <Link to='/dashboard/TableauDeBord' className='flex items-center gap-4  text-sm lg:text-base text-black dark:text-textDarkColor hover:bg-[#ececfe] dark:hover:text-textLightColor hover:text-primary p-4 rounded-xl transition-colors duration-300'>
+            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><RxDashboard  /></span>
             Tableau de bord
           </Link>
 
           {/* Users Section */}
           <div className='flex flex-col items-start text-sm lg:text-base'>
-            <button
-              className='flex justify-between items-center w-full p-4 dark:hover:text-textLightColor text-textSecLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
+            <Link to="/dashboard/users/table"
+              className='flex justify-between items-center w-full p-4 dark:hover:text-textLightColor text-black dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
               onClick={() => toggleDropdown('users')}
             >
               <span className='flex gap-4 items-center'>
-                <PiUsersThin />
+              <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><PiUsersThin  /></span>
                 Utilisateurs
               </span>
-              {dropdowns.users ? <FaTimes /> : <FaChevronDown />}
-            </button>
-            <div
-              className={`pl-4 flex flex-col  w-full transition-all duration-500 overflow-hidden ${
-                dropdowns.users ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-              <Link className='w-full flex items-center gap-3 dark:hover:text-textLightColor hover:bg-[#ececfe] hover:text-primary dark:text-textDarkColor p-4 rounded-xl transition-colors duration-300'>
-                <IoCreateOutline />
-                Créer
-              </Link>
-              <Link to='/dashboard/users/table' className='w-full flex items-center gap-3 dark:hover:text-textLightColor hover:bg-[#ececfe] hover:text-primary dark:text-textDarkColor p-4 rounded-xl transition-colors duration-300'>
-                <CiViewTable />
-                Tableau
-              </Link>
-            </div>
+            </Link>
+           
           </div>
 
           {/* Routes Section */}
           <div className='flex flex-col gap-4 items-start text-sm lg:text-base'>
             <button
-              className='flex justify-between items-center w-full p-4 text-textSecLightColor dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
+              className='flex justify-between items-center w-full p-4 text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
               onClick={() => toggleDropdown('routes')}
             >
               <span className='flex gap-4 items-center'>
-                <TbRouteScan />
+              <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><TbRouteScan  /></span>
+
                 Pages
               </span>
               {dropdowns.routes ? <FaTimes /> : <FaChevronDown />}
@@ -100,12 +87,9 @@ export default function SideBar() {
                 dropdowns.routes ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <Link  className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-                <IoCreateOutline />
-                Créer
-              </Link>
+           
               <Link to='/dashboard/route/table' className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-                <CiViewTable />
+                <CiViewTable  />
                 Tableau
               </Link>
               <Link to='/dashboard/route/tree' className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
@@ -117,51 +101,41 @@ export default function SideBar() {
 
           {/* Permissions Section */}
           <div className='flex flex-col gap-4 items-start text-sm lg:text-base'>
-            <button
-              className='flex justify-between items-center w-full p-4 text-textSecLightColor dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
+            <Link to='/dashboard/groop/table'
+              className='flex justify-between items-center w-full p-4 text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
               onClick={() => toggleDropdown('permissions')}
             >
               <span className='flex gap-4 items-center'>
-                <MdOutlineLocalPolice />
+              <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><MdOutlineLocalPolice  /></span>
+
                 Autorisations
               </span>
-              {dropdowns.permissions ? <FaTimes /> : <FaChevronDown />}
-            </button>
-            <div
-              className={`pl-4 flex flex-col gap-3 w-full transition-all duration-500 overflow-hidden ${
-                dropdowns.permissions ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-              <Link className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-                <IoCreateOutline />
-                Créer
-              </Link>
-              <Link to='/dashboard/groop/table' className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-                <PiCards />
-                Cartes
-              </Link>
-            </div>
+            </Link>
+          
           </div>
         </div>
       </div>
 
       {/* Application Section */}
       <div className='flex flex-col gap-3 text-sm lg:text-base'>
-        <p className='text-md font-medium text-gray-600 dark:text-gray-200 uppercase'>Application</p>
+        <p className='text-sm lg:text-md font-medium  text-gray-500 dark:text-gray-200 p-4'>Application</p>
         <div className='pl-4 flex flex-col '>
-          <div className='cursor-pointer flex gap-4 items-center text-textSecLightColor dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-            <GrUpdate />
+          <div className='cursor-pointer flex gap-4 items-center text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
+            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><GrUpdate  /></span>
+
             Mises à jour
           </div>
-          <div className='cursor-pointer flex gap-4 items-center text-textSecLightColor dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-            <IoSettingsOutline />
+          <div className='cursor-pointer flex gap-4 items-center text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
+            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><IoSettingsOutline  /></span>
+
             Paramètres
           </div>
           <div
             onClick={() => handleLogout()}
             className='cursor-pointer flex gap-4 items-center text-red-600 dark:text-red-400 hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'
           >
-            <IoIosLogOut />
+            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><IoIosLogOut  /></span>
+
             Déconnexion
           </div>
         </div>

@@ -335,7 +335,7 @@ const fetchData = async ()=>{
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <div className='pt-7 bg-secLightBg dark:bg-secDarkBg'>
+        <div className=' bg-secLightBg dark:bg-secDarkBg'>
           <div className="flex flex-row justify-center items-center">
             <h3 className="text-3xl pt-3 font-semibold text-black dark:text-textDarkColor">Les Pages</h3>
           </div>

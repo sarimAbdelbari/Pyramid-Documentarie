@@ -64,7 +64,7 @@ const App = () => {
 
               {/* Admin Routes */}
               {userInfo?.admin ? (
-                <div className="flex pb-11 justify-center gap-10 ">
+                <div className="flex justify-center gap-10 ">
                   <div className="w-1/5 ">
                     <SideBar />
                   </div>

@@ -4,7 +4,7 @@ import Select from "react-select";
 import Button from "@/components/button";
 import { sucess_toast, error_toast ,info_toast} from "@/utils/toastNotification";
 import CheckButton from "@/components/checkButton";
-
+import {useStateContext} from "@/contexts/ContextProvider";
 const CreateGroop = ({onClose}) => {
   const [groopName, setGroopName] = useState("");
   const [routes, setRoutes] = useState([]);
@@ -18,7 +18,7 @@ const CreateGroop = ({onClose}) => {
     type: 'file',
   });
   const [showPages ,setShowPages] = useState(false);
-  
+  const { setIsLoading } = useStateContext();
   const fetchData = async () => {
     try {
       setIsLoading(true);

@@ -175,7 +175,7 @@ const Routes = () => {
   };
 
   return (
-    <div className="pt-11 flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-3">
       <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
         Gestion des Routes
       </h3>
@@ -254,7 +254,7 @@ const Routes = () => {
 
       <div className="w-full">
         <div
-          className=" mx-5 shadow2-xl bg-lightCyen   dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2"
+          className=" mx-5 shadow-2xl bg-lightCyen   dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2"
           style={{ height: "600px" }}
         >
           <DataGrid

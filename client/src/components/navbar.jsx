@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState  ,useEffect } from 'react';
 import { BsMoonStarsFill } from 'react-icons/bs';
 import { MdOutlineLightMode, MdOutlineAddComment } from 'react-icons/md';
 import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
@@ -15,7 +15,23 @@ const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const { setVisible, userInfo ,setIsLoading } = useStateContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentDate, setCurrentDate] = useState("");
 
+  useEffect(() => {
+    const updateDate = () => {
+      const now = new Date();
+      // Format the date: "Tuesday, December 3, 2024"
+      const formattedDate = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+      setCurrentDate(formattedDate);
+    };
+
+    updateDate();
+  }, [])
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
@@ -37,31 +53,18 @@ const Navbar = () => {
     <>
       <div onClick={() => setIsMenuOpen(!isMenuOpen)} className={`${isMenuOpen ? 'fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-40' : 'hidden'} `}></div>
 
-    <nav className=" sticky top-5 z-40 py-2 bg-white dark:bg-mainDarkBg shadow-md rounded-full  transition-colors duration-300">
+    <nav className="  py-6  transition-colors duration-300">
       
-      <div className="flex justify-between items-center px-4 lg:px-7">
+      <div className="flex items-center justify-between ">
         {/* Logo Section */}
-        <Link to="/principal" className="flex items-center gap-4 flex-1" onClick={() => setVisible(true)}>
+        <Link to="/principal" className="flex items-center gap-4 w-1/5  " onClick={() => setVisible(true)}>
           <img
             src={LogoPngChiali}
             className="w-12 md:w-16 h-full  hover:scale-105 transition-transform object-contain"
             alt="LogoPngChiali"
           />
+           <h3 className='text-xl font-semibold text-nowrap'>PyrmidDoc</h3>
         </Link>
-
-        {/* Search, Email, Notification */}
-        <div className="items-center hidden lg:flex  gap-4 flex-1 mx-4 lg:mx-8">
-          <div className="flex-1 flex items-center bg-gray-100 dark:bg-gray-700 py-2 px-4 rounded-full">
-            <IoIosSearch className="text-xl text-gray-500  " />
-            <input
-              className="w-full bg-transparent focus:outline-none ml-2"
-              type="text"
-              placeholder="Recherche"
-            />
-          </div>
-          <MdOutlineAddComment className="text-4xl text-gray-500 dark:text-gray-300 p-2 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" />
-          <IoMdNotificationsOutline className="text-4xl text-gray-500 dark:text-gray-300 p-2 rounded-full cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" />
-        </div>
 
         {/* Profile & Theme Toggle */}
         <div className="relative flex items-center gap-4">
@@ -76,14 +79,15 @@ const Navbar = () => {
               alt="Profile"
             />
             <div className="hidden md:flex flex-col text-left">
-              <p className="text-sm font-bold text-gray-800 dark:text-white">
-                {userInfo?.userName}
+              <p className="text-sm font-semibold text-textLightColor dark:text-white">
+                Salut {userInfo?.userName}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {userInfo?.admin ? 'Admin' : 'User'}
+              
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+               {currentDate}
               </p>
             </div>
-            <RiArrowDropDownLine className="text-2xl md:text-3xl text-gray-500 dark:text-gray-300" />
+            {/* <RiArrowDropDownLine className="text-2xl md:text-3xl text-gray-500 dark:text-gray-300" /> */}
           </div>
 
           {/* Dropdown Menu */}
@@ -122,6 +126,26 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+        {/* Search, Email, Notification */}
+        <div className="items-center hidden lg:flex  gap-4 flex-1  justify-end">
+          <div className=" flex items-center bg-white dark:bg-gray-700 py-2 px-4 min-w-96 rounded-full">
+            <IoIosSearch className="text-xl text-gray-500  " />
+            <input
+              className="w-full pl-2 focus:outline-none ml-2"
+              type="text"
+              placeholder="Recherche"
+            />
+          </div>
+          <div className='bg-white dark:bg-mainDarkBg hover:bg-gray-200 dark:hover:bg-gray-600 p-3 rounded-full'> 
+
+          <MdOutlineAddComment className="text-xl text-gray-700 dark:text-gray-300  rounded-full cursor-pointer " />
+          </div>
+          <div className='bg-white dark:bg-mainDarkBg hover:bg-gray-200 dark:hover:bg-gray-600 p-3 rounded-full'>
+          <IoMdNotificationsOutline className="text-xl text-gray-700 dark:text-gray-300 rounded-full cursor-pointer " />
+
+          </div>
+        </div>
+
       </div>
     </nav>
     </>
