@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
+
 userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
     throw Error('All fields must be filled');

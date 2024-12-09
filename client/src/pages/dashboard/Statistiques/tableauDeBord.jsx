@@ -6,7 +6,7 @@ import ActiveGroops from '@/components/statistiques/activeGroops';
 
 const TableauDeBord = () => {
   return (
-    <div className=' bg-secLightBg dark:bg-secDarkBg'>
+    <div className='bg-secLightBg dark:bg-secDarkBg'>
       <div > 
         <h3 className='text-3xl font-medium p-3 text-center'>Statistiques General</h3>
       </div>

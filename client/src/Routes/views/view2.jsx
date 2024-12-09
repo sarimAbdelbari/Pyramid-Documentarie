@@ -41,7 +41,7 @@ const View2 = ({ route , preview}) => {
   };
 
   return (
-    <div className='pt-20'>
+    <div className=''>
       <div className={`grid grid-flow-row justify-center place-items-center gap-7  ${
             data.length === 1
               ? 'grid-cols-1'

@@ -83,8 +83,8 @@ const CreateUser = ({ onClose, user }) => {
 
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50 p-3 md:p-5 lg:p-7">
-      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-lg h-full overflow-y-auto flex flex-col justify-between">
+    <div className="fixed hide-scrollbar inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50 p-3 md:p-5 lg:p-7">
+      <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-lg h-full hide-scrollbar overflow-y-auto flex flex-col justify-between">
         <h2 className="text-xl font-semibold dark:text-white mb-4">
           {!user ? "Créer un utilisateur" : "Mettre à jour l'utilisateur"}
         </h2>

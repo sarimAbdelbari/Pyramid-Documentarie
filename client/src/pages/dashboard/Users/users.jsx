@@ -3,6 +3,7 @@ import { DataGrid   } from "@mui/x-data-grid";
 import { useStateContext } from "@/contexts/ContextProvider";
 import axios from "axios";
 import Button from "@/components/button";
+import ButtonIcon from "@/components/buttonIcon";
 import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
@@ -15,6 +16,7 @@ import { TbUsersGroup } from "react-icons/tb";
 import { RiAdminFill } from "react-icons/ri";
 import { CiCircleCheck } from "react-icons/ci";
 import { LiaUsersSolid } from "react-icons/lia";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const Users = () => {
   const { isLoading ,setIsLoading} = useStateContext();
@@ -168,12 +170,13 @@ const Users = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center gap-3 bg-white dark:bg-secDarkBg py-4 px-5 rounded-3xl">
-        <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
+      <div className="flex flex-col items-center gap-5  rounded-3xl">
+        <h3 className="text-2xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
           Utilisateurs
         </h3>
-        <div onClick={() => setShowCreateUserModal(true)}>
-          <Button Text="Crée un utilisateur" />
+        <div className="fixed bottom-12 right-12 z-50 " onClick={() => setShowCreateUserModal(true)}>
+          {/* <Button Icon={<IoMdAddCircleOutline />} /> */}
+          <ButtonIcon Icon={<IoMdAddCircleOutline className="text-2xl" />} />
         </div>
         <div className="w-full">
   <div className=" shadow-2xl bg-lightCyen dark:shadow-white rounded-lg dark:bg-mainDarkBg flex justify-around items-center flex-wrap gap-4 p-5 ">
@@ -240,7 +243,7 @@ const Users = () => {
 
    
       <div className="w-full">
-      <div className=" shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "600px"  }}>
+      <div className=" shadow-2xl bg-lightCyen dark:shadow-white rounded-lg  dark:bg-mainDarkBg py-2" style={{ height: "550px"  }}>
           <DataGrid
             rows={usersData}
             columns={columns}

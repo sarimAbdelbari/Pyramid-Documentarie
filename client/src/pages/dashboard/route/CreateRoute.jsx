@@ -368,12 +368,12 @@ const CreateRoute = ({ routeId, parrentId }) => {
             padding: "10px",
           },
         }}
-        sx={{ "& .MuiDialog-paper": { height: "100%", overflowX: "hidden" } }}
+        sx={{ "& .MuiDialog-paper ": { height: "100%", overflowX: "hidden" ,overflowY:"hidden" } }}
       >
         <h3 className="text-xl font-semibold dark:text-white p-4">
           {routeId ? "Mettre à jour Route" : "Créer un Route"}
         </h3>
-        <div className="bg-white dark:bg-gray-800 mx-3">
+        <div className="bg-white dark:bg-gray-800 mx-3 hide-scrollbar overflow-y-auto">
           <div className="my-4">
             <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">
               Parent Route :

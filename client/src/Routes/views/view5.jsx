@@ -34,7 +34,7 @@ const View5 = ({ route, preview }) => {
   }, [route, routeData, preview]);
 
   return (
-    <div className="pt-20 px-4">
+    <div className=" px-4">
       {/* Title Section */}
       <div className="text-center flex flex-col items-center gap-4">
         <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white">

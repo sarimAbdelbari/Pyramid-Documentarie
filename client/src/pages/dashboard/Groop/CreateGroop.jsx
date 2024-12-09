@@ -155,7 +155,7 @@ const CreateGroop = ({onClose}) => {
   return (
    
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center  z-40 p-5 md:p-7 lg:p-10 " >
-      <div className="bg-white dark:bg-gray-800 px-9 py-7 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl  h-full overflow-y-auto flex flex-col justify-between ">
+      <div className="bg-white hide-scrollbar  dark:bg-gray-800 px-9 py-7 rounded-2xl shadow-lg dark:shadow-white w-full max-w-4xl  h-full overflow-y-auto flex flex-col justify-between ">
         <h3 className="text-xl font-semibold dark:text-white mb-4">
           Créer un Groop
         </h3>

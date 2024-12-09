@@ -235,7 +235,7 @@ const DuplicateGroop = ({groop ,onClose}) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-40  p-3 md:p-5 lg:p-7 ">
 
-    <div className="flex flex-col justify-between items-center gap-5  bg-white dark:bg-gray-800 px-5 sm:px-8 md:px-11 py-7 rounded-2xl shadow-lg dark:shadow-white w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-4 h-full overflow-y-auto ">
+    <div className="flex flex-col hide-scrollbar justify-between items-center gap-5  bg-white dark:bg-gray-800 px-5 sm:px-8 md:px-11 py-7 rounded-2xl shadow-lg dark:shadow-white w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-4 h-full overflow-y-auto ">
     <div>
     <p className=" text-xl sm:text-2xl md:text-3xl text-textLightColor dark:text-textDarkColor font-semibold text-center">
       Clone le groop

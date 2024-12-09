@@ -7,7 +7,7 @@ const PdfReader = ({ route }) => {
   const pdfUrl = `${import.meta.env.VITE_PUBLIC_URLFILE}/${route.file}`;
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-12">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 ">
       <div className="container mx-auto">
         <div className="text-center mb-8  dark:bg-gray-800 p-4 rounded-lg">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-200">

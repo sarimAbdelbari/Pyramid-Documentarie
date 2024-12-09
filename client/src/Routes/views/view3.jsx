@@ -41,7 +41,7 @@ const View3 = ({ route ,preview}) => {
   };
 
   return (
-    <div className="pt-20">
+    <div className="">
       <div className="text-center my-11 flex justify-center flex-col gap-7 items-center">
         <h1 className="text-xl lg:text-3xl text-textLightColor dark:text-textDarkColor font-semibold leading-relaxed">
           {route?.title}

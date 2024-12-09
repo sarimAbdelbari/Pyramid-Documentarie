@@ -1,145 +1,150 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { RxDashboard } from 'react-icons/rx';
-import { PiUsersThin,  PiTreeViewThin, PiCards } from 'react-icons/pi';
-import { IoIosLogOut } from 'react-icons/io';
-import { IoCreateOutline } from "react-icons/io5";
-import { CiViewTable } from 'react-icons/ci';
-import { GrUpdate } from 'react-icons/gr';
-import { IoSettingsOutline } from 'react-icons/io5';
-import axios from 'axios';
-import { FaTimes, FaChevronDown } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { RxDashboard } from "react-icons/rx";
+import { PiUsersThin, PiTreeViewThin } from "react-icons/pi";
+import { IoIosLogOut } from "react-icons/io";
+import { CiViewTable } from "react-icons/ci";
+import { GrUpdate } from "react-icons/gr";
+import { IoSettingsOutline } from "react-icons/io5";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { TbRouteScan } from "react-icons/tb";
 import { MdOutlineLocalPolice } from "react-icons/md";
-export default function SideBar() {
+import axios from "axios";
+
+export default function Sidebar() {
   const [dropdowns, setDropdowns] = useState({
     users: false,
     routes: false,
     permissions: false,
   });
 
-
+  const location = useLocation();
 
   useEffect(() => {
-    const storedDropdowns = JSON.parse(localStorage.getItem('dropdowns'));
+    const storedDropdowns = JSON.parse(localStorage.getItem("dropdowns"));
     if (storedDropdowns) {
       setDropdowns(storedDropdowns);
     }
   }, []);
- 
 
   const toggleDropdown = (key) => {
-    setDropdowns((prevState) => {
-      const newDropdowns = { ...prevState, [key]: !prevState[key] };
-      localStorage.setItem('dropdowns', JSON.stringify(newDropdowns));
-      return newDropdowns;
+    setDropdowns((prev) => {
+      const updated = { ...prev, [key]: !prev[key] };
+      localStorage.setItem("dropdowns", JSON.stringify(updated));
+      return updated;
     });
-  }; 
+  };
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, { withCredentials: true });
-      window.location.href = '/login';
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      window.location.href = "/login";
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   };
-  return (
-    <div className=' flex flex-col gap-3 justify-between  rounded-3xl  py-4 dark:shadow-white transition-transform duration-700 ease-in-out'>
-      <div className='flex flex-col gap-3'>
-        <p className='text-sm lg:text-md font-medium  text-gray-500 dark:text-gray-200 p-4'>Dashboard</p>
-        <div className='flex flex-col gap-1'>
-          {/* Dashboard */}
-          <Link to='/dashboard/TableauDeBord' className='flex items-center gap-4  text-sm lg:text-base text-black dark:text-textDarkColor hover:bg-[#ececfe] dark:hover:text-textLightColor hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><RxDashboard  /></span>
-            Tableau de bord
-          </Link>
 
-          {/* Users Section */}
-          <div className='flex flex-col items-start text-sm lg:text-base'>
-            <Link to="/dashboard/users/table"
-              className='flex justify-between items-center w-full p-4 dark:hover:text-textLightColor text-black dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
-              onClick={() => toggleDropdown('users')}
-            >
-              <span className='flex gap-4 items-center'>
-              <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><PiUsersThin  /></span>
-                Utilisateurs
-              </span>
-            </Link>
-           
-          </div>
+  const isActive = (path) => location.pathname === path;
 
-          {/* Routes Section */}
-          <div className='flex flex-col gap-4 items-start text-sm lg:text-base'>
-            <button
-              className='flex justify-between items-center w-full p-4 text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
-              onClick={() => toggleDropdown('routes')}
-            >
-              <span className='flex gap-4 items-center'>
-              <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><TbRouteScan  /></span>
+  const NavLink = ({ to, icon: Icon, label }) => (
+    <Link
+      to={to}
+      className={`flex items-center gap-4 text-xs lg:text-sm p-4 rounded-lg transition-all ${
+        isActive(to)
+          ? "bg-gray-200 text-black"
+          : "text-gray-700 hover:bg-gray-300 w-full"
+      }`}
+    >
+      <span className="p-2 bg-gray-100 rounded-full">
+        <Icon size={18} className="text-gray-600" />
+      </span>
+      {label}
+    </Link>
+  );
 
-                Pages
-              </span>
-              {dropdowns.routes ? <FaTimes /> : <FaChevronDown />}
-            </button>
-            <div
-              className={`pl-4 flex flex-col gap-3 w-full transition-all duration-500 overflow-hidden ${
-                dropdowns.routes ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-           
-              <Link to='/dashboard/route/table' className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-                <CiViewTable  />
-                Tableau
-              </Link>
-              <Link to='/dashboard/route/tree' className='w-full flex items-center gap-3 dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-                <PiTreeViewThin />
-                Arbre
-              </Link>
-            </div>
-          </div>
-
-          {/* Permissions Section */}
-          <div className='flex flex-col gap-4 items-start text-sm lg:text-base'>
-            <Link to='/dashboard/groop/table'
-              className='flex justify-between items-center w-full p-4 text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary rounded-xl transition-colors duration-300'
-              onClick={() => toggleDropdown('permissions')}
-            >
-              <span className='flex gap-4 items-center'>
-              <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><MdOutlineLocalPolice  /></span>
-
-                Autorisations
-              </span>
-            </Link>
-          
-          </div>
+  const Dropdown = ({ label, icon: Icon, items, dropdownKey }) => (
+    <div className="flex flex-col gap-1">
+      <button
+        onClick={() => toggleDropdown(dropdownKey)}
+        className={`flex justify-between items-center p-4 rounded-lg transition-all ${
+          dropdowns[dropdownKey]
+            ? "bg-gray-200 text-black"
+            : "text-gray-700 hover:bg-gray-300 w-full"
+        }`}
+      >
+        <div className="flex items-center gap-4">
+          <span className="p-2 bg-gray-100 rounded-full">
+            <Icon size={18} className="text-gray-600" />
+          </span>
+          {label}
         </div>
-      </div>
+        {dropdowns[dropdownKey] ? <FaChevronDown /> : <FaChevronRight />}
+      </button>
 
-      {/* Application Section */}
-      <div className='flex flex-col gap-3 text-sm lg:text-base'>
-        <p className='text-sm lg:text-md font-medium  text-gray-500 dark:text-gray-200 p-4'>Application</p>
-        <div className='pl-4 flex flex-col '>
-          <div className='cursor-pointer flex gap-4 items-center text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><GrUpdate  /></span>
-
-            Mises à jour
-          </div>
-          <div className='cursor-pointer flex gap-4 items-center text-black dark:hover:text-textLightColor dark:text-textDarkColor hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'>
-            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><IoSettingsOutline  /></span>
-
-            Paramètres
-          </div>
-          <div
-            onClick={() => handleLogout()}
-            className='cursor-pointer flex gap-4 items-center text-red-600 dark:text-red-400 hover:bg-[#ececfe] hover:text-primary p-4 rounded-xl transition-colors duration-300'
-          >
-            <span className='p-3 bg-white dark:bg-gray-800 rounded-full'><IoIosLogOut  /></span>
-
-            Déconnexion
-          </div>
+      <div
+        className={`transition-all duration-300 overflow-hidden ${
+          dropdowns[dropdownKey] ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="flex flex-col pl-6 gap-2">
+          {items.map((item) => (
+            <NavLink key={item.label} to={item.to} icon={item.icon} label={item.label} />
+          ))}
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <nav className="text-gray-800 h-full p-2 lg:p-5  flex flex-col justify-between border-r text-nowrap border-gray-200">
+      <div>
+        <p className="text-lg font-semibold mb-4 text-gray-600">Dashboard</p>
+        <div className="space-y-2">
+          <NavLink to="/dashboard/TableauDeBord" icon={RxDashboard} label="Tableau de bord" />
+          <Dropdown
+            label="Utilisateurs"
+            icon={PiUsersThin}
+            dropdownKey="users"
+            items={[
+              { to: "/dashboard/users/table", icon: CiViewTable, label: "Table" },
+            ]}
+          />
+          <Dropdown
+            label="Pages"
+            icon={TbRouteScan}
+            dropdownKey="routes"
+            items={[
+              { to: "/dashboard/route/table", icon: CiViewTable, label: "Table" },
+              { to: "/dashboard/route/tree", icon: PiTreeViewThin, label: "Tree" },
+            ]}
+          />
+          <NavLink
+            to="/dashboard/groop/table"
+            icon={MdOutlineLocalPolice}
+            label="Autorisations"
+          />
+        </div>
+      </div>
+      <div>
+        <p className="text-lg font-semibold mb-4 text-gray-600">Application</p>
+        <div className="space-y-2">
+          <NavLink to="/dashboard/updates" icon={GrUpdate} label="Mises à jour" />
+          <NavLink to="/dashboard/settings" icon={IoSettingsOutline} label="Paramètres" />
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-4 text-xs lg:text-sm p-4 rounded-lg text-red-600 hover:bg-gray-300 w-full"
+          >
+            <span className="p-2 bg-gray-100 rounded-full">
+              <IoIosLogOut size={18} className="text-red-500" />
+            </span>
+            Déconnexion
+          </button>
+        </div>
+      </div>
+    </nav>
   );
 }

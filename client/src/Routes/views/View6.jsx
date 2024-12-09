@@ -9,7 +9,7 @@ const getImageSrc = (src) => {
 
 const View6 = () => {
   return (
-    <div className="min-h-screen pt-14 flex flex-col items-center gap-12 px-4 md:px-8 lg:px-16 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen  flex flex-col items-center gap-12 px-4 md:px-8 lg:px-16 bg-gray-50 dark:bg-gray-900">
       {/* Header Section */}
       <div className="text-center flex flex-col items-center">
         <h3 className="text-3xl font-semibold text-gray-800 dark:text-white">Certifications</h3>

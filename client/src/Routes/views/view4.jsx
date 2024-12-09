@@ -45,7 +45,7 @@ const View4 = ({ route , preview }) => {
   return (
     <>
       {data.length > 0 ? (
-        <div className="pt-20">
+        <div className="">
           <div className="grid grid-flow-row grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-12 place-content-center">
             {data.map((item, index) => (
               <div

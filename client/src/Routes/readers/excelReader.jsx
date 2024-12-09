@@ -30,7 +30,7 @@ const ExcelReader = ({ route }) => {
     }, [ExcelUrl]);
 
     return (
-        <div className=" bg-gray-100 dark:bg-gray-900 pt-12">
+        <div className=" bg-gray-100 dark:bg-gray-900 ">
             <h3 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
                 {route.title}
             </h3>

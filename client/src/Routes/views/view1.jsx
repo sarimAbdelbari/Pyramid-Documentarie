@@ -43,7 +43,7 @@ const View1 = ({ route ,preview}) => {
   };
 
   return (
-    <div className='pt-20'>
+    <div className=''>
       <div className='flex items-center justify-around flex-wrap gap-7'>
         {data.map((item, index) => (
           <div key={index} className='flex justify-center items-center flex-col m-4'>

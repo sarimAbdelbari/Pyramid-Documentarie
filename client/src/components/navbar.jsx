@@ -5,7 +5,7 @@ import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { ThemeContext } from '@/contexts/themeProvider';
 import { useStateContext } from '@/contexts/ContextProvider';
-import LogoPngChiali from '/assets/images/LogoPngChiali.webp';
+import LogoPngChiali from '/assets/images/LogoPngChialiBlack-removebg-preview.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { IoIosLogOut } from "react-icons/io";
@@ -36,6 +36,7 @@ const Navbar = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
   
+
   const handleLogout = async () => {
     try {
       setIsLoading(true)
@@ -51,43 +52,42 @@ const Navbar = () => {
 
   return (
     <>
-      <div onClick={() => setIsMenuOpen(!isMenuOpen)} className={`${isMenuOpen ? 'fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-40' : 'hidden'} `}></div>
+      <div onClick={() => setIsMenuOpen(!isMenuOpen)} className={`${isMenuOpen ? 'fixed inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-30' : 'hidden'} `}></div>
 
-    <nav className="  py-6  transition-colors duration-300">
+    <nav className="sticky top-0 left-0 z-40 bg-secLightBg  py-3 border-b-[1px] transition-colors duration-300 px-3 lg:px-6">
       
       <div className="flex items-center justify-between ">
         {/* Logo Section */}
-        <Link to="/principal" className="flex items-center gap-4 w-1/5  " onClick={() => setVisible(true)}>
+        <Link to="/principal" className="flex items-center gap-1 w-1/5  " onClick={() => setVisible(true)}>
           <img
             src={LogoPngChiali}
             className="w-12 md:w-16 h-full  hover:scale-105 transition-transform object-contain"
             alt="LogoPngChiali"
           />
-           <h3 className='text-xl font-semibold text-nowrap'>PyrmidDoc</h3>
+           <h3 className='text-lg text-textLightColor font-semibold text-nowrap font-serif'>Pyrmid Doc</h3>
         </Link>
 
         {/* Profile & Theme Toggle */}
         <div className="relative flex items-center gap-4">
           {/* Profile */}
           <div
-            className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full"
+            className="flex items-center gap-5 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <img
               src={`${import.meta.env.VITE_PUBLIC_URL1}/profileImage.webp`}
-              className="w-10 md:w-12 h-full rounded-full object-contain"
+              className="w-10 md:w-14 h-full rounded-full object-contain"
               alt="Profile"
             />
             <div className="hidden md:flex flex-col text-left">
-              <p className="text-sm font-semibold text-textLightColor dark:text-white">
+              <p className="text-md font-semibold text-textLightColor dark:text-white">
                 Salut {userInfo?.userName}
               </p>
               
-              <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                {currentDate}
               </p>
             </div>
-            {/* <RiArrowDropDownLine className="text-2xl md:text-3xl text-gray-500 dark:text-gray-300" /> */}
           </div>
 
           {/* Dropdown Menu */}
