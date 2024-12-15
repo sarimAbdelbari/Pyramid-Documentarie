@@ -74,8 +74,9 @@ const Users = () => {
 
   const handleDeleteUser = async () => {
     try {
+
       setIsLoading(true);
-      await axios.delete(`h${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
       sucess_toast("L'utilisateur a été supprimé avec succès");
       setUsersData((prevState) =>
         prevState.filter((user) => user._id !== userToDelete._id)

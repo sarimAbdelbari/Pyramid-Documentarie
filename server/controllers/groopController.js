@@ -189,9 +189,6 @@ const updateGroop = async (req, res) => {
   try {
     const { groopName, groopUsers, groopRoutes } = req.body;
 
-
-   console.log("groopRoutes" ,groopRoutes);
-
     // Find the existing group
     const existingGroop = await Groop.findById(req.params.id);
     if (!existingGroop) return res.status(404).json({ error: 'Group not found' });

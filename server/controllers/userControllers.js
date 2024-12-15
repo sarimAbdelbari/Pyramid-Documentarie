@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
     }
 
     if (!validator.isStrongPassword(password)) {
-      throw Error("Password not strong enoughLe mot de passe n'est pas assez fort");
+      throw Error("Le mot de passe n'est pas assez fort");
     }
 
     const existUserName = await User.findOne({ userName });

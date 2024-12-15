@@ -88,6 +88,7 @@ const DepthBar = () => {
           className="text-2xl text-textSecLightColor dark:text-textDarkColor cursor-pointer hover:text-darkPrimary hover:scale-125 ease-in-out duration-300"
         />
       )}
+      
       <Link to="/principal" className="text-2xl cursor-pointer mx-3 text-textSecLightColor hover:text-darkPrimary hover:scale-125 ease-in-out duration-300">
         <TiHomeOutline className="text-2xl text-textLightColor dark:text-textDarkColor cursor-pointer hover:text-darkPrimary" />
       </Link>

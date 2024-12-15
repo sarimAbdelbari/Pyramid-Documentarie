@@ -2,7 +2,6 @@ import { useContext, useState  ,useEffect } from 'react';
 import { BsMoonStarsFill } from 'react-icons/bs';
 import { MdOutlineLightMode, MdOutlineAddComment } from 'react-icons/md';
 import {  IoIosSearch, IoMdNotificationsOutline } from 'react-icons/io';
-import { RiArrowDropDownLine } from 'react-icons/ri';
 import { ThemeContext } from '@/contexts/themeProvider';
 import { useStateContext } from '@/contexts/ContextProvider';
 import LogoPngChiali from '/assets/images/LogoPngChialiBlack-removebg-preview.png';

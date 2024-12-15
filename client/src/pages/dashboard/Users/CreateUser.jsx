@@ -47,7 +47,9 @@ const CreateUser = ({ onClose, user }) => {
   const handleCreateUser = async () => {
     try {
       setIsLoading(true);
-       await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
+      const response =  await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
+
+     console.log("response" ,response.data)
 
       sucess_toast("Utilisateur créé avec succès");
 
@@ -55,7 +57,7 @@ const CreateUser = ({ onClose, user }) => {
 
     } catch (error) {
       setIsLoading(false);
-      error_toast("Échec de la création de l'utilisateur");
+      error_toast(`"Échec de la création de l'utilisateur" ${error.response ? error.response.data.message : error.message}`);
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -64,6 +66,7 @@ const CreateUser = ({ onClose, user }) => {
 
   const handleUpdateUser = async () => {
     try {
+
       setIsLoading(true)
       await axios.patch(`${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`, selectedUser);
    

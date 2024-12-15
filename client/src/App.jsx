@@ -35,7 +35,6 @@ const App = () => {
   const { userInfo } = useStateContext();
   const routeData = useRouteAuth();
   const { isLoading } = useStateContext();
-
   return (
     <div className="h-screen overflow-hidden bg-secLightBg dark:bg-secDarkBg">
       <ToastContainer
@@ -51,7 +50,6 @@ const App = () => {
         theme={theme}
       />
       {isLoading && <LoadingScreen />}
-
       {isAuthenticated ? (
         <div className="h-full flex flex-col">
           {userInfo?.active ? (
@@ -60,13 +58,11 @@ const App = () => {
                 <div className="h-full flex flex-col">
                   {/* Navbar */}
                   <Navbar className="flex-shrink-0" />
-
                   <div className="flex h-full overflow-hidden">
                     {/* Sidebar */}
                     <div className="w-1/5 lg:w-1/5 h-full hide-scrollbar overflow-y-auto">
                       <SideBar />
                     </div>
-
                     {/* Main Content */}
                     <div className="flex-1 p-4 lg:p-6 overflow-y-auto hide-scrollbar">
                       <Routes>
@@ -99,7 +95,6 @@ const App = () => {
                 <div className="h-full flex flex-col">
                   <Navbar className="flex-shrink-0" />
                   <CMSRoadmap routeData={routeData} className="flex-shrink-0" />
-
                   <div className="flex-1 p-4 lg:p-6 overflow-y-auto hide-scrollbar">
                     <Routes>
                       {Object.values(routeData).map((route, index) => (
@@ -139,7 +134,6 @@ const App = () => {
               )}
             </>
           ) : (
-            // Redirect inactive users to RDPage
             <div className="h-full flex flex-col">
               <Navbar className="flex-shrink-0" />
               <div className="flex-1">
@@ -151,7 +145,6 @@ const App = () => {
           )}
         </div>
       ) : (
-        // Login Route for unauthenticated users
         <Routes>
           <Route path="/*" element={<Login />} />
         </Routes>
