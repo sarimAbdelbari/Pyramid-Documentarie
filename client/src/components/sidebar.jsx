@@ -55,7 +55,7 @@ export default function Sidebar() {
       to={to}
       className={`flex items-center gap-4 text-xs lg:text-sm p-4 rounded-lg transition-all ${
         isActive(to)
-          ? "bg-gray-200 text-black"
+          ? "bg-gray-200 text-black "
           : "text-gray-700 hover:bg-gray-300 w-full"
       }`}
     >

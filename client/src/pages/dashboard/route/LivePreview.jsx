@@ -49,7 +49,7 @@ const LivePreview = (selectedNode) => {
             onClick={() => setShowLivePreview(false)}
             className="font-bold text-3xl text-darkPrimary z-50 top-3 right-3 absolute cursor-pointer hover:text-white hover:scale-125 duration-300"
         />
-     <div className="bg-white shadow-2xl rounded-2xl w-full h-full overflow-y-auto relative p-3 "> 
+     <div className="bg-white shadow-2xl rounded-2xl w-full h-full overflow-y-auto hide-scrollbar relative p-3 "> 
       <div className="pointer-events-none">
 
       <Navbar/>

@@ -63,7 +63,7 @@ const Navbar = () => {
             className="w-12 md:w-16 h-full  hover:scale-105 transition-transform object-contain"
             alt="LogoPngChiali"
           />
-           <h3 className='text-lg text-textLightColor font-semibold text-nowrap font-serif'>Pyrmid Doc</h3>
+           <h3 className='text-lg text-textLightColor font-semibold text-nowrap font-serif'>Pyramid Doc</h3>
         </Link>
 
         {/* Profile & Theme Toggle */}

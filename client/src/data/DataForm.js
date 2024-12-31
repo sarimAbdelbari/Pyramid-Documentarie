@@ -124,6 +124,11 @@ const viewOptions = [
       titre: "Voir 5",
     },
     {
+      name: "View7",
+      imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/View7.webp`,
+      titre: "Voir 7",
+    },
+    {
       name: "TableView",
       imgSrc: `${import.meta.env.VITE_PUBLIC_URL1}/TableView.webp`,
       titre: "Vue de table",

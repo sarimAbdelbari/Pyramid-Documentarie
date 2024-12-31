@@ -10,13 +10,12 @@ import {
 } from "@/utils/toastNotification";
 import ImageModal from "@/components/ImageModal";
 import { useStateContext } from "@/contexts/ContextProvider";
-import LoadingScreen from "@/utils/loadingScreen";
 import Select from "react-select";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { fr, se } from "date-fns/locale";
+import { fr } from "date-fns/locale";
 import { CiImageOn } from "react-icons/ci";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { FaRegFileExcel } from "react-icons/fa";
@@ -25,8 +24,7 @@ import { FaRegFileWord } from "react-icons/fa";
 
 const CreateRoute = ({ routeId, parrentId }) => {
 
-
-
+ 
   const {
     setIsLoading,
     showNew,
@@ -48,7 +46,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
     file: "",
     expiredate: "",
     details: "",
-    data: { tableCol: {}, tableRow: {} },
+    data: { tableCol: {}, tableRow: {} , cycle:'' },
   });
   const [selectedParrent, setSelectedParrent] = useState("");
 
@@ -58,6 +56,27 @@ const CreateRoute = ({ routeId, parrentId }) => {
       value: route._id,
       label: route.path,
     }));
+
+
+  const optionsCycle = [
+    {
+    value:"plan",
+    label:"Plan"
+    },
+    {
+    value:"do",
+    label:"Do"
+    },
+    {
+    value:"check",
+    label:"Check"
+    },
+    {
+    value:"act",
+    label:"Act"
+    }
+  ]
+
 
   const handleViewSelection = (viewName) => {
     setSelectedRoute({ ...selectedRoute, view: viewName });
@@ -102,11 +121,14 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
       if (parrentId) {
         setSelectedParrent({
-          value: parrentId?.value,
-          label: parrentId?.label,
+          value: parrentId.value,
+          label: parrentId.label,
         });
 
-        
+        setSelectedRoute({
+          ...selectedRoute , parrentPath: parrentId.value
+        })
+
         if(parrentId.data){
           
           setParrentData(parrentId.data);
@@ -354,6 +376,16 @@ const CreateRoute = ({ routeId, parrentId }) => {
     setSelectedRoute({ ...selectedRoute, expiredate: date });
   };
 
+ const onChangeCycle = (selectedOption) => {
+ 
+  
+    setSelectedRoute({
+      ...selectedRoute , data: {...selectedRoute.data ,cycle:selectedOption.value }
+    })
+
+
+ }
+
   return (
     <>
       <Dialog
@@ -384,7 +416,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
               options={optionsRoutes}
               isSearchable
               placeholder="Rechercher un parent Route"
-              className="px-3 z-30 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
+              className=" z-30 m-1 p-2 block border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
             />
           </div>
 
@@ -452,6 +484,23 @@ const CreateRoute = ({ routeId, parrentId }) => {
               className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
             />
           </div>
+          {parrentData.view === "View7" && (<>
+            <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">
+             Cycle :
+            </label>
+            <Select
+              value={{
+                label : selectedRoute.data.cycle,
+                value:selectedRoute.data.cycle
+              } || ""}
+              onChange={onChangeCycle}
+              options={optionsCycle}
+              isSearchable
+              placeholder="Rechercher Cycle"
+              className=" z-30 m-1  block  border-gray-300 rounded-md  dark:bg-gray-700 dark:text-white"
+              />
+              </>
+          )}
 
           <div className="my-4">
             <label
@@ -597,7 +646,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
               />
             </div>
           )}
-
+          
           <div className="my-4">
             {parrentData?.data && (
               <>

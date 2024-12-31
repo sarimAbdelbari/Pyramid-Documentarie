@@ -1,60 +1,78 @@
-import React from 'react';
-import useFetchData from '@/hooks/useFetchData';
+import React from "react";
+import useFetchData from "@/hooks/useFetchData";
 
 const TopTenUsers = () => {
-  // Fetch data using your custom hook
-  const { data, error } = useFetchData(`${import.meta.env.VITE_API_URL}/users/TopUsers`);
-
- 
+  // Fetch data using the custom hook
+  const { data, error } = useFetchData(
+    `${import.meta.env.VITE_API_URL}/users/TopUsers`
+  );
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex justify-center items-center h-40">
+        <p className="text-red-600 dark:text-red-400">Error: {error}</p>
+      </div>
+    );
   }
 
   return (
-    <div style={{ padding: '2rem', margin: 'auto' , width: '100%' }}>
-      <div
-        style={{
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1rem',
-        }}
-      >
-        <h2 style={{ fontSize: '1.5rem', fontWeight: '600' }}>Top Routes</h2>
-       
+    <div className="h-full w-full bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6">
+      {/* Header */}
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+          Top Utilisateurs
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Classement des utilisateurs avec le plus de documents
+        </p>
       </div>
 
-      <div
-        className='flex gap-3 flex-wrap justify-center items-center'
-      >
-        {data &&
-          data.map((item, index) => (
-            <div
-              key={item.user._id}
-              className='text-center p-3 rounded-2xl flex  gap-3 justify-center items-center bg-lightCyen shadow-xl dark:bg-mainDarkBg dark:shadow-white'
-            >
-              <p style={{ fontSize: '1.25rem', fontWeight: '600' }}>{`${index + 1}st`}</p>
-              <img
-                src={`https://ui-avatars.com/api/?name=${item.user.userName}&background=random`}
-                alt={`${item.user.userName}`}
-                style={{
-                  width: '45px',
-                  height: '45px',
-                  borderRadius: '50%',
-                  margin: '0.5rem auto',
-                }}
-              />
-              <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>{item.user.userName}</p>
-              <p style={{ color: '#888', fontSize: '0.9rem' }}>{item.user.email}</p>
-              <div style={{ marginTop: '0.5rem', fontSize: '1rem', fontWeight: '600' }}>
-                {item["routes count"]} Documents
-              </div>
+      {/* Users List */}
+        <div className="grid grid-cols-1  gap-4 max-h-96 overflow-y-auto">
+          {data &&
+            data.slice(0, 4).map((item, index) => (
+          <div
+            key={item.user._id}
+            className="flex  items-center gap-4 bg-lightCyen dark:bg-gray-700 p-4 rounded-lg shadow-md"
+          >
+            {/* Rank */}
+            <div className="text-center">
+              <p className="text-md font-semibold text-gray-800 dark:text-gray-100">
+            {`${index + 1}st`}
+              </p>
             </div>
-          ))}
-      </div>
-    </div>
-  );
+
+            {/* Avatar */}
+            <img
+              src={`https://ui-avatars.com/api/?name=${item.user.userName}&background=random`}
+              alt={`${item.user.userName}`}
+              className="w-9 h-9 rounded-full"
+            />
+
+            {/* User Info */}
+            <div className="flex flex-col items-center">
+              <p className="text-md font-medium text-gray-800 dark:text-gray-100">
+            {item.user.userName}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+            {item.user.email}
+              </p>
+            </div>
+
+            {/* Documents Count */}
+            <div className="text-center">
+              <p className="text-md font-semibold text-gray-800 dark:text-gray-100">
+            {item["routes count"]}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+            Documents
+              </p>
+            </div>
+          </div>
+            ))}
+        </div>
+          </div>
+        );
 };
 
 export default TopTenUsers;

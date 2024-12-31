@@ -4,17 +4,17 @@ import { useStateContext } from "@/contexts/ContextProvider";
 import axios from "axios";
 import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
-import AddIcon from "@mui/icons-material/Add";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CreateRoute from "@/pages/dashboard/route/CreateRoute";
-import Button from "@/components/button";
+import ButtonIcon from "@/components/buttonicon";
 import { FaUncharted } from "react-icons/fa6";
 import { VscFilePdf } from "react-icons/vsc";
 import { PiMicrosoftWordLogo } from "react-icons/pi";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { CiRoute } from "react-icons/ci";
 import { SiReactrouter } from "react-icons/si";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const Routes = () => {
   const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch ,setIsLoading} = useStateContext();
@@ -75,7 +75,7 @@ const Routes = () => {
         params.row.view && (
           <div className="flex items-center">
             <img
-              src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.view}.png`}
+              src={`${import.meta.env.VITE_PUBLIC_URL1}/${params.row.view}.webp`}
               alt="image"
               className="w-12 h-12 object-cover rounded-xl"
             />
@@ -175,15 +175,13 @@ const Routes = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="relative flex flex-col items-center gap-3">
       <h3 className="text-3xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
         Gestion des Routes
       </h3>
-      <div onClick={() => openNewDialog()}>
-        <Button
-          Text="Ajouter"
-          Icon={<AddIcon />}
-          className="bg-primary hover:bg-darkPrimary transition-colors duration-300"
+      <div className="fixed bottom-12 right-12 z-50" onClick={() => openNewDialog()}>
+        <ButtonIcon
+          Icon={<IoMdAddCircleOutline className="text-2xl" />}
         />
       </div>
       <div className="w-full">

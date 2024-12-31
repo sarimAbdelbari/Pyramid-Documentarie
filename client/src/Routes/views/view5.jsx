@@ -5,12 +5,12 @@ import { useStateContext } from '@/contexts/ContextProvider';
 
 const View5 = ({ route, preview }) => {
   const [data, setData] = useState([]);
-  const { routeData   } = useStateContext();
+  const [loading, setLoading] = useState(true); // Loading state
+  const { routeData } = useStateContext();
 
   useEffect(() => {
     const getViewData = async () => {
       try {
-       
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/route/parrentId/${route._id}`
         );
@@ -25,22 +25,32 @@ const View5 = ({ route, preview }) => {
           setData(response.data);
         }
       } catch (error) {
-       
         console.error('Error fetching view data:', error);
-      } 
+      } finally {
+        setLoading(false); // Set loading to false once the data is fetched
+      }
     };
 
     getViewData();
   }, [route, routeData, preview]);
 
+  // Helper function to format date
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString(); // You can customize the format as needed
+  };
+
+  if (loading) {
+    return <div>Loading...</div>; // You can replace this with a more sophisticated loading spinner
+  }
+
   return (
-    <div className=" px-4">
+    <div className="px-4">
       {/* Title Section */}
       <div className="text-center flex flex-col items-center gap-4">
-        <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white">
+        <h1 className="text-2xl md:text-3xl font-semibold text-textLightColor dark:text-textDarkColor">
           {route.title}
         </h1>
-        <p className="text-base md:text-lg font-medium text-gray-600 dark:text-gray-300 w-full md:w-3/5">
+        <p className="text-base md:text-lg font-medium text-textSecLightColor dark:text-textDarkColor w-full md:w-3/5">
           {route.details}
         </p>
       </div>
@@ -49,7 +59,7 @@ const View5 = ({ route, preview }) => {
       <div className="my-11 w-full flex flex-col items-center gap-6">
         <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6">
           {/* Header */}
-          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 text-gray-700 dark:text-gray-200 font-semibold text-sm md:text-xl py-4 px-4">
+          <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 text-gray-700 dark:text-gray-200 font-semibold text-sm md:text-xl py-4 px-4">
             <div className="text-start">Lien</div>
             <div className="text-center">Auteur</div>
             <div className="text-center">Details</div>
@@ -74,12 +84,12 @@ const View5 = ({ route, preview }) => {
                   >
                     {item.title}
                   </Link>
-                  <p className="text-center md:text-left">{item.title}</p>
+                  <p className="text-center md:text-left">{item.author}</p>
                   <p className="text-center text-sm md:text-base">
                     {item.details}
                   </p>
                   <p className="text-end text-sm md:text-base">
-                    {new Date(item.createdAt).toLocaleDateString()}
+                    {formatDate(item.createdAt)}
                   </p>
                 </div>
               ))

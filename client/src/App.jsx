@@ -5,6 +5,7 @@ import View4 from "@/Routes/views/view4";
 import View2 from "@/Routes/views/view2";
 import View3 from "@/Routes/views/view3";
 import View5 from "@/Routes/views/view5";
+import View7 from "@/Routes/views/view7";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -113,6 +114,8 @@ const App = () => {
                                 return <View4 route={route} />;
                               case "View5":
                                 return <View5 route={route} />;
+                              case "View7":
+                                return <View7 route={route} />;
                               case "TableView":
                                 return <TableView route={route} />;
                               case "PdfReader":

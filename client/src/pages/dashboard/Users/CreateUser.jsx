@@ -15,7 +15,7 @@ const CreateUser = ({ onClose, user }) => {
     admin: false,
     groop: []
   });
-
+ const [response , setResponse] = useState({})
   const [groopOptions, setGroopOptions] = useState([]);
   
   const {setIsLoading} = useStateContext();
@@ -49,8 +49,7 @@ const CreateUser = ({ onClose, user }) => {
       setIsLoading(true);
       const response =  await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
 
-     console.log("response" ,response.data)
-
+     setResponse(response.data)
       sucess_toast("Utilisateur créé avec succès");
 
       onClose();

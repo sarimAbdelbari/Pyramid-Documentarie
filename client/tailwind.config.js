@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainLightBg: '#f2f2f2', 
+        mainLightBg: '#f7f7f7', 
         secLightBg: '#f2f4f8', 
         lightCyen:'#f2f4f8',
         secDarkBg: '#001428', 

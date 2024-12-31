@@ -1,4 +1,4 @@
-require('dotenv').config();
+const dotenv = require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 // , 'http://10.10.4.62:5173'
 
 const corsOptions = {
-    origin: process.env.CorsOptionsOriginLocal  ,
+    origin: process.env.CorsOptionsOriginPc,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 200

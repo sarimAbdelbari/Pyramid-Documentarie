@@ -8,7 +8,7 @@ import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import { ThemeContext } from '@/contexts/themeProvider';
-import CreateUser from "@/pages/dashboard/Users/CreateUser"; // Import CreateUser component
+import CreateUser from "@/pages/dashboard/Users/CreateUser"; 
 import { FaUncharted } from "react-icons/fa6";
 import { LuUserCheck2 } from "react-icons/lu";
 import { LuUserX2 } from "react-icons/lu";
@@ -323,11 +323,7 @@ const Users = () => {
         <CreateUser
           user={userToEdit}
           onClose={handleCloseCreateUserModal}
-          onSave={() => {
-            fetchUsers(); // Refresh user list after saving
-            handleCloseCreateUserModal();
-          }}
-          />
+        />
       </>
       )}
     </>
