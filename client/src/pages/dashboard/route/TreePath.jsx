@@ -181,7 +181,6 @@ const fetchData = async ()=>{
    
     setSelectedNode(nodeData._id);
 
-    // setShowNew(true); // Show the CreateRoute component for editing
   };
 
   const transformData = (routeData) => {
@@ -328,9 +327,22 @@ const fetchData = async ()=>{
   setSelectedNode(nodeData.attributes ||"");
   setShowLivePreview(true);
  }
+
+ const handleNewData = async () =>{
+  try {
+    
+    await fetchData();
+    
+    
+  } catch (error) {
+    console.error(error)
+  }
+ }
+
+
   return (
     <>
-      {showNew && <CreateRoute routeId={selectedNode} parrentId={parrentId}  />}
+      {showNew && <CreateRoute routeId={selectedNode} parrentId={parrentId} onSubmit={handleNewData} onUpdate={handleNewData}  />}
       {showLivePreview && <LivePreview routeId={selectedNode}  />}
       {isLoading ? (
         <LoadingScreen />

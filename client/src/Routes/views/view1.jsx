@@ -38,7 +38,7 @@ const View1 = ({ route, preview }) => {
   return (
     <div className="py-6">
       <div className="flex flex-wrap items-center justify-center gap-6">
-        {data.map((item, index) => (
+        {data.length > 0 && data.map((item, index) => (
           <div
             key={index}
             className="flex flex-col items-center justify-center m-4 w-64 lg:w-72 xl:w-80"

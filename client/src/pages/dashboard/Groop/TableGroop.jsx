@@ -3,7 +3,7 @@ import axios from "axios";
 import GroopCard from "@/components/GroopCard";
 import { CiCirclePlus } from "react-icons/ci";
 import { error_toast, sucess_toast } from "@/utils/toastNotification";
-import { useStateContext } from '@/contexts/ContextProvider';
+import { useStateContext } from "@/contexts/ContextProvider";
 import CreateGroop from "@/pages/dashboard/Groop/CreateGroop";
 import UpdateGroop from "@/pages/dashboard/Groop/UpdateGroop";
 import DuplicateGroop from "@/pages/dashboard/Groop/DuplicateGroop";
@@ -14,21 +14,22 @@ const TableGroop = () => {
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isModalDuplicateOpen, setIsModalDuplicateOpen] = useState(false);
   const [selectedGroop, setSelectedGroop] = useState(null); // Track the group to delete
- const {setIsLoading} =useStateContext()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true)
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
-        setGroopData(response.data);
-      } catch (error) {
-        setIsLoading(false)
-        console.error('Error fetching groop data:', error);
-      } finally {
-        setIsLoading(false)
-      }
-    };
+  const { setIsLoading } = useStateContext();
 
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
+
+      setGroopData(response.data);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching groop data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -36,12 +37,12 @@ const TableGroop = () => {
     try {
       setIsLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/groop/${id}`);
-      setGroopData(groopData.filter(groop => groop._id !== id));
-      setIsModalOpen(false); 
+      setGroopData(groopData.filter((groop) => groop._id !== id));
+      setIsModalOpen(false);
       sucess_toast("Le groop a été supprimé avec succès");
     } catch (error) {
-      setIsLoading(false)
-      console.error('Error deleting groop:', error);
+      setIsLoading(false);
+      console.error("Error deleting groop:", error);
       error_toast("Impossible de supprimer le groop");
     } finally {
       setIsLoading(false);
@@ -49,13 +50,13 @@ const TableGroop = () => {
   };
 
   const openDeleteModal = (id) => {
-    setSelectedGroop(id); 
-    setIsModalOpen(true);  
+    setSelectedGroop(id);
+    setIsModalOpen(true);
   };
 
   const closeDeleteModal = () => {
     setIsModalOpen(false);
-    setSelectedGroop(null); 
+    setSelectedGroop(null);
   };
 
   const AreYouSure = () => {
@@ -83,7 +84,7 @@ const TableGroop = () => {
       </div>
     );
   };
-  
+
   const handleCloseCreateModal = () => {
     setIsModalCreateOpen(false);
   };
@@ -91,24 +92,31 @@ const TableGroop = () => {
     setIsModalCreateOpen(true);
   };
 
-  const openUpdateComponent = (id) =>{
+  const openUpdateComponent = (id) => {
     setSelectedGroop(id);
     setIsModalUpdateOpen(true);
-  }
-  const openDuplicateComponent = (id) =>{
+  };
+  const openDuplicateComponent = (id) => {
     setSelectedGroop(id);
     setIsModalDuplicateOpen(true);
-  }
-  
- 
+  };
+
   const handleCloseUpdateModal = () => {
     setSelectedGroop(null);
     setIsModalUpdateOpen(false);
-  }
+  };
   const handleCloseDuplicateModal = () => {
     setSelectedGroop(null);
     setIsModalDuplicateOpen(false);
-  }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="mx-auto p-4">
@@ -117,19 +125,42 @@ const TableGroop = () => {
       </h3>
       <div className="grid grid-flow-rows grid-cols-1  xl:grid-cols-2  gap-4 md:gap-6   ">
         <div className="bg-white dark:bg-gray-800 h-full min-h-96   shadow-lg rounded-3xl p-4 my-2 flex flex-col justify-center items-center  duration-300 hover:scale-105 hover:shadow-2xl">
-          <div onClick={handleOpenCreateModal} className="flex flex-col items-center justify-center cursor-pointer">
+          <div
+            onClick={handleOpenCreateModal}
+            className="flex flex-col items-center justify-center cursor-pointer"
+          >
             <CiCirclePlus className="text-6xl text-textSecLightColor hover:bg-textSecLightColor hover:text-white p-2 rounded-full duration-300 ease-in-out" />
           </div>
         </div>
         {groopData.map((groop) => (
-          <GroopCard key={groop._id} groop={groop} onDelete={openDeleteModal} OnUpdateOpen={openUpdateComponent} OnDuplicateOpen={openDuplicateComponent} />
+          <GroopCard
+            key={groop._id}
+            groop={groop}
+            onDelete={openDeleteModal}
+            OnUpdateOpen={openUpdateComponent}
+            OnDuplicateOpen={openDuplicateComponent}
+          />
         ))}
       </div>
 
       {isModalOpen && <AreYouSure />}
-      {isModalCreateOpen && <CreateGroop onClose={handleCloseCreateModal}  />}
-      {isModalUpdateOpen && <UpdateGroop onClose={handleCloseUpdateModal}  groop={selectedGroop} />}
-      {isModalDuplicateOpen && <DuplicateGroop onClose={handleCloseDuplicateModal}  groop={selectedGroop} />}
+      {isModalCreateOpen && (
+        <CreateGroop onClose={handleCloseCreateModal} onSubmit={handleSubmit} />
+      )}
+      {isModalUpdateOpen && (
+        <UpdateGroop
+          onClose={handleCloseUpdateModal}
+          onSubmit={handleSubmit}
+          groop={selectedGroop}
+        />
+      )}
+      {isModalDuplicateOpen && (
+        <DuplicateGroop
+          onClose={handleCloseDuplicateModal}
+          onSubmit={handleSubmit}
+          groop={selectedGroop}
+        />
+      )}
     </div>
   );
 };

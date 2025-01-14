@@ -43,7 +43,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-app.use(express.json());
+
+// ? JSON and URL-encoded body parsing with size limits
+app.use(express.json({ limit: '10mb' })); // adjust limit as needed
+app.use(express.urlencoded({ limit: '10mb', extended: true })); // adjust limit as needed
 app.use(cookieParser());
 
 //  * Routes

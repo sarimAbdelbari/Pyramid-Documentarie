@@ -5,7 +5,9 @@ import Button from "@/components/button";
 import { sucess_toast, error_toast ,info_toast} from "@/utils/toastNotification";
 import CheckButton from "@/components/checkButton";
 import {useStateContext} from "@/contexts/ContextProvider";
-const CreateGroop = ({onClose}) => {
+import { FaRegCircleXmark } from "react-icons/fa6";
+
+const CreateGroop = ({onClose , onSubmit}) => {
   const [groopName, setGroopName] = useState("");
   const [routes, setRoutes] = useState([]);
   const [users, setUsers] = useState([]);
@@ -21,7 +23,6 @@ const CreateGroop = ({onClose}) => {
   const { setIsLoading } = useStateContext();
   const fetchData = async () => {
     try {
-      setIsLoading(true);
       const responseFiles = await axios.get(`${import.meta.env.VITE_API_URL}/route/files`);
       const responsePages = await axios.get(`${import.meta.env.VITE_API_URL}/route/pages`);
       const responseUsers = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
@@ -29,11 +30,8 @@ const CreateGroop = ({onClose}) => {
       setFiles(responsePages.data);
       setUsers(responseUsers.data);
     } catch (error) {
-      setIsLoading(false);
       console.error(error);
-    } finally{
-      setIsLoading(false)
-    }
+    } 
   };
 
   useEffect(() => {
@@ -136,6 +134,7 @@ const CreateGroop = ({onClose}) => {
       setSelectedRoutes([]);
       setSelectedUsers([]);
       
+      onSubmit();
       onClose();
      
       sucess_toast("Groop created successfully");
@@ -159,6 +158,10 @@ const CreateGroop = ({onClose}) => {
         <h3 className="text-xl font-semibold dark:text-white mb-4">
           Créer un Groop
         </h3>
+         <FaRegCircleXmark
+              onClick={() => onClose()}
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-lg sm:text-xl md:text-2xl text-secLightBg hover:text-textSecLightColor  dark:text-textDarkColor cursor-pointer"
+            />
         <div className="mb-4">
           <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300 ">
             Nom du groupe

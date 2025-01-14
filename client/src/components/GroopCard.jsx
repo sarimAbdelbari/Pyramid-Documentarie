@@ -1,5 +1,4 @@
 import { FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import Button from "@/components/button";
 import { useEffect, useState } from "react";
 import { HiMiniPlusSmall ,HiMiniMinusSmall} from "react-icons/hi2";
@@ -144,19 +143,20 @@ const GroopCard = ({ groop, onDelete ,OnUpdateOpen ,OnDuplicateOpen }) => {
   Utilisateurs:
   </h3>
   <ul className="list-none space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
-    {groop.groopUsers.map((user, index) => (
-      <li
-        key={index}
-        className="flex items-center bg-white dark:bg-gray-800 p-2 rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-300"
-      >
-        <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center font-semibold text-gray-800 dark:text-gray-100 mr-3">
-          {user.userName.charAt(0).toUpperCase()}
-        </div>
-        <span className=" dark:text-gray-200 text-sm text-textSecLightColor">
-          {user.userName} - {user.email}
-        </span>
-      </li>
-    ))}
+  {groop.groopUsers.map((user, index) => (
+  <li
+    key={index}
+    className="flex items-center bg-white dark:bg-gray-800 p-2 rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-300"
+  >
+    <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center font-semibold text-gray-800 dark:text-gray-100 mr-3">
+      {user?.userName ? user.userName.charAt(0).toUpperCase() : '?'}
+    </div>
+    <span className=" dark:text-gray-200 text-sm text-textSecLightColor">
+      {user?.userName ? user.userName : 'Unknown User'} - {user?.email || 'No Email'}
+    </span>
+  </li>
+))}
+
   </ul>
 </div>
 

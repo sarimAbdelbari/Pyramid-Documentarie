@@ -13,7 +13,7 @@ import { MdOutlineFileDownload ,MdOutlineFileDownloadOff } from "react-icons/md"
 import { useStateContext } from '@/contexts/ContextProvider';
 
 
-const UpdateGroop = ({groop ,onClose}) => {
+const UpdateGroop = ({groop ,onClose ,onSubmit}) => {
 
     const [groopName, setGroopName] = useState("");
     const [routes, setRoutes] = useState([]);
@@ -195,15 +195,18 @@ const UpdateGroop = ({groop ,onClose}) => {
           }
      
     
-          await axios.patch(`${import.meta.env.VITE_API_URL}/groop/${groop}`, {
+         await axios.patch(`${import.meta.env.VITE_API_URL}/groop/${groop}`, {
             groopName,
             groopUsers: selectedUsers.map((user) => user.value),
             groopRoutes: selectedRoutes,
           });
     
+
+          
           setGroopName("");
           setSelectedRoutes([]);
           setSelectedUsers([]);
+          onSubmit()
           onClose()
           sucess_toast("Groop updated successfully");
     
@@ -245,9 +248,9 @@ const UpdateGroop = ({groop ,onClose}) => {
 
     <div className="flex hide-scrollbar  flex-col justify-between items-center gap-5  bg-white dark:bg-gray-800 px-5 sm:px-8 md:px-11 py-7 rounded-2xl shadow-lg dark:shadow-white w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-4 h-full overflow-y-auto ">
     <div>
-    <p className=" text-xl sm:text-2xl md:text-3xl text-textLightColor dark:text-textDarkColor font-semibold text-center">
+    <h3 className=" text-xl sm:text-2xl md:text-3xl text-textLightColor dark:text-textDarkColor font-semibold text-center">
       Mise à jour de <span className="text-darkPrimary">{groopName}</span>
-    </p>
+    </h3>
 
     </div>
     <FaRegCircleXmark
@@ -352,9 +355,17 @@ const UpdateGroop = ({groop ,onClose}) => {
       
         </div>
       </div>
-      <div onClick={() => handleSubmit()}>
+     
+
+      <div className="flex justify-end items-end gap-3 w-full">
+            <div onClick={onClose}>
+
+          <Button Text="Annuler"  />
+            </div>
+            <div onClick={() => handleSubmit()}>
         <Button Text="Mis A Jour" />
       </div>
+        </div>
     </div>
 </div>
 

@@ -17,7 +17,7 @@ import { SiReactrouter } from "react-icons/si";
 import { IoMdAddCircleOutline } from "react-icons/io";
 
 const Routes = () => {
-  const { isLoading, showNew, setShowNew, reloadfetch, setReloadfetch ,setIsLoading} = useStateContext();
+  const { isLoading, showNew, setShowNew ,setIsLoading} = useStateContext();
   const [routesData, setRoutesData] = useState([]);
   const [routesStats, setRoutesStats] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState(null);
@@ -27,7 +27,7 @@ const Routes = () => {
 
   useEffect(() => {
     fetchRoutes();
-    setReloadfetch(false);
+    fetchRouteStats();
 
     const savedVisibilityModel = localStorage.getItem("columnVisibilityModelRoute");
 
@@ -35,15 +35,13 @@ const Routes = () => {
       setColumnVisibilityModel(JSON.parse(savedVisibilityModel));
     }
 
-  }, [reloadfetch, setReloadfetch]);
+  }, []);
 
   const fetchRoutes = async () => {
     try {
       setIsLoading(true);
       const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route`);
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/route`);
-
-      setRoutesStats(response.data);
+     
 
       const dataWithId = data.map((route, index) => ({
         ...route,
@@ -62,6 +60,45 @@ const Routes = () => {
       setIsLoading(false)
     }
   };
+
+ const fetchRouteStats = async ()=>{
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/route`);
+
+    setRoutesStats(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+ }
+
+ const handleNewData = async (newdata) =>{
+  try {
+    
+    setRoutesData((prevState) => [
+      ...prevState,
+      { ...newdata, id: prevState.length + 1 } // Ensure a unique ID
+    ]);
+    
+    await fetchRouteStats();
+  } catch (error) {
+    console.error(error)
+  }
+ }
+
+const handleUpdateData = async(updatedroute)=>{
+  try {
+
+setRoutesData((prevState) =>
+      prevState.map((route) =>
+        route._id === updatedroute._id ? { ...route, ...updatedroute }  : route
+      )
+    );
+
+    await fetchRouteStats();
+  } catch (error) {
+    console.error(error)
+  }
+}
 
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
@@ -131,6 +168,8 @@ const Routes = () => {
       setRoutesData((prevState) =>
         prevState.filter((route) => route._id !== routeToDelete)
       );
+
+      await fetchRouteStats();
       handleCloseConfirmDialog();
     } catch (error) {
       setIsLoading(false)
@@ -294,7 +333,7 @@ const Routes = () => {
       </div>
 
       {/* Create Route Dialog */}
-      {showNew && <CreateRoute routeId={selectedRoute} />}
+      {showNew && <CreateRoute routeId={selectedRoute} onSubmit={handleNewData}  onUpdate={handleUpdateData}/>}
 
       {/* Confirmation Dialog */}
       <ConfirmDialog

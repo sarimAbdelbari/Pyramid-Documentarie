@@ -3,6 +3,7 @@ import View4 from "@/Routes/views/view4";
 import View2 from "@/Routes/views/view2";
 import View3 from "@/Routes/views/view3";
 import View5 from "@/Routes/views/view5";
+import View7 from "@/Routes/views/view7";
 import PdfReader from "@/Routes/readers/pdfReader";
 import TableView from "@/Routes/views/tableView";
 import ExcelReader from "@/Routes/readers/excelReader";
@@ -30,6 +31,8 @@ const LivePreview = (selectedNode) => {
       return <View4 route={selectedNode?.routeId} preview={preview} />;
     case "View5":
       return <View5 route={selectedNode?.routeId} preview={preview} />;
+    case "View7":
+      return <View7 route={selectedNode?.routeId} preview={preview} />;
     case "TableView":
       return <TableView route={selectedNode?.routeId} preview={preview} />;
     case "PdfReader":

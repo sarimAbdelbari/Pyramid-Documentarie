@@ -22,16 +22,8 @@ import { FaRegFileExcel } from "react-icons/fa";
 import { viewOptions } from "@/data/DataForm";
 import { FaRegFileWord } from "react-icons/fa";
 
-const CreateRoute = ({ routeId, parrentId }) => {
-
- 
-  const {
-    setIsLoading,
-    showNew,
-    setShowNew,
-    setReloadfetch,
-    reloadfetch,
-  } = useStateContext();
+const CreateRoute = ({ routeId, parrentId, onSubmit, onUpdate }) => {
+  const { setIsLoading, showNew, setShowNew } = useStateContext();
   const [routes, setRoutes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
@@ -46,37 +38,36 @@ const CreateRoute = ({ routeId, parrentId }) => {
     file: "",
     expiredate: "",
     details: "",
-    data: { tableCol: {}, tableRow: {} , cycle:'' },
+    data: { tableCol: {}, tableRow: {}, cycle: "" },
   });
   const [selectedParrent, setSelectedParrent] = useState("");
 
   const [parrentData, setParrentData] = useState({});
 
-  const optionsRoutes = routes.map((route) => ({
-      value: route._id,
-      label: route.path,
-    }));
 
+  const optionsRoutes = routes.map((route) => ({
+    value: route._id,
+    label: route.path,
+  }));
 
   const optionsCycle = [
     {
-    value:"plan",
-    label:"Plan"
+      value: "plan",
+      label: "Plan",
     },
     {
-    value:"do",
-    label:"Do"
+      value: "do",
+      label: "Do",
     },
     {
-    value:"check",
-    label:"Check"
+      value: "check",
+      label: "Check",
     },
     {
-    value:"act",
-    label:"Act"
-    }
-  ]
-
+      value: "act",
+      label: "Act",
+    },
+  ];
 
   const handleViewSelection = (viewName) => {
     setSelectedRoute({ ...selectedRoute, view: viewName });
@@ -114,10 +105,13 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
   const fetchRoutes = async () => {
     try {
-      setIsLoading(true);
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/route/pages`);
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/route/pages`
+      );
 
       setRoutes(data);
+
+
 
       if (parrentId) {
         setSelectedParrent({
@@ -126,17 +120,16 @@ const CreateRoute = ({ routeId, parrentId }) => {
         });
 
         setSelectedRoute({
-          ...selectedRoute , parrentPath: parrentId.value
-        })
+          ...selectedRoute,
+          parrentPath: parrentId.value,
+        });
 
-        if(parrentId.data){
-          
+        if (parrentId.data) {
           setParrentData(parrentId.data);
           const dataFields = Object.entries(
             parrentId.data.data?.tableCol || {}
           ).map(([tableCol, value]) => ({ tableCol, value }));
           setDataFields(dataFields);
-
         }
       }
 
@@ -162,14 +155,11 @@ const CreateRoute = ({ routeId, parrentId }) => {
         setDataRowFields(routeId?.data?.tableRow || []);
       }
     } catch (error) {
-      setIsLoading(false)
       console.error(
         `Impossible de récupérer les routes: ${
           error.response ? error.response.data.message : error.message
         }`
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -240,7 +230,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
   const handleCreateRoute = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       if (!selectedRoute.path.includes("/")) {
         info_toast("Le chemin de la route doit contenir un '/'.");
         return;
@@ -260,14 +250,19 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
       const dataRoute = { ...selectedRoute, path: `${selectedRoute.path}` };
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/route`, dataRoute);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/route`,
+        dataRoute
+      );
+
+      onSubmit(response.data);
 
       sucess_toast("Route créé avec succès");
+
       setSelectedRoute({});
       setShowNew(false);
-      setReloadfetch(!reloadfetch);
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
       error_toast(
         `Échec de la création de route: ${
           error.response ? error.response.data.message : error.message
@@ -275,7 +270,7 @@ const CreateRoute = ({ routeId, parrentId }) => {
       );
       console.error(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -286,15 +281,16 @@ const CreateRoute = ({ routeId, parrentId }) => {
         return;
       }
 
-      await axios.patch(
+      const response = await axios.patch(
         `${import.meta.env.VITE_API_URL}/route/${selectedRoute._id}`,
         selectedRoute
       );
       sucess_toast("Route mis à jour avec succès");
 
+      onUpdate(response.data);
+
       setSelectedRoute({});
       setShowNew(false);
-      setReloadfetch(!reloadfetch);
     } catch (error) {
       error_toast(
         `Échec de la mise à jour de route: ${
@@ -333,35 +329,25 @@ const CreateRoute = ({ routeId, parrentId }) => {
 
   const parrentSData = async (id) => {
     try {
-      setIsLoading(true)
-      if(id) {
-
+      if (id) {
         const dataWithId = await axios.get(
           `${import.meta.env.VITE_API_URL}/route/${id}`
         );
-        
+
         setParrentData(dataWithId.data);
       } else {
-        error_toast("id Is Not valid")
+        error_toast("id Is Not valid");
       }
-      
     } catch (error) {
-      setIsLoading(false)
-      console.error(error)
-      error_toast("id Is Not valid")
-
-    } finally {
-      setIsLoading(false)
+      console.error(error);
+      error_toast("id Is Not valid");
     }
-
   };
 
   const onChangeParrentPath = async (selectedOption) => {
-
     setSelectedRoute({
       ...selectedRoute,
       parrentPath: selectedOption.value,
-
     });
 
     await parrentSData(selectedOption.value);
@@ -376,15 +362,12 @@ const CreateRoute = ({ routeId, parrentId }) => {
     setSelectedRoute({ ...selectedRoute, expiredate: date });
   };
 
- const onChangeCycle = (selectedOption) => {
- 
-  
+  const onChangeCycle = (selectedOption) => {
     setSelectedRoute({
-      ...selectedRoute , data: {...selectedRoute.data ,cycle:selectedOption.value }
-    })
-
-
- }
+      ...selectedRoute,
+      data: { ...selectedRoute.data, cycle: selectedOption.value },
+    });
+  };
 
   return (
     <>
@@ -400,7 +383,13 @@ const CreateRoute = ({ routeId, parrentId }) => {
             padding: "10px",
           },
         }}
-        sx={{ "& .MuiDialog-paper ": { height: "100%", overflowX: "hidden" ,overflowY:"hidden" } }}
+        sx={{
+          "& .MuiDialog-paper ": {
+            height: "100%",
+            overflowX: "hidden",
+            overflowY: "hidden",
+          },
+        }}
       >
         <h3 className="text-xl font-semibold dark:text-white p-4">
           {routeId ? "Mettre à jour Route" : "Créer un Route"}
@@ -484,22 +473,26 @@ const CreateRoute = ({ routeId, parrentId }) => {
               className="px-3 py-3 mt-1 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
             />
           </div>
-          {parrentData.view === "View7" && (<>
-            <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">
-             Cycle :
-            </label>
-            <Select
-              value={{
-                label : selectedRoute.data.cycle,
-                value:selectedRoute.data.cycle
-              } || ""}
-              onChange={onChangeCycle}
-              options={optionsCycle}
-              isSearchable
-              placeholder="Rechercher Cycle"
-              className=" z-30 m-1  block  border-gray-300 rounded-md  dark:bg-gray-700 dark:text-white"
+
+          {(parrentData.view === "View7" ||  parrentId?.view === "View7")  && (
+            <>
+              <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">
+                Cycle :
+              </label>
+              <Select
+                value={
+                  {
+                    label: selectedRoute.data.cycle,
+                    value: selectedRoute.data.cycle,
+                  } || ""
+                }
+                onChange={onChangeCycle}
+                options={optionsCycle}
+                isSearchable
+                placeholder="Rechercher Cycle"
+                className=" z-30 m-1  block  border-gray-300 rounded-md  dark:bg-gray-700 dark:text-white"
               />
-              </>
+            </>
           )}
 
           <div className="my-4">
@@ -646,31 +639,26 @@ const CreateRoute = ({ routeId, parrentId }) => {
               />
             </div>
           )}
-          
-          <div className="my-4">
-            {parrentData?.data && (
-              <>
-                <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">
-                  Lignes du tableau :
-                </label>
 
-                {parrentData?.data &&
-                  Object.keys(parrentData?.data.tableCol).map((key, index) => (
-                    <input
-                      key={index}
-                      label={`${key}`}
-                      placeholder={key}
-                      type="text"
-                      value={selectedRoute?.data?.tableRow[index]?.[key] || ""}
-                      onChange={(event) =>
-                        handleFieldRowChange(index, event, key)
-                      }
-                      className="px-3 py-3 my-4 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
-                    />
-                  ))}
-              </>
-            )}
-          </div>
+          {(parrentData?.view === "TableView" || parrentId?.view === "TableView") && (
+            <div className="my-4">
+              <label className="py-3 block text-md font-medium text-gray-700 dark:text-gray-300">
+                Lignes du tableau :
+              </label>
+
+              {parrentData?.data && Object.keys(parrentData?.data.tableCol).map((key, index) => (
+                <input
+                  key={index}
+                  label={`${key}`}
+                  placeholder={key}
+                  type="text"
+                  value={selectedRoute?.data?.tableRow[index]?.[key] || ""}
+                  onChange={(event) => handleFieldRowChange(index, event, key)}
+                  className="px-3 py-3 my-4 block w-full border-gray-300 rounded-md shadow-md dark:bg-gray-700 dark:text-white"
+                />
+              ))}
+            </div>
+          )}
 
           {selectedRoute.view === "TableView" && (
             <div className="my-4">

@@ -31,11 +31,7 @@ const View7 = ({ route, preview }) => {
         fetchData();
     }, [route, routeData, preview]);
 
-    const getImageSrc = src => {
-        return src
-            ? `${import.meta.env.VITE_PUBLIC_URL1}/${src}`
-            : `${import.meta.env.VITE_PUBLIC_URL1}/imageHolder.jpg`;
-    };
+ 
 
     const renderSection = (title, icon, color, cycle) => (
         <div className="flex flex-col justify-center rounded-xl shadow-2xl m-4 py-4 px-7 w-full h-full dark:shadow-md dark:shadow-white bg-mainLightBg dark:bg-secDarkBg">

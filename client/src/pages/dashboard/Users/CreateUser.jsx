@@ -5,8 +5,9 @@ import Select from "react-select";
 import { sucess_toast, error_toast } from "@/utils/toastNotification";
 import CheckButton from "@/components/checkButton";
 import { useStateContext } from '@/contexts/ContextProvider';
+import { FaRegCircleXmark } from "react-icons/fa6";
 
-const CreateUser = ({ onClose, user }) => {
+const CreateUser = ({ onClose, user ,onSubmit ,onUpdate }) => {
   const [selectedUser, setSelectedUser] = useState(user || {
     userName: "",
     email: "",
@@ -15,7 +16,6 @@ const CreateUser = ({ onClose, user }) => {
     admin: false,
     groop: []
   });
- const [response , setResponse] = useState({})
   const [groopOptions, setGroopOptions] = useState([]);
   
   const {setIsLoading} = useStateContext();
@@ -23,15 +23,11 @@ const CreateUser = ({ onClose, user }) => {
   useEffect(() => {
     const fetchGroopOptions = async () => {
       try {
-        setIsLoading(true);
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
         setGroopOptions(data.map(groop => ({ value: groop._id, label: groop.groopName })));
       } catch (error) {
-        setIsLoading(false);
         console.error("Failed to fetch groops", error);
-      } finally {
-        setIsLoading(false);
-      }
+      } 
     };
 
     fetchGroopOptions();
@@ -49,9 +45,9 @@ const CreateUser = ({ onClose, user }) => {
       setIsLoading(true);
       const response =  await axios.post(`${import.meta.env.VITE_API_URL}/users`, selectedUser);
 
-     setResponse(response.data)
       sucess_toast("Utilisateur créé avec succès");
 
+      onSubmit(response.data);
       onClose();
 
     } catch (error) {
@@ -67,10 +63,11 @@ const CreateUser = ({ onClose, user }) => {
     try {
 
       setIsLoading(true)
-      await axios.patch(`${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`, selectedUser);
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`, selectedUser);
    
       sucess_toast("Mise à jour de l'utilisateur réussie");
-
+ 
+      onUpdate(response.data);
       onClose();
       
     } catch (error) {
@@ -87,9 +84,13 @@ const CreateUser = ({ onClose, user }) => {
   return (
     <div className="fixed hide-scrollbar inset-0 bg-gray-600 bg-opacity-50 shadow-xl flex items-center justify-center z-50 p-3 md:p-5 lg:p-7">
       <div className="bg-white dark:bg-gray-800 px-11 py-9 rounded-2xl shadow-lg dark:shadow-white w-full max-w-lg h-full hide-scrollbar overflow-y-auto flex flex-col justify-between">
-        <h2 className="text-xl font-semibold dark:text-white mb-4">
+        <h3 className="text-xl font-semibold dark:text-white mb-4">
           {!user ? "Créer un utilisateur" : "Mettre à jour l'utilisateur"}
-        </h2>
+        </h3>
+        <FaRegCircleXmark
+      onClick={() => onClose()}
+      className="absolute top-4 right-4 sm:top-5 sm:right-5 text-lg sm:text-xl md:text-2xl text-secLightBg hover:text-textSecLightColor  dark:text-textDarkColor cursor-pointer"
+    />
         <div className="mb-4">
           <label className="py-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Nom D&apos;utilisateur</label>
           <input

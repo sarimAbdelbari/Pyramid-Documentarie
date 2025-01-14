@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { DataGrid   } from "@mui/x-data-grid";
 import { useStateContext } from "@/contexts/ContextProvider";
 import axios from "axios";
-import Button from "@/components/button";
+// import Button from "@/components/button";
 import ButtonIcon from "@/components/buttonIcon";
 import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -51,9 +51,7 @@ const Users = () => {
       const { data: usersData } = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       const { data: groopData } = await axios.get(`${import.meta.env.VITE_API_URL}/groop`);
 
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/user`);
-
-      setUsersStats(response.data);
+      await fetchUserStats();
 
       setGroopList(groopData);
 
@@ -72,15 +70,28 @@ const Users = () => {
     }
   };
 
+  const fetchUserStats = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stats/user`);
+
+      setUsersStats(response.data);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleDeleteUser = async () => {
     try {
 
       setIsLoading(true);
+
       await axios.delete(`${import.meta.env.VITE_API_URL}/users/${userToDelete._id}`);
       sucess_toast("L'utilisateur a été supprimé avec succès");
       setUsersData((prevState) =>
         prevState.filter((user) => user._id !== userToDelete._id)
       );
+      await fetchUserStats();
+
       handleCloseConfirmDialog();
     } catch (error) {
       setIsLoading(false);
@@ -90,6 +101,40 @@ const Users = () => {
       setIsLoading(false)
     }
   };
+
+  const handleNewData = async (newData) => {
+    try {
+      
+      setUsersData((prevState) => [
+        ...prevState,
+        { ...newData, id: prevState.length + 1 } // Ensure a unique ID
+      ]);
+      
+      await fetchUserStats();
+      
+    } catch (error) {
+      console.error(error)
+    }
+
+
+  };
+
+ const handleUpdateData = async(updatedUser)=> {
+   try {
+    
+    setUsersData((prevState) =>
+      prevState.map((user) =>
+        user._id === updatedUser.user._id ? { ...user, ...updatedUser.user }  : user
+      )
+    );
+    
+
+  await fetchUserStats();
+
+  } catch (error) {
+  console.error(error)
+  }
+ }
 
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
@@ -168,6 +213,9 @@ const Users = () => {
     localStorage.setItem("columnVisibilityModelUsers", JSON.stringify(newModel));
   };
 
+ 
+  
+  
 
   return (
     <>
@@ -175,7 +223,7 @@ const Users = () => {
         <h3 className="text-2xl font-semibold text-textLightColor dark:text-textDarkColor leading-relaxed">
           Utilisateurs
         </h3>
-        <div className="fixed bottom-12 right-12 z-50 " onClick={() => setShowCreateUserModal(true)}>
+        <div className="fixed bottom-9 right-9 z-50 " onClick={() => setShowCreateUserModal(true)}>
           {/* <Button Icon={<IoMdAddCircleOutline />} /> */}
           <ButtonIcon Icon={<IoMdAddCircleOutline className="text-2xl" />} />
         </div>
@@ -323,6 +371,8 @@ const Users = () => {
         <CreateUser
           user={userToEdit}
           onClose={handleCloseCreateUserModal}
+          onSubmit={handleNewData}
+          onUpdate={handleUpdateData}
         />
       </>
       )}
