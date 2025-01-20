@@ -13,7 +13,6 @@ const loginUser = async (req, res) => {
     try {
         const user = await User.login(email, password);
  
-        console.log(user)
         // create a token
         const token = createToken(user._id);
 
@@ -72,28 +71,3 @@ const checkAuth = async (req, res) => {
 
 module.exports = { loginUser, logoutUser , checkAuth};
 
-
-
-  
-// * signup user 
-
-// const signupUser = async (req, res) => {
-//     const { userName, email, password } = req.body; 
-
-//     try {   
-
-//         const user = await User.signup(userName, email, password);
-
-//         const token = createToken(user._id);
-
-//         // Set the token in a cookie
-//         res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-
-//         res.status(200).json({ user, token });
-
-//     } catch (error) {
-
-//         res.status(400).json({ error: error.message });
-
-//     }
-// };
